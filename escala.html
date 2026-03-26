@@ -2,809 +2,300 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Escala Musical – IBMéier</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
-/* ── VARIABLES ── */
-:root {
-  --red:       #c0392b;
-  --red2:      #e74c3c;
-  --red-glow:  rgba(192,57,43,0.25);
-  --gold:      #d4a853;
-  --gold2:     #f0c878;
-  --bg:        #06060e;
-  --bg2:       #0c0c1a;
-  --surface:   rgba(255,255,255,0.04);
-  --surface2:  rgba(255,255,255,0.07);
-  --glass:     rgba(10,10,20,0.7);
-  --border:    rgba(255,255,255,0.07);
-  --border2:   rgba(255,255,255,0.12);
-  --text:      #f0f4ff;
-  --text-dim:  #6b7a9a;
-  --text-mid:  #9aa3bb;
-  --morning:   #f1c21b;
-  --night:     #8a3ffc;
-  --scroll-y:  0px;
+:root{
+  --red:#c0392b;--red2:#e74c3c;--red-glow:rgba(192,57,43,0.25);
+  --gold:#d4a853;--gold2:#f0c878;--green:#2ecc71;
+  --bg:#06060e;--bg2:#0c0c1a;--surface:rgba(255,255,255,0.04);--surface2:rgba(255,255,255,0.07);
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --text:#f0f4ff;--text-dim:#6b7a9a;--text-mid:#9aa3bb;
+  --morning:#f1c21b;--night:#8a3ffc;
 }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(192,57,43,0.4);border-radius:2px}
+.parallax-scene{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);will-change:transform}
+.orb-1{width:600px;height:600px;top:-200px;left:-200px;background:radial-gradient(circle,rgba(192,57,43,0.18) 0%,transparent 70%)}
+.orb-2{width:500px;height:500px;bottom:-100px;right:-100px;background:radial-gradient(circle,rgba(15,52,96,0.22) 0%,transparent 70%)}
+.orb-3{width:400px;height:400px;top:40%;left:50%;background:radial-gradient(circle,rgba(212,168,83,0.06) 0%,transparent 70%)}
+.grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")}
+header{position:sticky;top:0;z-index:300;background:rgba(6,6,14,0.85);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-bottom:1px solid var(--border);padding:0 24px}
+.header-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:62px;gap:12px}
+.logo-area{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
+.logo-img{height:34px;width:auto;object-fit:contain;flex-shrink:0}
+.logo-divider{width:1px;height:26px;background:var(--border2);flex-shrink:0}
+.logo-sub{display:flex;flex-direction:column;gap:1px;min-width:0}
+.logo-panel{font-family:'Syne',sans-serif;font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:0.18em;font-weight:700;white-space:nowrap}
+.logo-desc{font-size:10px;color:var(--text-dim);letter-spacing:0.04em;white-space:nowrap}
+.header-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.sync-indicator{display:flex;align-items:center;gap:6px;font-size:11px;padding:5px 10px;border-radius:20px;background:var(--surface);border:1px solid var(--border);color:var(--text-dim);transition:all 0.3s;white-space:nowrap}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--text-dim);flex-shrink:0;transition:all 0.3s}
+.sync-indicator.syncing .sync-dot{background:var(--gold2);box-shadow:0 0 8px var(--gold2);animation:pulse 1s infinite}
+.sync-indicator.synced .sync-dot{background:var(--green);box-shadow:0 0 6px var(--green)}
+.sync-indicator.error .sync-dot{background:var(--red2);box-shadow:0 0 6px var(--red2)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.btn-login{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--red),#9a2219);color:white;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;transition:all 0.2s;box-shadow:0 0 20px var(--red-glow);white-space:nowrap;min-height:38px}
+.btn-login:hover{background:linear-gradient(135deg,var(--red2),#b52e22);transform:translateY(-1px)}
+.user-chip{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border2);padding:4px 12px 4px 4px;border-radius:40px}
+.user-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:white;flex-shrink:0}
+.user-name{font-size:12px;color:var(--text);font-weight:500;white-space:nowrap;max-width:110px;overflow:hidden;text-overflow:ellipsis}
+.btn-logout{background:none;border:1px solid var(--border);color:var(--text-dim);cursor:pointer;font-size:11px;padding:5px 10px;border-radius:6px;font-family:'DM Sans',sans-serif;transition:all 0.15s;white-space:nowrap;min-height:34px}
+.btn-logout:hover{border-color:var(--red);color:var(--red2)}
+main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-index:2}
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── LOADING ── */
+.loading-overlay{position:fixed;inset:0;background:rgba(6,6,14,0.95);backdrop-filter:blur(12px);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
+.loading-spinner{width:48px;height:48px;border:3px solid rgba(192,57,43,0.2);border-top-color:var(--red);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-family:'Syne',sans-serif;font-size:14px;color:var(--text-dim);font-weight:700;letter-spacing:0.05em}
 
-html { scroll-behavior: smooth; }
+/* ── CONFIG ERROR ── */
+#configError{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:88vh;text-align:center}
+.config-card{background:rgba(12,12,24,0.9);border:1px solid var(--border2);border-radius:20px;padding:36px;max-width:500px;width:100%;margin:0 auto}
+.config-card-top{height:2px;background:linear-gradient(90deg,transparent,var(--red),var(--gold),transparent);border-radius:2px;margin-bottom:28px}
+.config-title{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--gold2);margin-bottom:8px}
+.config-sub{font-size:13px;color:var(--text-dim);line-height:1.7;margin-bottom:24px}
+.config-steps{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:left;margin-bottom:20px}
+.config-step{display:flex;gap:10px;margin-bottom:12px;font-size:12px;color:var(--text-mid);align-items:flex-start}
+.config-step:last-child{margin-bottom:0}
+.step-num{width:20px;height:20px;border-radius:50%;background:rgba(192,57,43,0.2);border:1px solid rgba(192,57,43,0.4);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:9px;font-weight:800;color:var(--red2);flex-shrink:0;margin-top:1px}
+.config-code{font-family:'DM Mono','Courier New',monospace;font-size:11px;background:rgba(212,168,83,0.08);border:1px solid rgba(212,168,83,0.2);border-radius:8px;padding:12px;color:var(--gold2);line-height:1.8;margin-top:6px;word-break:break-all}
 
-body {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
+/* ── LOGIN ── */
+#loginScreen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:88vh;text-align:center}
+.login-bg-text{position:absolute;font-family:'Syne',sans-serif;font-size:clamp(60px,15vw,200px);font-weight:800;color:rgba(255,255,255,0.015);pointer-events:none;user-select:none;letter-spacing:-0.04em;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;z-index:0}
+.login-content{position:relative;z-index:1;width:100%}
+.login-logo-big{width:150px;height:auto;margin:0 auto 22px;display:block;filter:drop-shadow(0 6px 35px rgba(192,57,43,0.35)) brightness(1.05)}
+.login-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:var(--red2);margin-bottom:10px}
+.login-title{font-family:'Syne',sans-serif;font-size:clamp(22px,5vw,46px);font-weight:800;line-height:1.05;background:linear-gradient(140deg,#ffffff 0%,var(--gold2) 55%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;letter-spacing:-0.02em}
+.login-sub{color:var(--text-dim);font-size:13px;line-height:1.7;max-width:340px;margin:0 auto 32px}
+.login-card{background:rgba(12,12,24,0.8);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border:1px solid var(--border2);border-radius:20px;padding:30px 34px;max-width:420px;margin:0 auto;box-shadow:0 32px 80px rgba(0,0,0,0.6);position:relative;overflow:hidden}
+.login-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(192,57,43,0.06) 0%,transparent 50%,rgba(212,168,83,0.04) 100%);pointer-events:none}
+.login-card-top-line{position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--red),var(--gold),transparent)}
+.login-card-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--text);margin-bottom:4px}
+.login-card-sub{font-size:12px;color:var(--text-dim);margin-bottom:20px}
+.login-role-tabs{display:flex;gap:8px;margin-bottom:18px}
+.role-tab{flex:1;padding:11px 8px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text-dim);cursor:pointer;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;gap:5px;min-height:44px;justify-content:center}
+.role-tab .role-icon{font-size:18px}
+.role-tab.active{background:rgba(192,57,43,0.15);border-color:rgba(192,57,43,0.5);color:var(--gold)}
+.login-input,.login-select{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:13px 16px;border-radius:10px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;appearance:none;-webkit-appearance:none;min-height:48px}
+.login-input:focus,.login-select:focus{border-color:rgba(192,57,43,0.6);box-shadow:0 0 0 3px rgba(192,57,43,0.1)}
+.login-input::placeholder{color:var(--text-dim)}
+.login-input-wrap,.login-select-wrap{position:relative;margin-bottom:14px}
+.select-arrow{position:absolute;right:14px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--text-dim);font-size:10px}
+.btn-enter{width:100%;background:linear-gradient(135deg,var(--red) 0%,#8b1a14 100%);border:none;color:white;padding:15px;border-radius:10px;cursor:pointer;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.05em;transition:all 0.2s;box-shadow:0 8px 28px rgba(192,57,43,0.35);margin-top:8px;min-height:52px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-enter:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(192,57,43,0.5)}
+.btn-enter:disabled{opacity:0.5;cursor:not-allowed;transform:none}
 
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(192,57,43,0.4); border-radius: 2px; }
-
-/* ── PARALLAX BACKGROUND ── */
-.parallax-scene {
-  position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
-}
-.orb {
-  position: absolute; border-radius: 50%; filter: blur(90px);
-  will-change: transform; transition: transform 0.1s linear;
-}
-.orb-1 {
-  width: 700px; height: 700px; top: -200px; left: -200px;
-  background: radial-gradient(circle, rgba(192,57,43,0.18) 0%, transparent 70%);
-}
-.orb-2 {
-  width: 600px; height: 600px; bottom: -100px; right: -100px;
-  background: radial-gradient(circle, rgba(15,52,96,0.22) 0%, transparent 70%);
-}
-.orb-3 {
-  width: 400px; height: 400px; top: 40%; left: 50%;
-  background: radial-gradient(circle, rgba(212,168,83,0.06) 0%, transparent 70%);
-}
-.grain {
-  position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: 0.025;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-}
-
-/* ── HEADER ── */
-header {
-  position: sticky; top: 0; z-index: 300;
-  background: rgba(6,6,14,0.75);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border-bottom: 1px solid var(--border);
-  padding: 0 32px;
-}
-.header-inner {
-  max-width: 1400px; margin: 0 auto;
-  display: flex; align-items: center; justify-content: space-between;
-  height: 68px; gap: 20px;
-}
-.logo-area { display: flex; align-items: center; gap: 16px; }
-.logo-img { height: 40px; width: auto; object-fit: contain; }
-.logo-divider { width: 1px; height: 32px; background: var(--border2); }
-.logo-sub {
-  display: flex; flex-direction: column; gap: 1px;
-}
-.logo-panel {
-  font-family: 'Syne', sans-serif; font-size: 11px;
-  color: var(--gold); text-transform: uppercase; letter-spacing: 0.2em; font-weight: 700;
-}
-.logo-desc { font-size: 10px; color: var(--text-dim); letter-spacing: 0.05em; }
-
-.header-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-
-.btn-login {
-  display: flex; align-items: center; gap: 7px;
-  background: linear-gradient(135deg, var(--red), #9a2219);
-  color: white; border: none;
-  padding: 9px 20px; border-radius: 8px; cursor: pointer;
-  font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700;
-  transition: all 0.2s; letter-spacing: 0.02em;
-  box-shadow: 0 0 24px var(--red-glow);
-}
-.btn-login:hover {
-  background: linear-gradient(135deg, var(--red2), #b52e22);
-  box-shadow: 0 0 36px rgba(192,57,43,0.45);
-  transform: translateY(-1px);
-}
-
-.user-chip {
-  display: flex; align-items: center; gap: 10px;
-  background: var(--surface2); border: 1px solid var(--border2);
-  padding: 5px 14px 5px 5px; border-radius: 40px;
-}
-.user-avatar {
-  width: 32px; height: 32px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--red), var(--gold));
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800; color: white;
-}
-.user-name { font-size: 13px; color: var(--text); font-weight: 500; }
-.btn-logout {
-  background: none; border: 1px solid var(--border);
-  color: var(--text-dim); cursor: pointer; font-size: 11px;
-  padding: 5px 12px; border-radius: 6px;
-  font-family: 'DM Sans', sans-serif; transition: all 0.15s;
-}
-.btn-logout:hover { border-color: var(--red); color: var(--red2); }
-
-/* ── MAIN ── */
-main { max-width: 1400px; margin: 0 auto; padding: 0 24px 100px; position: relative; z-index: 2; }
-
-/* ── LOGIN SCREEN ── */
-#loginScreen {
-  display: flex; flex-direction: column; align-items: center;
-  justify-content: center; min-height: 88vh; text-align: center;
-}
-.login-bg-text {
-  position: absolute; font-family: 'Syne', sans-serif;
-  font-size: clamp(80px, 15vw, 200px); font-weight: 800;
-  color: rgba(255,255,255,0.015); pointer-events: none;
-  user-select: none; letter-spacing: -0.04em; top: 50%;
-  left: 50%; transform: translate(-50%, -50%); white-space: nowrap;
-  z-index: 0;
-}
-.login-content { position: relative; z-index: 1; width: 100%; }
-.login-logo-big {
-  width: 180px; height: auto;
-  margin: 0 auto 28px; display: block;
-  filter: drop-shadow(0 8px 40px rgba(192,57,43,0.35)) brightness(1.05);
-}
-.login-eyebrow {
-  font-size: 11px; font-weight: 600; letter-spacing: 0.2em;
-  text-transform: uppercase; color: var(--red2);
-  margin-bottom: 14px; opacity: 0.9;
-}
-.login-title {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(28px, 5vw, 52px); font-weight: 800; line-height: 1.05;
-  background: linear-gradient(140deg, #ffffff 0%, var(--gold2) 55%, var(--gold) 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  margin-bottom: 12px; letter-spacing: -0.02em;
-}
-.login-sub {
-  color: var(--text-dim); font-size: 15px; line-height: 1.7;
-  max-width: 380px; margin: 0 auto 44px;
-}
-
-/* GLASS CARD */
-.login-card {
-  background: rgba(12,12,24,0.75);
-  backdrop-filter: blur(32px) saturate(160%);
-  -webkit-backdrop-filter: blur(32px) saturate(160%);
-  border: 1px solid var(--border2);
-  border-radius: 20px; padding: 36px 40px;
-  max-width: 420px; margin: 0 auto;
-  box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
-  position: relative; overflow: hidden;
-}
-.login-card::before {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(192,57,43,0.06) 0%, transparent 50%, rgba(212,168,83,0.04) 100%);
-  pointer-events: none;
-}
-.login-card-top-line {
-  position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--red), var(--gold), transparent);
-}
-.login-card-title {
-  font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 800;
-  color: var(--text); margin-bottom: 4px;
-}
-.login-card-sub { font-size: 12px; color: var(--text-dim); margin-bottom: 24px; }
-
-.login-role-tabs { display: flex; gap: 8px; margin-bottom: 24px; }
-.role-tab {
-  flex: 1; padding: 12px 8px; border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--surface); color: var(--text-dim); cursor: pointer;
-  font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.1em;
-  transition: all 0.2s; display: flex; flex-direction: column;
-  align-items: center; gap: 5px;
-}
-.role-tab .role-icon { font-size: 18px; }
-.role-tab.active {
-  background: rgba(192,57,43,0.15); border-color: rgba(192,57,43,0.5);
-  color: var(--gold); box-shadow: 0 0 20px rgba(192,57,43,0.2);
-}
-
-.login-input, .login-select {
-  width: 100%; background: rgba(255,255,255,0.05);
-  border: 1px solid var(--border); color: var(--text);
-  font-family: 'DM Sans', sans-serif; font-size: 14px;
-  padding: 13px 16px; border-radius: 10px; outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  appearance: none; -webkit-appearance: none;
-}
-.login-input:focus, .login-select:focus {
-  border-color: rgba(192,57,43,0.6);
-  box-shadow: 0 0 0 3px rgba(192,57,43,0.1);
-}
-.login-input::placeholder { color: var(--text-dim); }
-.login-input-wrap, .login-select-wrap {
-  position: relative; margin-bottom: 14px;
-}
-.select-arrow {
-  position: absolute; right: 14px; top: 50%;
-  transform: translateY(-50%); pointer-events: none;
-  color: var(--text-dim); font-size: 10px;
-}
-
-.btn-enter {
-  width: 100%;
-  background: linear-gradient(135deg, var(--red) 0%, #8b1a14 100%);
-  border: none; color: white; padding: 15px;
-  border-radius: 10px; cursor: pointer;
-  font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800;
-  letter-spacing: 0.05em; transition: all 0.2s;
-  box-shadow: 0 8px 32px rgba(192,57,43,0.35);
-  margin-top: 8px;
-}
-.btn-enter:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(192,57,43,0.5);
-}
-.btn-enter:active { transform: translateY(0); }
-
-/* ── APP SCREEN ── */
-#appScreen { display: none; animation: fadeUp 0.4s ease; }
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── PAGE HERO ── */
-.page-hero {
-  padding: 64px 0 48px; margin-bottom: 40px;
-  position: relative; overflow: hidden;
-}
-.page-hero::after {
-  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border2), transparent);
-}
-.hero-eyebrow {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.25);
-  padding: 5px 16px; border-radius: 40px; margin-bottom: 20px;
-  font-size: 11px; color: var(--red2); font-weight: 600;
-  text-transform: uppercase; letter-spacing: 0.15em;
-}
-.hero-eyebrow::before {
-  content: ''; width: 6px; height: 6px; border-radius: 50%;
-  background: var(--red2); box-shadow: 0 0 8px var(--red2);
-}
-.page-hero h1 {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(28px, 5vw, 56px); font-weight: 800; line-height: 1.0;
-  letter-spacing: -0.025em;
-  background: linear-gradient(140deg, #ffffff 0%, var(--gold2) 60%, var(--gold) 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  margin-bottom: 12px;
-}
-.page-hero p {
-  color: var(--text-dim); font-size: 15px; font-weight: 400;
-}
-.hero-glow {
-  position: absolute; top: 0; left: -100px;
-  width: 500px; height: 300px;
-  background: radial-gradient(ellipse, rgba(192,57,43,0.08) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-/* ── STATS BAR ── */
-.stats-bar {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: 12px; margin-bottom: 40px;
-}
-.stat-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px; padding: 20px 22px;
-  position: relative; overflow: hidden;
-  transition: border-color 0.2s, transform 0.2s;
-  cursor: default;
-}
-.stat-card:hover {
-  border-color: rgba(192,57,43,0.3);
-  transform: translateY(-2px);
-}
-.stat-card::before {
-  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, var(--red), var(--gold), transparent);
-  opacity: 0.6;
-}
-.stat-val {
-  font-family: 'Syne', sans-serif;
-  font-size: 36px; font-weight: 800; color: var(--gold2); line-height: 1;
-}
-.stat-label {
-  font-size: 11px; color: var(--text-dim);
-  text-transform: uppercase; letter-spacing: 0.12em; margin-top: 6px;
-}
-
-/* ── TABS ── */
-.tabs {
-  display: flex; gap: 2px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border);
-  border-radius: 12px; padding: 4px;
-  margin-bottom: 40px; width: fit-content; flex-wrap: wrap;
-}
-.tab {
-  padding: 9px 22px; border-radius: 9px; cursor: pointer; border: none;
-  font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700;
-  background: none; color: var(--text-dim); transition: all 0.18s;
-  letter-spacing: 0.05em; text-transform: uppercase;
-}
-.tab.active {
-  background: linear-gradient(135deg, var(--red), #8b1a14);
-  color: white; box-shadow: 0 4px 16px rgba(192,57,43,0.35);
-}
-
-/* ── TAB CONTENT ANIMATION ── */
-.tab-content {
-  animation: fadeUp 0.25s ease;
-}
-
-/* ── SECTION HEADER ── */
-.section-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 22px; font-weight: 800; color: var(--text);
-  margin-bottom: 4px; letter-spacing: -0.01em;
-}
-.section-sub { font-size: 13px; color: var(--text-dim); margin-bottom: 28px; }
-
-/* ── MUSICIAN CARDS ── */
-.musicians-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(295px, 1fr));
-  gap: 14px; margin-bottom: 40px;
-}
-.musician-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px; padding: 22px;
-  transition: all 0.22s; position: relative; overflow: hidden;
-}
-.musician-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(192,57,43,0.5), transparent);
-}
-.musician-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(192,57,43,0.25);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(192,57,43,0.1);
-}
-.musician-header {
-  display: flex; align-items: center;
-  justify-content: space-between; margin-bottom: 16px;
-}
-.musician-name {
-  font-family: 'Syne', sans-serif; font-size: 14px;
-  font-weight: 800; color: var(--text);
-}
-.musician-instrument {
-  font-size: 11px; color: var(--text-dim);
-  text-transform: uppercase; letter-spacing: 0.1em; margin-top: 2px;
-}
-.musician-icon {
-  width: 38px; height: 38px; border-radius: 10px;
-  background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.2);
-  display: flex; align-items: center; justify-content: center; font-size: 18px;
-}
-.sundays-avail { display: flex; flex-direction: column; gap: 8px; }
-.sunday-row { display: flex; align-items: center; justify-content: space-between; }
-.sunday-label { font-size: 11px; color: var(--text-dim); min-width: 76px; }
-.toggle-group { display: flex; gap: 5px; }
-.toggle-btn {
-  padding: 4px 10px; border-radius: 20px; border: 1px solid transparent;
-  font-size: 10px; cursor: pointer; font-family: 'DM Sans', sans-serif;
-  transition: all 0.15s; font-weight: 600; letter-spacing: 0.02em;
-}
-.toggle-btn.manha {
-  background: rgba(241,194,27,0.07); border-color: rgba(241,194,27,0.2);
-  color: rgba(241,194,27,0.7);
-}
-.toggle-btn.manha.on {
-  background: rgba(241,194,27,0.18); border-color: var(--morning);
-  color: var(--morning); box-shadow: 0 0 10px rgba(241,194,27,0.2);
-}
-.toggle-btn.noite {
-  background: rgba(138,63,252,0.07); border-color: rgba(138,63,252,0.2);
-  color: rgba(138,63,252,0.7);
-}
-.toggle-btn.noite.on {
-  background: rgba(138,63,252,0.18); border-color: var(--night);
-  color: #b57bff; box-shadow: 0 0 10px rgba(138,63,252,0.2);
-}
-
-/* ── BUTTONS ── */
-.btn-primary {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: var(--surface2); border: 1px solid var(--border2);
-  color: var(--text); padding: 10px 20px; border-radius: 9px; cursor: pointer;
-  font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700;
-  transition: all 0.18s; letter-spacing: 0.03em;
-}
-.btn-primary:hover { background: rgba(255,255,255,0.1); transform: translateY(-1px); }
-.btn-gold {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: linear-gradient(135deg, var(--gold), #a87830);
-  border: none; color: #0a0a14;
-  padding: 10px 20px; border-radius: 9px; cursor: pointer;
-  font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 800;
-  transition: all 0.18s; box-shadow: 0 4px 20px rgba(212,168,83,0.25);
-  letter-spacing: 0.03em;
-}
-.btn-gold:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(212,168,83,0.4); }
-.btn-red {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: linear-gradient(135deg, var(--red), #8b1a14);
-  border: none; color: white;
-  padding: 10px 20px; border-radius: 9px; cursor: pointer;
-  font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 800;
-  transition: all 0.18s; box-shadow: 0 4px 20px rgba(192,57,43,0.3);
-  letter-spacing: 0.03em;
-}
-.btn-red:hover {
-  background: linear-gradient(135deg, var(--red2), #a82219);
-  transform: translateY(-1px); box-shadow: 0 8px 28px rgba(192,57,43,0.45);
-}
-.btn-sm {
-  padding: 8px 16px; border-radius: 8px;
-  border: 1px solid rgba(192,57,43,0.35); cursor: pointer;
-  font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700;
-  background: rgba(192,57,43,0.08); color: var(--red2); transition: all 0.18s;
-  letter-spacing: 0.05em; text-transform: uppercase;
-}
-.btn-sm:hover { background: rgba(192,57,43,0.18); border-color: var(--red2); }
-.btn-danger {
-  padding: 7px 14px; border-radius: 8px;
-  border: 1px solid rgba(231,76,60,0.3); cursor: pointer;
-  font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700;
-  background: rgba(231,76,60,0.06); color: #e74c3c; transition: all 0.18s;
-  letter-spacing: 0.04em; text-transform: uppercase;
-}
-.btn-danger:hover { background: rgba(231,76,60,0.15); border-color: #e74c3c; }
-
-/* ── ACTIONS ROW ── */
-.actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; align-items: center; }
-
-/* ── INFO BOX ── */
-.info-box {
-  background: rgba(15,52,96,0.15); border: 1px solid rgba(15,52,96,0.4);
-  border-left: 2px solid var(--gold);
-  border-radius: 10px; padding: 14px 18px;
-  font-size: 12px; color: var(--text-dim); line-height: 1.8;
-  margin-bottom: 24px;
-}
-.info-box strong { color: var(--gold); }
-
-/* ── LEGEND BAR ── */
-.legend-bar {
-  display: flex; gap: 20px; align-items: center;
-  margin-bottom: 20px; flex-wrap: wrap;
-}
-.legend-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-dim); }
-.legend-dot { width: 8px; height: 8px; border-radius: 50%; }
-
-/* ── SCHEDULE GRID ── */
-.schedule-container { display: flex; flex-direction: column; gap: 24px; }
-.sunday-block {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 20px; overflow: hidden;
-  transition: all 0.2s;
-}
-.sunday-block:hover { border-color: rgba(192,57,43,0.2); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
-.sunday-block-header {
-  background: linear-gradient(135deg, rgba(6,6,14,0.9) 0%, rgba(15,5,5,0.9) 100%);
-  padding: 20px 26px;
-  display: flex; align-items: center; justify-content: space-between;
-  border-bottom: 1px solid rgba(192,57,43,0.25);
-  position: relative; overflow: hidden;
-}
-.sunday-block-header::after {
-  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, var(--red), transparent);
-}
-.sunday-date {
-  font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; color: var(--text);
-  letter-spacing: -0.01em;
-}
-.sunday-date span {
-  font-size: 12px; color: var(--text-dim); display: block;
-  font-family: 'DM Sans', sans-serif; margin-top: 3px; font-weight: 400;
-}
-.sunday-num {
-  width: 48px; height: 48px; border-radius: 12px;
-  background: linear-gradient(135deg, var(--red), #8b1a14);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Syne', sans-serif; font-size: 22px; font-weight: 800;
-  color: white; box-shadow: 0 4px 20px rgba(192,57,43,0.4);
-}
-.services-grid { display: grid; grid-template-columns: 1fr 1fr; }
-@media (max-width: 700px) { .services-grid { grid-template-columns: 1fr; } }
-.service-col { padding: 22px 26px; border-right: 1px solid var(--border); }
-.service-col:last-child { border-right: none; }
-.service-header {
-  display: flex; align-items: center; gap: 9px; margin-bottom: 16px;
-  padding-bottom: 12px; border-bottom: 1px solid var(--border);
-}
-.service-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-}
-.service-dot.manha { background: var(--morning); box-shadow: 0 0 8px rgba(241,194,27,0.5); }
-.service-dot.noite { background: var(--night); box-shadow: 0 0 8px rgba(138,63,252,0.5); }
-.service-label {
-  font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.1em;
-}
-.service-label.manha { color: var(--morning); }
-.service-label.noite { color: #b57bff; }
-.instrument-row {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 12px; padding: 9px 0;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-.instrument-row:last-child { border-bottom: none; }
-.instr-name { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-dim); min-width: 90px; }
-.instr-emoji { font-size: 14px; }
-.musician-assigned select {
-  background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-  color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 12px;
-  padding: 5px 10px; border-radius: 7px; outline: none; cursor: pointer;
-  transition: border-color 0.2s;
-  max-width: 160px;
-}
-.musician-assigned select:focus { border-color: rgba(192,57,43,0.5); }
-.musician-assigned select:hover { border-color: var(--border2); }
-
-/* ── EXPORT AREA ── */
-.export-area {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--border);
-  border-radius: 14px; padding: 24px;
-  font-family: 'DM Sans', monospace; font-size: 13px; color: var(--text);
-  line-height: 1.9; white-space: pre-wrap; display: none;
-  min-height: 120px; max-height: 600px; overflow-y: auto;
-}
-.export-area.visible { display: block; animation: fadeUp 0.25s ease; }
-
-/* ── ADD FORM ── */
-.add-form {
-  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
-  border-radius: 14px; padding: 22px; margin-bottom: 24px;
-  display: none;
-}
-.add-form.visible { display: block; animation: fadeUp 0.2s ease; }
-.form-row { display: flex; gap: 14px; flex-wrap: wrap; align-items: flex-end; }
-.form-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 140px; }
-.form-group label { font-size: 11px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; }
-.form-group input, .form-group select {
-  background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-  color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 13px;
-  padding: 10px 14px; border-radius: 9px; outline: none; transition: border-color 0.2s;
-}
-.form-group input:focus, .form-group select:focus {
-  border-color: rgba(192,57,43,0.5);
-}
-.form-group input::placeholder { color: var(--text-dim); }
-
-/* ── HISTORY TAB ── */
-.history-empty {
-  text-align: center; padding: 60px 20px; color: var(--text-dim);
-}
-.history-empty-icon {
-  font-size: 48px; display: block; margin-bottom: 16px; opacity: 0.4;
-}
-.history-empty-text { font-size: 15px; margin-bottom: 6px; color: var(--text-mid); }
-.history-empty-sub { font-size: 13px; }
-
-.history-list { display: flex; flex-direction: column; gap: 14px; }
-.history-item {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px; overflow: hidden;
-  transition: border-color 0.2s;
-}
-.history-item:hover { border-color: rgba(192,57,43,0.2); }
-.history-item-header {
-  padding: 18px 22px;
-  display: flex; align-items: center;
-  justify-content: space-between; flex-wrap: wrap; gap: 12px;
-  cursor: pointer; user-select: none;
-}
-.history-item-header:hover .history-toggle { color: var(--text); }
-.history-meta { display: flex; flex-direction: column; gap: 3px; }
-.history-label {
-  font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800;
-  color: var(--text);
-}
-.history-date { font-size: 12px; color: var(--text-dim); }
-.history-actions { display: flex; align-items: center; gap: 8px; }
-.history-toggle { color: var(--text-dim); font-size: 18px; transition: transform 0.2s, color 0.2s; }
-.history-toggle.open { transform: rotate(180deg); }
-
-.history-body {
-  border-top: 1px solid var(--border); padding: 20px 22px;
-  display: none;
-}
-.history-body.visible { display: block; animation: fadeUp 0.2s ease; }
-.history-preview {
-  font-family: 'DM Sans', monospace; font-size: 12px;
-  color: var(--text-dim); line-height: 1.8;
-  white-space: pre-wrap;
-  max-height: 300px; overflow-y: auto;
-  background: rgba(255,255,255,0.02);
-  border: 1px solid var(--border);
-  border-radius: 10px; padding: 16px;
-}
-
-/* ── ADM BADGE ── */
-.adm-badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  background: rgba(192,57,43,0.15); border: 1px solid rgba(192,57,43,0.35);
-  padding: 3px 10px; border-radius: 20px; margin-left: 10px;
-  font-size: 10px; color: var(--red2); font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.1em; vertical-align: middle;
-}
-
-/* ── MEMBER PANEL ── */
-.member-hero {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 20px; padding: 32px; margin-bottom: 28px;
-  position: relative; overflow: hidden;
-}
-.member-hero::before {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 0% 50%, rgba(192,57,43,0.06) 0%, transparent 60%);
-  pointer-events: none;
-}
-.member-hero-content { position: relative; display: flex; align-items: center; gap: 20px; }
-.member-avatar-big {
-  width: 64px; height: 64px; border-radius: 16px; flex-shrink: 0;
-  background: linear-gradient(135deg, var(--red), var(--gold));
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; color: white;
-  box-shadow: 0 8px 28px rgba(192,57,43,0.35);
-}
-.member-info h2 {
-  font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 800;
-  color: var(--text); letter-spacing: -0.01em; margin-bottom: 4px;
-}
-.member-info p { font-size: 13px; color: var(--text-dim); margin-bottom: 10px; }
-.instr-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: rgba(212,168,83,0.1); border: 1px solid rgba(212,168,83,0.25);
-  padding: 4px 12px; border-radius: 20px;
-  font-size: 12px; color: var(--gold2); font-weight: 600;
-}
-.member-summary-bar {
-  display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap;
-}
-.summary-item {
-  flex: 1; min-width: 110px;
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 14px; padding: 20px 22px;
-  display: flex; flex-direction: column; gap: 5px;
-}
-.summary-val {
-  font-family: 'Syne', sans-serif; font-size: 32px;
-  font-weight: 800; color: var(--gold2); line-height: 1;
-}
-.summary-label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; }
-
-.member-calendar { display: flex; flex-direction: column; gap: 14px; }
-.member-sunday-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px; overflow: hidden;
-  transition: border-color 0.2s;
-}
-.member-sunday-card:hover { border-color: rgba(192,57,43,0.2); }
-.member-sunday-header {
-  padding: 16px 22px; display: flex; align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--border);
-  background: rgba(6,6,14,0.5);
-}
-.member-sunday-header .date {
-  font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; color: var(--text);
-}
-.member-sunday-header .day-num { font-size: 12px; color: var(--text-dim); }
-.member-sunday-body { padding: 16px 22px; display: flex; flex-direction: column; gap: 10px; }
-.cult-slot {
-  display: flex; align-items: center; gap: 14px;
-  padding: 12px 16px; border-radius: 12px;
-  border: 1px solid var(--border);
-  background: rgba(255,255,255,0.02);
-}
-.cult-slot-icon { font-size: 20px; width: 28px; text-align: center; }
-.cult-slot-info { flex: 1; }
-.cult-slot-label {
-  font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
-}
-.cult-slot-label.manha { color: var(--morning); }
-.cult-slot-label.noite { color: #b57bff; }
-.cult-slot-label.unavail { color: var(--text-dim); }
-.cult-slot-status { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
-.cult-slot.unavailable { opacity: 0.4; }
-.cult-slot.assigned-manha {
-  border-color: rgba(241,194,27,0.3);
-  background: rgba(241,194,27,0.05);
-}
-.cult-slot.assigned-noite {
-  border-color: rgba(138,63,252,0.3);
-  background: rgba(138,63,252,0.05);
-}
-.cult-assigned-tag, .cult-avail-tag {
-  font-size: 10px; font-family: 'Syne', sans-serif; font-weight: 800;
-  padding: 3px 10px; border-radius: 20px; letter-spacing: 0.1em;
-}
-.cult-assigned-tag {
-  background: rgba(46,204,113,0.15); color: #2ecc71;
-  border: 1px solid rgba(46,204,113,0.3);
-}
-.cult-avail-tag {
-  background: rgba(255,255,255,0.05); color: var(--text-dim);
-  border: 1px solid var(--border);
-}
-
-/* ── MEMBER HISTORY SECTION ── */
-.member-history-list { display: flex; flex-direction: column; gap: 12px; margin-top: 24px; }
-.member-history-item {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 12px; padding: 16px 20px;
-}
-.member-history-month {
-  font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--gold2);
-  margin-bottom: 8px;
-}
-.member-history-dates { display: flex; flex-wrap: wrap; gap: 8px; }
-.date-badge {
-  display: inline-flex; align-items: center; gap: 5px;
-  background: rgba(192,57,43,0.1); border: 1px solid rgba(192,57,43,0.2);
-  padding: 4px 12px; border-radius: 20px;
-  font-size: 11px; color: var(--red2); font-weight: 600;
-}
-
-/* ── TOAST ── */
-.toast {
-  position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(20px);
-  background: rgba(12,12,24,0.95);
-  backdrop-filter: blur(20px);
-  border: 1px solid var(--border2); border-radius: 12px;
-  padding: 12px 22px; font-size: 13px; color: var(--text);
-  z-index: 9999; pointer-events: none;
-  opacity: 0; transition: all 0.28s cubic-bezier(.22,1,.36,1);
-  white-space: nowrap; font-weight: 500;
-  box-shadow: 0 16px 40px rgba(0,0,0,0.5);
-}
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* ── RESPONSIVE ── */
-@media (max-width: 600px) {
-  header { padding: 0 16px; }
-  main { padding: 0 14px 80px; }
-  .musicians-grid { grid-template-columns: 1fr; }
-  .login-card { padding: 24px 20px; }
-  .logo-img { height: 32px; }
-  .member-hero-content { flex-direction: column; align-items: flex-start; }
+/* ── APP ── */
+#appScreen{display:none;animation:fadeUp 0.4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.page-hero{padding:48px 0 36px;margin-bottom:28px;position:relative;overflow:hidden}
+.page-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent)}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.25);padding:5px 14px;border-radius:40px;margin-bottom:16px;font-size:10px;color:var(--red2);font-weight:600;text-transform:uppercase;letter-spacing:0.15em}
+.hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--red2);box-shadow:0 0 8px var(--red2)}
+.page-hero h1{font-family:'Syne',sans-serif;font-size:clamp(22px,4vw,46px);font-weight:800;line-height:1.0;letter-spacing:-0.025em;background:linear-gradient(140deg,#ffffff 0%,var(--gold2) 60%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px}
+.page-hero p{color:var(--text-dim);font-size:13px}
+.hero-glow{position:absolute;top:0;left:-100px;width:500px;height:300px;background:radial-gradient(ellipse,rgba(192,57,43,0.08) 0%,transparent 70%);pointer-events:none}
+.stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:28px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 18px;position:relative;overflow:hidden;transition:border-color 0.2s,transform 0.2s}
+.stat-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--red),var(--gold),transparent);opacity:0.6}
+.stat-val{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--gold2);line-height:1}
+.stat-label{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.12em;margin-top:5px}
+.tabs{display:flex;gap:2px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:32px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:8px 16px;border-radius:9px;cursor:pointer;border:none;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;background:none;color:var(--text-dim);transition:all 0.18s;letter-spacing:0.04em;text-transform:uppercase;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:5px;min-height:40px;position:relative}
+.tab.active{background:linear-gradient(135deg,var(--red),#8b1a14);color:white;box-shadow:0 4px 14px rgba(192,57,43,0.35)}
+.tab-badge{background:var(--red2);color:white;font-size:9px;padding:1px 5px;border-radius:10px;min-width:16px;text-align:center;line-height:1.6;font-weight:800;display:none}
+.tab-badge.visible{display:inline-block}
+.tab-content{animation:fadeUp 0.25s ease}
+.section-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--text);margin-bottom:4px}
+.section-sub{font-size:12px;color:var(--text-dim);margin-bottom:22px}
+.section-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:18px}
+.btn-primary{display:inline-flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:9px 16px;border-radius:9px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;transition:all 0.18s;white-space:nowrap;min-height:40px}
+.btn-primary:hover{background:rgba(255,255,255,0.1);transform:translateY(-1px)}
+.btn-red{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--red),#8b1a14);color:white;border:none;padding:9px 16px;border-radius:9px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;box-shadow:0 4px 18px var(--red-glow);transition:all 0.18s;white-space:nowrap;min-height:40px}
+.btn-red:hover{box-shadow:0 6px 26px rgba(192,57,43,0.5);transform:translateY(-1px)}
+.btn-gold{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--gold),#b8893c);color:#000;border:none;padding:9px 16px;border-radius:9px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;box-shadow:0 4px 18px rgba(212,168,83,0.3);transition:all 0.18s;white-space:nowrap;min-height:40px}
+.btn-gold:hover{box-shadow:0 6px 26px rgba(212,168,83,0.45);transform:translateY(-1px)}
+.btn-green{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#27ae60,#1e8449);color:white;border:none;padding:9px 16px;border-radius:9px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;box-shadow:0 4px 18px rgba(39,174,96,0.3);transition:all 0.18s;white-space:nowrap;min-height:40px}
+.btn-green:hover{box-shadow:0 6px 26px rgba(39,174,96,0.45);transform:translateY(-1px)}
+.btn-sm{display:inline-flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border2);color:var(--text-mid);padding:7px 13px;border-radius:8px;cursor:pointer;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;transition:all 0.15s;white-space:nowrap;min-height:36px}
+.btn-sm:hover{background:rgba(255,255,255,0.1);color:var(--text)}
+.btn-danger{display:inline-flex;align-items:center;gap:5px;background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.25);color:var(--red2);padding:7px 13px;border-radius:8px;cursor:pointer;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;transition:all 0.15s;white-space:nowrap;min-height:36px}
+.btn-danger:hover{background:rgba(192,57,43,0.2);border-color:var(--red)}
+.btn-outline-green{display:inline-flex;align-items:center;gap:5px;background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.25);color:var(--green);padding:7px 13px;border-radius:8px;cursor:pointer;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;transition:all 0.15s;white-space:nowrap;min-height:36px}
+.btn-outline-green:hover{background:rgba(46,204,113,0.15)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.musicians-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:12px;margin-bottom:32px}
+.musician-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px;transition:all 0.22s;position:relative;overflow:hidden}
+.musician-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(192,57,43,0.5),transparent)}
+.musician-card:hover{transform:translateY(-2px);border-color:rgba(192,57,43,0.25);box-shadow:0 10px 32px rgba(0,0,0,0.3)}
+.musician-card.submitted{border-color:rgba(46,204,113,0.15)}
+.musician-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:8px}
+.musician-header-left{display:flex;align-items:center;gap:10px;min-width:0}
+.musician-icon{width:34px;height:34px;border-radius:9px;background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.2);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.musician-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.musician-instrument{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-top:1px}
+.submitted-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(46,204,113,0.1);border:1px solid rgba(46,204,113,0.28);color:var(--green);padding:3px 8px;border-radius:20px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;flex-shrink:0}
+.pending-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(241,194,27,0.08);border:1px solid rgba(241,194,27,0.22);color:var(--morning);padding:3px 8px;border-radius:20px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;flex-shrink:0}
+.sundays-avail{display:flex;flex-direction:column;gap:7px}
+.sunday-row{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.sunday-label{font-size:11px;color:var(--text-dim);min-width:60px}
+.toggle-group{display:flex;gap:4px}
+.toggle-btn{padding:5px 10px;border-radius:20px;border:1px solid transparent;font-size:10px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;font-weight:600;min-height:30px;display:flex;align-items:center;gap:3px}
+.toggle-btn.manha{background:rgba(241,194,27,0.07);border-color:rgba(241,194,27,0.2);color:rgba(241,194,27,0.7)}
+.toggle-btn.manha.on{background:rgba(241,194,27,0.18);border-color:var(--morning);color:var(--morning);box-shadow:0 0 8px rgba(241,194,27,0.2)}
+.toggle-btn.noite{background:rgba(138,63,252,0.07);border-color:rgba(138,63,252,0.2);color:rgba(138,63,252,0.7)}
+.toggle-btn.noite.on{background:rgba(138,63,252,0.18);border-color:var(--night);color:#b57bff;box-shadow:0 0 8px rgba(138,63,252,0.2)}
+.member-hero{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:26px;margin-bottom:22px;position:relative;overflow:hidden}
+.member-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 50%,rgba(192,57,43,0.06) 0%,transparent 60%);pointer-events:none}
+.member-hero-content{position:relative;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.member-avatar-big{width:56px;height:56px;border-radius:14px;flex-shrink:0;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:white;box-shadow:0 8px 22px rgba(192,57,43,0.35)}
+.member-info h2{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--text);letter-spacing:-0.01em;margin-bottom:3px}
+.member-info p{font-size:12px;color:var(--text-dim);margin-bottom:7px}
+.instr-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(212,168,83,0.1);border:1px solid rgba(212,168,83,0.25);padding:3px 10px;border-radius:20px;font-size:11px;color:var(--gold2);font-weight:600}
+.member-summary-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:8px;margin-bottom:24px}
+.summary-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.summary-val{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--gold2);line-height:1}
+.summary-label{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em}
+.avail-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+.avail-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color 0.2s}
+.avail-card-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(6,6,14,0.5);border-bottom:1px solid var(--border)}
+.avail-card-date{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--text)}
+.avail-card-label{font-size:11px;color:var(--text-dim)}
+.avail-card-body{padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.avail-slot-btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text-dim);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;transition:all 0.18s;flex:1;min-width:100px;min-height:44px}
+.avail-slot-btn.manha-on{background:rgba(241,194,27,0.12);border-color:rgba(241,194,27,0.4);color:var(--morning)}
+.avail-slot-btn.noite-on{background:rgba(138,63,252,0.12);border-color:rgba(138,63,252,0.4);color:#b57bff}
+.btn-submit-avail{width:100%;background:linear-gradient(135deg,var(--red) 0%,#8b1a14 100%);border:none;color:white;padding:15px;border-radius:12px;cursor:pointer;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.05em;transition:all 0.2s;box-shadow:0 8px 28px rgba(192,57,43,0.35);margin-top:6px;min-height:52px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-submit-avail:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(192,57,43,0.5)}
+.btn-submit-avail:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.banner{border-radius:12px;padding:13px 16px;margin-bottom:18px;display:flex;align-items:flex-start;gap:10px;font-size:12px}
+.banner-icon{font-size:18px;flex-shrink:0;margin-top:1px}
+.banner-text strong{display:block;font-weight:700;margin-bottom:2px;font-size:13px}
+.banner.green{background:rgba(46,204,113,0.07);border:1px solid rgba(46,204,113,0.22);color:var(--green)}
+.banner.gold{background:rgba(212,168,83,0.07);border:1px solid rgba(212,168,83,0.22);color:var(--gold2)}
+.banner.red{background:rgba(192,57,43,0.07);border:1px solid rgba(192,57,43,0.18);color:var(--red2)}
+.assigned-card{background:var(--surface);border:1px solid rgba(46,204,113,0.18);border-radius:12px;overflow:hidden;margin-bottom:10px}
+.assigned-card.revoked-card{border-color:rgba(192,57,43,0.18);opacity:0.6}
+.assigned-card-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(6,6,14,0.5);border-bottom:1px solid rgba(255,255,255,0.04);flex-wrap:wrap;gap:8px}
+.assigned-date-label{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--text)}
+.assigned-service{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700}
+.assigned-service.manha{background:rgba(241,194,27,0.1);color:var(--morning);border:1px solid rgba(241,194,27,0.3)}
+.assigned-service.noite{background:rgba(138,63,252,0.1);color:#b57bff;border:1px solid rgba(138,63,252,0.3)}
+.assigned-card-body{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;flex-wrap:wrap;gap:10px}
+.assigned-instr{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500}
+.revoked-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.3);color:var(--red2);padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700}
+.no-assignment{text-align:center;padding:36px 20px;color:var(--text-dim)}
+.no-assignment-icon{font-size:36px;opacity:0.3;margin-bottom:10px}
+.schedule-container{display:flex;flex-direction:column;gap:14px}
+.schedule-sunday{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.schedule-sunday-header{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,14,0.6);border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
+.schedule-sunday-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--text)}
+.schedule-sunday-date{font-size:11px;color:var(--text-dim)}
+.schedule-services{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--border)}
+.schedule-service{padding:14px 16px}
+.schedule-service:first-child{border-right:1px solid var(--border)}
+.service-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.service-label.manha{color:var(--morning)}
+.service-label.noite{color:#b57bff}
+.instr-rows{display:flex;flex-direction:column;gap:5px}
+.instr-row{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.instr-name{font-size:10px;color:var(--text-dim);min-width:58px}
+.instr-select{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:11px;padding:4px 8px;border-radius:7px;outline:none;flex:1;min-width:0;cursor:pointer;min-height:30px}
+.instr-select:focus{border-color:rgba(192,57,43,0.5)}
+.schedule-list{display:flex;flex-direction:column;gap:12px}
+.sched-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.sched-card.approved{border-color:rgba(46,204,113,0.18)}
+.sched-card.sent-active{border-color:rgba(212,168,83,0.25)}
+.sched-card-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;cursor:pointer}
+.sched-meta{display:flex;flex-direction:column;gap:3px}
+.sched-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--text)}
+.sched-date{font-size:11px;color:var(--text-dim)}
+.sched-status{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700}
+.sched-status.approved{background:rgba(46,204,113,0.1);color:var(--green);border:1px solid rgba(46,204,113,0.28)}
+.sched-status.sent{background:rgba(212,168,83,0.1);color:var(--gold2);border:1px solid rgba(212,168,83,0.28)}
+.sched-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sched-toggle{color:var(--text-dim);font-size:18px;transition:transform 0.2s}
+.sched-toggle.open{transform:rotate(180deg)}
+.sched-body{border-top:1px solid var(--border);padding:18px 20px;display:none}
+.sched-body.visible{display:block;animation:fadeUp 0.2s ease}
+.sched-preview{font-family:'DM Mono','Courier New',monospace;font-size:12px;color:var(--text-mid);line-height:1.9;white-space:pre-wrap;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;padding:14px;max-height:260px;overflow-y:auto}
+.notif-list{display:flex;flex-direction:column;gap:10px}
+.notif-item{background:var(--surface);border:1px solid rgba(192,57,43,0.2);border-left:3px solid var(--red);border-radius:12px;padding:16px;position:relative}
+.notif-item.read{border-left-color:var(--border);border-color:var(--border);opacity:0.6}
+.notif-item-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:7px}
+.notif-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--text)}
+.notif-time{font-size:10px;color:var(--text-dim);flex-shrink:0}
+.notif-detail{font-size:12px;color:var(--text-mid);margin-bottom:10px;line-height:1.5}
+.notif-unread-dot{position:absolute;top:14px;right:14px;width:8px;height:8px;background:var(--red2);border-radius:50%;box-shadow:0 0 8px var(--red2)}
+.legend-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-dim)}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+.info-box{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:12px;color:var(--text-dim);margin-bottom:18px;line-height:1.6}
+.export-area{font-family:'DM Mono','Courier New',monospace;font-size:12px;color:var(--text-mid);line-height:1.9;white-space:pre-wrap;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:16px;min-height:100px;max-height:400px;overflow-y:auto}
+.add-form{display:none;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:20px}
+.add-form.visible{display:block}
+.form-row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+.form-group{display:flex;flex-direction:column;gap:6px;flex:1;min-width:160px}
+.form-group label{font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em}
+.form-group input,.form-group select{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 12px;border-radius:9px;outline:none;transition:border-color 0.2s;min-height:40px}
+.form-group input:focus,.form-group select:focus{border-color:rgba(192,57,43,0.5)}
+.form-group input::placeholder{color:var(--text-dim)}
+.history-empty{text-align:center;padding:56px 20px;color:var(--text-dim)}
+.history-empty-icon{font-size:42px;display:block;margin-bottom:12px;opacity:0.4}
+.history-list{display:flex;flex-direction:column;gap:10px}
+.history-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.history-item-header{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;cursor:pointer;user-select:none}
+.history-meta{display:flex;flex-direction:column;gap:2px}
+.history-label{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--text)}
+.history-date{font-size:11px;color:var(--text-dim)}
+.history-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.history-toggle{color:var(--text-dim);font-size:18px;transition:transform 0.2s}
+.history-toggle.open{transform:rotate(180deg)}
+.history-body{border-top:1px solid var(--border);padding:16px 18px;display:none}
+.history-body.visible{display:block;animation:fadeUp 0.2s ease}
+.history-preview{font-family:'DM Mono','Courier New',monospace;font-size:12px;color:var(--text-dim);line-height:1.8;white-space:pre-wrap;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:9px;padding:12px;max-height:260px;overflow-y:auto}
+.adm-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(192,57,43,0.15);border:1px solid rgba(192,57,43,0.35);padding:3px 9px;border-radius:20px;margin-left:10px;font-size:10px;color:var(--red2);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;vertical-align:middle}
+.empty-state{text-align:center;padding:56px 20px;color:var(--text-dim)}
+.empty-state-icon{font-size:44px;opacity:0.3;margin-bottom:14px}
+.empty-state p{font-size:14px;line-height:1.6}
+.empty-state small{font-size:12px;opacity:0.7}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(12,12,24,0.96);backdrop-filter:blur(20px);border:1px solid var(--border2);border-radius:12px;padding:10px 20px;font-size:13px;color:var(--text);z-index:9999;pointer-events:none;opacity:0;transition:all 0.28s cubic-bezier(.22,1,.36,1);white-space:nowrap;font-weight:500;box-shadow:0 14px 36px rgba(0,0,0,0.5);max-width:90vw;text-overflow:ellipsis;overflow:hidden}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:768px){
+  header{padding:0 14px}
+  .header-inner{height:54px;gap:8px}
+  .logo-img{height:28px}
+  .logo-desc{display:none}
+  main{padding:0 14px 80px}
+  .page-hero{padding:32px 0 24px;margin-bottom:20px}
+  .stats-bar{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:20px}
+  .tab{padding:7px 12px;font-size:10px}
+  .musicians-grid{grid-template-columns:1fr}
+  .member-summary-bar{grid-template-columns:repeat(2,1fr)}
+  .schedule-services{grid-template-columns:1fr}
+  .schedule-service:first-child{border-right:none;border-bottom:1px solid var(--border)}
+}
+@media(max-width:480px){
+  .logo-divider,.logo-sub{display:none}
+  .user-name{display:none}
+  .user-chip{padding:4px}
+  .sync-indicator span.sync-text{display:none}
+  .stats-bar{grid-template-columns:1fr 1fr}
+  .form-group{min-width:100%}
 }
 </style>
 </head>
 <body>
-
-<!-- PARALLAX SCENE -->
 <div class="parallax-scene">
   <div class="orb orb-1" id="orb1"></div>
   <div class="orb orb-2" id="orb2"></div>
@@ -812,7 +303,11 @@ main { max-width: 1400px; margin: 0 auto; padding: 0 24px 100px; position: relat
 </div>
 <div class="grain"></div>
 
-<!-- HEADER -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text" id="loadingText">Conectando…</div>
+</div>
+
 <header>
   <div class="header-inner">
     <div class="logo-area">
@@ -824,367 +319,794 @@ main { max-width: 1400px; margin: 0 auto; padding: 0 24px 100px; position: relat
       </div>
     </div>
     <div class="header-right" id="headerRight">
-      <button class="btn-login" onclick="showLoginScreen()">Entrar</button>
+      <div class="sync-indicator" id="syncIndicator" style="display:none;">
+        <div class="sync-dot"></div>
+        <span class="sync-text" id="syncText">Conectando…</span>
+      </div>
     </div>
   </div>
 </header>
 
 <main>
 
-  <!-- LOGIN SCREEN -->
-  <div id="loginScreen">
-    <div class="login-bg-text">IBMéier</div>
-    <div class="login-content">
-      <img class="login-logo-big" src="https://static.wixstatic.com/media/430a01_070855f78e42434680537abbc733ed44~mv2.png/v1/fill/w_456,h_220,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/marca_ibmeier_horizontal_original.png" alt="IBMéier" onerror="this.style.display='none'">
-      <div class="login-eyebrow">Escala Instrumental · Abril 2026</div>
-      <div class="login-title">Painel de Cultos<br>Dominicais</div>
-      <p class="login-sub">Disponibilidade e geração automática da escala dos cultos da manhã e da noite.</p>
-      <div class="login-card">
-        <div class="login-card-top-line"></div>
-        <div class="login-card-title">Acesso ao Painel</div>
-        <div class="login-card-sub">Selecione seu perfil para continuar</div>
-        <div class="login-role-tabs">
-          <button class="role-tab active" id="roleTabMember" onclick="selectRole('membro')">
-            <span class="role-icon">🎸</span>Músico
-          </button>
-          <button class="role-tab" id="roleTabAdm" onclick="selectRole('adm')">
-            <span class="role-icon">🛡</span>ADM
-          </button>
-        </div>
-        <div id="memberLoginFields">
-          <div class="login-select-wrap">
-            <select class="login-select" id="memberSelect">
-              <option value="">— Selecione seu nome —</option>
-            </select>
-            <span class="select-arrow">▼</span>
-          </div>
-        </div>
-        <div id="admLoginFields" style="display:none;">
-          <div class="login-input-wrap">
-            <input type="password" class="login-input" id="admPassword" placeholder="Senha ADM" onkeydown="if(event.key==='Enter')doLogin()">
-          </div>
-        </div>
-        <button class="btn-enter" onclick="doLogin()">Entrar no Painel →</button>
+<!-- CONFIG ERROR -->
+<div id="configError">
+  <div class="config-card">
+    <div class="config-card-top"></div>
+    <div class="config-title">⚙️ Configure o Firebase</div>
+    <div class="config-sub">O ADM precisa fazer isso uma única vez. Depois, qualquer músico abre o link e já entra diretamente.</div>
+    <div class="config-steps">
+      <div class="config-step"><div class="step-num">1</div><span>Acesse <a href="https://console.firebase.google.com" target="_blank" style="color:var(--gold2);">console.firebase.google.com</a> → crie um projeto gratuito</span></div>
+      <div class="config-step"><div class="step-num">2</div><span>Vá em <strong>Realtime Database</strong> → Criar banco → modo de teste</span></div>
+      <div class="config-step"><div class="step-num">3</div><span>Copie a URL do banco (ex: <code style="color:var(--gold2);">https://SEU-PROJETO.firebaseio.com</code>)</span></div>
+      <div class="config-step"><div class="step-num">4</div><span>Abra este arquivo HTML e substitua na linha indicada:</span></div>
+    </div>
+    <div class="config-code">const FIREBASE_URL = 'https://SEU-PROJETO-default-rtdb.firebaseio.com';</div>
+    <div style="font-size:11px;color:var(--text-dim);margin-top:16px;line-height:1.7;">Feito isso, distribua o arquivo. Qualquer celular que abrir já conecta automaticamente — sem senha, sem código de acesso.</div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-bg-text">IBMéier</div>
+  <div class="login-content">
+    <img class="login-logo-big" src="https://static.wixstatic.com/media/430a01_070855f78e42434680537abbc733ed44~mv2.png/v1/fill/w_456,h_220,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/marca_ibmeier_horizontal_original.png" alt="IBMéier" onerror="this.style.display='none'">
+    <div class="login-eyebrow">Escala Instrumental · Abril 2026</div>
+    <div class="login-title">Painel de Cultos<br>Dominicais</div>
+    <p class="login-sub">Disponibilidade e geração automática da escala dos cultos da manhã e da noite.</p>
+    <div class="login-card">
+      <div class="login-card-top-line"></div>
+      <div class="login-card-title">Acesso ao Painel</div>
+      <div class="login-card-sub">Selecione seu perfil para continuar</div>
+      <div class="login-role-tabs">
+        <button class="role-tab active" id="roleTabMember" onclick="selectRole('membro')">
+          <span class="role-icon">🎸</span>Músico
+        </button>
+        <button class="role-tab" id="roleTabAdm" onclick="selectRole('adm')">
+          <span class="role-icon">🛡</span>ADM
+        </button>
       </div>
+      <div id="memberLoginFields">
+        <div class="login-select-wrap">
+          <select class="login-select" id="memberSelect"></select>
+          <span class="select-arrow">▼</span>
+        </div>
+      </div>
+      <div id="admLoginFields" style="display:none;">
+        <div class="login-input-wrap">
+          <input type="password" class="login-input" id="admPassword" placeholder="Senha ADM" onkeydown="if(event.key==='Enter')doLogin()">
+        </div>
+      </div>
+      <button class="btn-enter" onclick="doLogin()" id="btnEnter">Entrar no Painel →</button>
     </div>
   </div>
+</div>
 
-  <!-- APP SCREEN -->
-  <div id="appScreen">
-
-    <div class="page-hero">
-      <div class="hero-glow"></div>
-      <div class="hero-eyebrow">Abril 2026</div>
-      <h1 id="appTitle">Escala Instrumental</h1>
-      <p id="appSubtitle">4 domingos · Culto da Manhã e Noite</p>
+<!-- APP -->
+<div id="appScreen">
+  <div class="page-hero">
+    <div class="hero-glow"></div>
+    <div class="hero-eyebrow">Abril 2026</div>
+    <h1 id="appTitle">Escala Instrumental</h1>
+    <p id="appSubtitle">4 domingos · Culto da Manhã e Noite</p>
+  </div>
+  <div class="stats-bar" id="statsBar"></div>
+  <div class="tabs" id="admTabs" style="display:none;">
+    <button class="tab active" onclick="switchTab('disponibilidade',this)">Disponibilidade</button>
+    <button class="tab" onclick="switchTab('escala',this)">⚡ Escala</button>
+    <button class="tab" onclick="switchTab('exportar',this)">Exportar</button>
+    <button class="tab" onclick="switchTab('historico',this)">Histórico</button>
+    <button class="tab" onclick="switchTab('aprovadas',this)">✅ Aprovadas</button>
+    <button class="tab" onclick="switchTab('enviadas',this)">📤 Enviadas</button>
+    <button class="tab" onclick="switchTab('notificacoes',this)" id="tabNotif">🔔 Alertas<span class="tab-badge" id="notifBadge"></span></button>
+  </div>
+  <div id="memberPanel" style="display:none;"></div>
+  <div id="admContent" style="display:none;">
+    <div id="tab-disponibilidade" class="tab-content">
+      <div class="section-header">
+        <div><h2 class="section-title">Disponibilidade</h2><p class="section-sub">Gerenciar disponibilidade dos músicos · Abril 2026</p></div>
+        <button class="btn-sm" onclick="toggleAddForm()">+ Adicionar Músico</button>
+      </div>
+      <div class="add-form" id="addForm">
+        <div class="form-row">
+          <div class="form-group"><label>Nome</label><input type="text" id="newName" placeholder="Nome completo"></div>
+          <div class="form-group"><label>Instrumento</label>
+            <select id="newInstr">
+              <option value="violao">🎸 Violão</option><option value="guitarra">🎸 Guitarra</option>
+              <option value="teclado">🎹 Teclado</option><option value="baixo">🎸 Baixo</option>
+              <option value="bateria">🥁 Bateria</option><option value="percussao">🥁 Percussão</option>
+              <option value="backing">🎤 Backing</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex:0;min-width:auto;"><label>&nbsp;</label><button class="btn-sm" onclick="addMusician()">Adicionar</button></div>
+        </div>
+      </div>
+      <div class="musicians-grid" id="musiciansGrid"></div>
     </div>
-
-    <div class="stats-bar" id="statsBar"></div>
-
-    <!-- ADM TABS -->
-    <div class="tabs" id="admTabs" style="display:none;">
-      <button class="tab active" onclick="switchTab('disponibilidade',this)">Disponibilidade</button>
-      <button class="tab" onclick="switchTab('escala',this)">Escala</button>
-      <button class="tab" onclick="switchTab('exportar',this)">Exportar</button>
-      <button class="tab" onclick="switchTab('historico',this)">Histórico</button>
+    <div id="tab-escala" class="tab-content" style="display:none;">
+      <div class="section-header">
+        <div><h2 class="section-title">Escala de Abril 2026</h2><p class="section-sub">Gerada com base nas disponibilidades enviadas</p></div>
+        <div class="actions" style="margin:0;">
+          <button class="btn-red" onclick="generateSchedule()">⚡ Gerar</button>
+          <button class="btn-green" onclick="approveSchedule()" id="btnApprove" style="display:none;">✅ Aprovar</button>
+        </div>
+      </div>
+      <div class="legend-bar">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--morning);"></div>Manhã</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--night);"></div>Noite</div>
+      </div>
+      <div class="info-box">Músicos não repetem instrumento na mesma semana · Revezamento automático por disponibilidade</div>
+      <div class="schedule-container" id="scheduleContainer"></div>
     </div>
-
-    <!-- MEMBER PANEL -->
-    <div id="memberPanel" style="display:none;"></div>
-
-    <!-- ADM CONTENT -->
-    <div id="admContent" style="display:none;">
-
-      <!-- TAB: DISPONIBILIDADE -->
-      <div id="tab-disponibilidade" class="tab-content">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:20px;">
-          <div>
-            <h2 class="section-title">Disponibilidade</h2>
-            <p class="section-sub">Marque os cultos que cada músico pode participar em Abril 2026</p>
-          </div>
-          <button class="btn-sm" onclick="toggleAddForm()">+ Adicionar Músico</button>
-        </div>
-        <div class="add-form" id="addForm">
-          <div class="form-row">
-            <div class="form-group">
-              <label>Nome</label>
-              <input type="text" id="newName" placeholder="Nome completo">
-            </div>
-            <div class="form-group">
-              <label>Instrumento</label>
-              <select id="newInstr">
-                <option value="violao">🎸 Violão</option>
-                <option value="guitarra">🎸 Guitarra</option>
-                <option value="teclado">🎹 Teclado</option>
-                <option value="baixo">🎸 Baixo</option>
-                <option value="bateria">🥁 Bateria</option>
-                <option value="percussao">🥁 Percussão</option>
-                <option value="backing">🎤 Backing</option>
-              </select>
-            </div>
-            <div class="form-group" style="flex:0;">
-              <label>&nbsp;</label>
-              <button class="btn-sm" onclick="addMusician()">Adicionar</button>
-            </div>
-          </div>
-        </div>
-        <div class="musicians-grid" id="musiciansGrid"></div>
+    <div id="tab-exportar" class="tab-content" style="display:none;">
+      <h2 class="section-title">Exportar Escala</h2>
+      <p class="section-sub">Gere o texto para WhatsApp</p>
+      <div class="actions">
+        <button class="btn-gold" onclick="exportSchedule()">📋 Gerar WhatsApp</button>
+        <button class="btn-primary" onclick="copyExport()">Copiar</button>
+        <button class="btn-red" onclick="saveToHistory()">Salvar Histórico</button>
       </div>
-
-      <!-- TAB: ESCALA -->
-      <div id="tab-escala" class="tab-content" style="display:none;">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:20px;">
-          <div>
-            <h2 class="section-title">Escala de Abril 2026</h2>
-            <p class="section-sub">Gerada automaticamente com revezamento balanceado</p>
-          </div>
-          <button class="btn-red" onclick="generateSchedule()">⚡ Gerar Automaticamente</button>
-        </div>
-        <div class="legend-bar">
-          <div class="legend-item"><div class="legend-dot" style="background:var(--morning);box-shadow:0 0 6px rgba(241,194,27,0.5);"></div>Manhã</div>
-          <div class="legend-item"><div class="legend-dot" style="background:var(--night);box-shadow:0 0 6px rgba(138,63,252,0.5);"></div>Noite</div>
-          <div class="legend-item" style="margin-left:auto;font-size:11px;color:var(--text-dim);">Use o select para ajuste manual</div>
-        </div>
-        <div class="info-box" style="margin-bottom:24px;">
-          <strong>Regras aplicadas:</strong> Nenhum músico repete instrumento na mesma semana (manhã + noite) · Máx. 2 domingos por instrumento no mês · Revezamento obrigatório entre músicos do mesmo instrumento
-        </div>
-        <div class="schedule-container" id="scheduleContainer"></div>
+      <div id="exportTitle" style="display:none;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">Prévia</div>
+      <div class="export-area" id="exportText"></div>
+    </div>
+    <div id="tab-historico" class="tab-content" style="display:none;">
+      <div class="section-header">
+        <div><h2 class="section-title">Histórico de Escalas</h2><p class="section-sub">Registro de escalas exportadas</p></div>
+        <button class="btn-danger" onclick="clearHistory()" id="clearHistBtn" style="display:none;">Limpar</button>
       </div>
-
-      <!-- TAB: EXPORTAR -->
-      <div id="tab-exportar" class="tab-content" style="display:none;">
-        <h2 class="section-title">Exportar Escala</h2>
-        <p class="section-sub">Gere o texto para WhatsApp e salve no histórico</p>
-        <div class="actions">
-          <button class="btn-gold" onclick="exportSchedule()">📋 Gerar Texto WhatsApp</button>
-          <button class="btn-primary" onclick="copyExport()">Copiar Texto</button>
-          <button class="btn-red" onclick="saveToHistory()">Salvar no Histórico</button>
-        </div>
-        <div id="exportTitle" style="display:none;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;">Prévia</div>
-        <div class="export-area" id="exportText"></div>
+      <div id="historyContainer"></div>
+    </div>
+    <div id="tab-aprovadas" class="tab-content" style="display:none;">
+      <div class="section-header">
+        <div><h2 class="section-title">Escalas Aprovadas</h2><p class="section-sub">Pronto para enviar aos músicos</p></div>
       </div>
-
-      <!-- TAB: HISTÓRICO -->
-      <div id="tab-historico" class="tab-content" style="display:none;">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:28px;">
-          <div>
-            <h2 class="section-title">Histórico de Escalas</h2>
-            <p class="section-sub">Registro de todas as escalas exportadas e confirmadas</p>
-          </div>
-          <button class="btn-danger" onclick="clearHistory()" id="clearHistBtn" style="display:none;">Limpar Histórico</button>
-        </div>
-        <div id="historyContainer"></div>
+      <div id="approvedContainer"></div>
+    </div>
+    <div id="tab-enviadas" class="tab-content" style="display:none;">
+      <div class="section-header">
+        <div><h2 class="section-title">Escala Ativa</h2><p class="section-sub">Escala publicada e visível para os músicos</p></div>
       </div>
-
-    </div><!-- /admContent -->
-
-  </div><!-- /appScreen -->
+      <div id="sentContainer"></div>
+    </div>
+    <div id="tab-notificacoes" class="tab-content" style="display:none;">
+      <div class="section-header">
+        <div><h2 class="section-title">Alertas de Revogação</h2><p class="section-sub">Músicos que revogaram presença</p></div>
+        <button class="btn-sm" onclick="markAllNotifRead()">Marcar todas lidas</button>
+      </div>
+      <div id="notifContainer"></div>
+    </div>
+  </div>
+</div>
 
 </main>
-
 <div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════════════════
-// CONSTANTS
-// ══════════════════════════════════════════
-const ADM_PASSWORD = 'ibmeier2026';
-const LS_SCHEDULE  = 'ibmeier_schedule_v1';
-const LS_HISTORY   = 'ibmeier_history_v1';
+// ══════════════════════════════════════════════════════════
+//  ▼ ÚNICA CONFIGURAÇÃO NECESSÁRIA — edite só esta linha ▼
+// ══════════════════════════════════════════════════════════
+const FIREBASE_URL = 'https://ibm-53e5f-default-rtdb.firebaseio.com';
+//  ex: 'https://ibmeier-escala-default-rtdb.firebaseio.com'
+// ══════════════════════════════════════════════════════════
+
+const ADM_PASSWORD  = 'ibmeier2026';
+const LS_SESSION    = 'ibm_session_v5';
+const SYNC_INTERVAL = 30000;
+const DB_PATH       = '/escala.json';
 
 const SUNDAYS = [
-  { date:'06/04', label:'1º Domingo', num:'06' },
-  { date:'13/04', label:'2º Domingo', num:'13' },
-  { date:'20/04', label:'3º Domingo', num:'20' },
-  { date:'27/04', label:'4º Domingo', num:'27' },
+  {date:'06/04',label:'1º Domingo'},
+  {date:'13/04',label:'2º Domingo'},
+  {date:'20/04',label:'3º Domingo'},
+  {date:'27/04',label:'4º Domingo'},
 ];
-
 const INSTRUMENTS = {
-  violao:    { label:'Violão',    emoji:'🎸' },
-  guitarra:  { label:'Guitarra',  emoji:'🎸' },
-  teclado:   { label:'Teclado',   emoji:'🎹' },
-  baixo:     { label:'Baixo',     emoji:'🎸' },
-  bateria:   { label:'Bateria',   emoji:'🥁' },
-  percussao: { label:'Percussão', emoji:'🥁' },
-  backing:   { label:'Backing',   emoji:'🎤' },
+  violao:   {label:'Violão',    emoji:'🎸'},
+  guitarra: {label:'Guitarra',  emoji:'🎸'},
+  teclado:  {label:'Teclado',   emoji:'🎹'},
+  baixo:    {label:'Baixo',     emoji:'🎸'},
+  bateria:  {label:'Bateria',   emoji:'🥁'},
+  percussao:{label:'Percussão', emoji:'🥁'},
+  backing:  {label:'Backing',   emoji:'🎤'},
 };
-
-let musicians = [
-  { id:1,  name:'Leo Correa',        instrument:'violao',   avail:{0:{m:true,n:true},  1:{m:false,n:false}, 2:{m:true,n:true},  3:{m:false,n:false}} },
-  { id:2,  name:'Natã',              instrument:'violao',   avail:{0:{m:false,n:false}, 1:{m:true,n:false},  2:{m:false,n:false}, 3:{m:true,n:false}}  },
-  { id:3,  name:'Bernardo',          instrument:'violao',   avail:{0:{m:false,n:true},  1:{m:false,n:true},  2:{m:false,n:true},  3:{m:false,n:true}}  },
-  { id:4,  name:'Cassio Leopoldino', instrument:'violao',   avail:{0:{m:true,n:false},  1:{m:true,n:false},  2:{m:false,n:false}, 3:{m:true,n:false}}  },
-  { id:5,  name:'Endy Viegas',       instrument:'violao',   avail:{0:{m:false,n:false}, 1:{m:false,n:true},  2:{m:false,n:true},  3:{m:false,n:true}}  },
-  { id:6,  name:'Flávio',            instrument:'guitarra', avail:{0:{m:true,n:true},   1:{m:false,n:true},  2:{m:false,n:true},  3:{m:true,n:true}}   },
-  { id:7,  name:'Adriano',           instrument:'guitarra', avail:{0:{m:true,n:false},  1:{m:true,n:false},  2:{m:false,n:false}, 3:{m:true,n:false}}  },
-  { id:8,  name:'Wellerson',         instrument:'teclado',  avail:{0:{m:true,n:false},  1:{m:true,n:false},  2:{m:true,n:false},  3:{m:true,n:false}}  },
-  { id:9,  name:'Clésio',            instrument:'teclado',  avail:{0:{m:false,n:true},  1:{m:false,n:true},  2:{m:false,n:true},  3:{m:false,n:true}}  },
-  { id:10, name:'Leandro Aguiar',    instrument:'teclado',  avail:{0:{m:true,n:false},  1:{m:false,n:false}, 2:{m:true,n:false},  3:{m:false,n:false}} },
-  { id:11, name:'Wladia Pacheco',    instrument:'teclado',  avail:{0:{m:false,n:false}, 1:{m:true,n:false},  2:{m:false,n:false}, 3:{m:true,n:false}}  },
-  { id:12, name:'Wellinton',         instrument:'teclado',  avail:{0:{m:false,n:true},  1:{m:false,n:false}, 2:{m:false,n:true},  3:{m:false,n:false}} },
-  { id:13, name:'Paulo Beco',        instrument:'baixo',    avail:{0:{m:true,n:true},   1:{m:false,n:true},  2:{m:false,n:false}, 3:{m:true,n:true}}   },
-  { id:14, name:'Gab IBM',           instrument:'baixo',    avail:{0:{m:false,n:true},  1:{m:true,n:false},  2:{m:true,n:true},   3:{m:false,n:true}}  },
-  { id:15, name:'Vinicius IBM',      instrument:'baixo',    avail:{0:{m:true,n:false},  1:{m:false,n:false}, 2:{m:true,n:false},  3:{m:false,n:false}} },
-  { id:16, name:'Rafael Naso',       instrument:'baixo',    avail:{0:{m:false,n:false}, 1:{m:true,n:true},   2:{m:false,n:false}, 3:{m:true,n:true}}   },
-  { id:17, name:'Rodrigo',           instrument:'bateria',  avail:{0:{m:true,n:false},  1:{m:true,n:false},  2:{m:false,n:false}, 3:{m:true,n:false}}  },
-  { id:18, name:'Rodrigo Serejo',    instrument:'bateria',  avail:{0:{m:false,n:true},  1:{m:false,n:true},  2:{m:true,n:true},   3:{m:false,n:true}}  },
-  { id:19, name:'Eduardo Santos',    instrument:'bateria',  avail:{0:{m:false,n:true},  1:{m:true,n:true},   2:{m:false,n:true},  3:{m:true,n:false}}  },
-  { id:20, name:'Vinícius Louzada',  instrument:'bateria',  avail:{0:{m:true,n:false},  1:{m:false,n:false}, 2:{m:true,n:false},  3:{m:false,n:false}} },
-  { id:21, name:'Nelson Fernandes',  instrument:'percussao',avail:{0:{m:true,n:false},  1:{m:true,n:false},  2:{m:false,n:false}, 3:{m:true,n:false}}  },
+const DEFAULT_MUSICIANS = [
+  {id:1, name:'Leo Correa',        instrument:'violao',   avail:{0:{m:true,n:true},  1:{m:false,n:false},2:{m:true,n:true},  3:{m:false,n:false}}},
+  {id:2, name:'Natã',              instrument:'violao',   avail:{0:{m:false,n:false},1:{m:true,n:false}, 2:{m:false,n:false},3:{m:true,n:false}}},
+  {id:3, name:'Bernardo',          instrument:'violao',   avail:{0:{m:false,n:true}, 1:{m:false,n:true}, 2:{m:false,n:true}, 3:{m:false,n:true}}},
+  {id:4, name:'Cassio Leopoldino', instrument:'violao',   avail:{0:{m:true,n:false}, 1:{m:true,n:false}, 2:{m:false,n:false},3:{m:true,n:false}}},
+  {id:5, name:'Endy Viegas',       instrument:'violao',   avail:{0:{m:false,n:false},1:{m:false,n:true}, 2:{m:false,n:true}, 3:{m:false,n:true}}},
+  {id:6, name:'Flávio',            instrument:'guitarra', avail:{0:{m:true,n:true},  1:{m:false,n:true}, 2:{m:false,n:true}, 3:{m:true,n:true}}},
+  {id:7, name:'Adriano',           instrument:'guitarra', avail:{0:{m:true,n:false}, 1:{m:true,n:false}, 2:{m:false,n:false},3:{m:true,n:false}}},
+  {id:8, name:'Wellerson',         instrument:'teclado',  avail:{0:{m:true,n:false}, 1:{m:true,n:false}, 2:{m:true,n:false}, 3:{m:true,n:false}}},
+  {id:9, name:'Clésio',            instrument:'teclado',  avail:{0:{m:false,n:true}, 1:{m:false,n:true}, 2:{m:false,n:true}, 3:{m:false,n:true}}},
+  {id:10,name:'Leandro Aguiar',    instrument:'teclado',  avail:{0:{m:true,n:false}, 1:{m:false,n:false},2:{m:true,n:false}, 3:{m:false,n:false}}},
+  {id:11,name:'Wladia Pacheco',    instrument:'teclado',  avail:{0:{m:false,n:false},1:{m:true,n:false}, 2:{m:false,n:false},3:{m:true,n:false}}},
+  {id:12,name:'Wellinton',         instrument:'teclado',  avail:{0:{m:false,n:true}, 1:{m:false,n:false},2:{m:false,n:true}, 3:{m:false,n:false}}},
+  {id:13,name:'Paulo Beco',        instrument:'baixo',    avail:{0:{m:true,n:true},  1:{m:false,n:true}, 2:{m:false,n:false},3:{m:true,n:true}}},
+  {id:14,name:'Gab IBM',           instrument:'baixo',    avail:{0:{m:false,n:true}, 1:{m:true,n:false}, 2:{m:true,n:true},  3:{m:false,n:true}}},
+  {id:15,name:'Vinicius IBM',      instrument:'baixo',    avail:{0:{m:true,n:false}, 1:{m:false,n:false},2:{m:true,n:false}, 3:{m:false,n:false}}},
+  {id:16,name:'Rafael Naso',       instrument:'baixo',    avail:{0:{m:false,n:false},1:{m:true,n:true},  2:{m:false,n:false},3:{m:true,n:true}}},
+  {id:17,name:'Rodrigo',           instrument:'bateria',  avail:{0:{m:true,n:false}, 1:{m:true,n:false}, 2:{m:false,n:false},3:{m:true,n:false}}},
+  {id:18,name:'Rodrigo Serejo',    instrument:'bateria',  avail:{0:{m:false,n:true}, 1:{m:false,n:true}, 2:{m:true,n:true},  3:{m:false,n:true}}},
+  {id:19,name:'Eduardo Santos',    instrument:'bateria',  avail:{0:{m:false,n:true}, 1:{m:true,n:true},  2:{m:false,n:true}, 3:{m:true,n:false}}},
+  {id:20,name:'Vinícius Louzada',  instrument:'bateria',  avail:{0:{m:true,n:false}, 1:{m:false,n:false},2:{m:true,n:false}, 3:{m:false,n:false}}},
+  {id:21,name:'Nelson Fernandes',  instrument:'percussao',avail:{0:{m:true,n:false}, 1:{m:true,n:false}, 2:{m:false,n:false},3:{m:true,n:false}}},
 ];
 
-let schedule     = {};
-let currentUser  = null;
-let currentRole  = null;
-let nextId       = 22;
-let selectedRole = 'membro';
+// ── STATE ──
+let appData     = null;
+let currentUser = null;
+let currentRole = null;
+let selectedRole= 'membro';
+let nextId      = 22;
+let memberPendingAvail = {};
+let syncTimer   = null;
+let saving      = false;
 
-// ══════════════════════════════════════════
-// LOCAL STORAGE HELPERS
-// ══════════════════════════════════════════
-function saveScheduleToLS() {
-  try { localStorage.setItem(LS_SCHEDULE, JSON.stringify(schedule)); } catch(e){}
-}
-function loadScheduleFromLS() {
-  try {
-    const s = localStorage.getItem(LS_SCHEDULE);
-    if (s) schedule = JSON.parse(s);
-  } catch(e){}
-}
-function loadHistory() {
-  try {
-    const h = localStorage.getItem(LS_HISTORY);
-    return h ? JSON.parse(h) : [];
-  } catch(e){ return []; }
-}
-function saveHistory(arr) {
-  try { localStorage.setItem(LS_HISTORY, JSON.stringify(arr)); } catch(e){}
+// ── SESSION (localStorage apenas para sessão) ──
+function ls(k,d=null){try{const v=localStorage.getItem(k);return v!=null?JSON.parse(v):d}catch{return d}}
+function lsW(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
+
+function emptyAppData(){
+  return {musicians:JSON.parse(JSON.stringify(DEFAULT_MUSICIANS)),schedule:{},submissions:{},approved:[],sent:null,notifications:[],revocations:{},history:[]};
 }
 
-// ══════════════════════════════════════════
-// PARALLAX
-// ══════════════════════════════════════════
-(function initParallax() {
-  const orb1 = document.getElementById('orb1');
-  const orb2 = document.getElementById('orb2');
-  const orb3 = document.getElementById('orb3');
-  let ticking = false;
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      requestAnimationFrame(() => {
-        const y = window.scrollY;
-        orb1.style.transform = `translateY(${y * 0.25}px)`;
-        orb2.style.transform = `translateY(${y * -0.15}px)`;
-        orb3.style.transform = `translateY(${y * 0.1}px) translateX(${y * 0.05}px)`;
-        ticking = false;
-      });
-      ticking = true;
-    }
+// ══════════════════════════════════════════════════════════
+//  FIREBASE REST API — simples como fetch()
+// ══════════════════════════════════════════════════════════
+async function fbRead(){
+  const r = await fetch(FIREBASE_URL + DB_PATH);
+  if(!r.ok) throw new Error('Firebase read error '+r.status);
+  const data = await r.json();
+  return data; // null se vazio
+}
+
+async function fbWrite(data){
+  const r = await fetch(FIREBASE_URL + DB_PATH, {
+    method: 'PUT',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(data)
   });
-})();
-
-// ══════════════════════════════════════════
-// MEMBER SELECT
-// ══════════════════════════════════════════
-function populateMemberSelect() {
-  const sel = document.getElementById('memberSelect');
-  sel.innerHTML = '<option value="">— Selecione seu nome —</option>';
-  [...musicians].sort((a,b) => a.name.localeCompare(b.name)).forEach(m => {
-    sel.innerHTML += `<option value="${m.id}">${m.name} (${INSTRUMENTS[m.instrument].emoji} ${INSTRUMENTS[m.instrument].label})</option>`;
-  });
+  if(!r.ok) throw new Error('Firebase write error '+r.status);
+  return await r.json();
 }
 
-// ══════════════════════════════════════════
-// ROLE + LOGIN
-// ══════════════════════════════════════════
-function selectRole(role) {
-  selectedRole = role;
-  document.getElementById('roleTabMember').classList.toggle('active', role === 'membro');
-  document.getElementById('roleTabAdm').classList.toggle('active', role === 'adm');
-  document.getElementById('memberLoginFields').style.display = role === 'membro' ? 'block' : 'none';
-  document.getElementById('admLoginFields').style.display   = role === 'adm'    ? 'block' : 'none';
+// ── SYNC UI ──
+function setSyncState(state,text){
+  const el=document.getElementById('syncIndicator');
+  const tx=document.getElementById('syncText');
+  if(el){el.className='sync-indicator '+state;}
+  if(tx)tx.textContent=text;
 }
 
-function doLogin() {
-  if (selectedRole === 'adm') {
-    if (document.getElementById('admPassword').value !== ADM_PASSWORD) {
-      showToast('Senha incorreta'); return;
+async function saveCloud(){
+  if(!appData||saving)return;
+  saving=true;setSyncState('syncing','Salvando…');
+  try{
+    await fbWrite(appData);
+    setSyncState('synced','Salvo ✓');
+    setTimeout(()=>setSyncState('synced','Sincronizado'),2000);
+  }catch(e){
+    setSyncState('error','Erro ao salvar');
+    showToast('⚠️ Erro ao salvar. Verifique a conexão.');
+    console.error(e);
+  }finally{saving=false}
+}
+
+async function loadCloud(){
+  setSyncState('syncing','Sincronizando…');
+  try{
+    const data = await fbRead();
+    if(!data){
+      // Banco vazio: inicializar com dados padrão
+      appData = emptyAppData();
+      await fbWrite(appData);
+    } else {
+      appData = data;
+      if(!appData.musicians)   appData.musicians=JSON.parse(JSON.stringify(DEFAULT_MUSICIANS));
+      if(!appData.schedule)    appData.schedule={};
+      if(!appData.submissions) appData.submissions={};
+      if(!appData.approved)    appData.approved=[];
+      if(appData.sent===undefined) appData.sent=null;
+      if(!appData.notifications)  appData.notifications=[];
+      if(!appData.revocations)    appData.revocations={};
+      if(!appData.history)        appData.history=[];
     }
-    currentUser = { name:'Administrador', role:'adm' };
-  } else {
-    const mid = document.getElementById('memberSelect').value;
-    if (!mid) { showToast('Selecione seu nome'); return; }
-    const m = musicians.find(x => x.id == mid);
-    if (!m) { showToast('Músico não encontrado'); return; }
-    currentUser = { name: m.name, role:'membro', musicianId: m.id };
+    nextId = appData.musicians.reduce((max,m)=>Math.max(max,m.id),0)+1;
+    setSyncState('synced','Sincronizado');
+    return true;
+  }catch(e){
+    setSyncState('error','Erro de conexão');
+    console.error(e);
+    return false;
   }
-  currentRole = currentUser.role;
-  enterApp();
 }
 
-function showLoginScreen() {
+function startAutoSync(){
+  stopAutoSync();
+  syncTimer = setInterval(async()=>{
+    const ok = await loadCloud();
+    if(ok && currentRole==='adm') refreshAdmView();
+    if(ok && currentRole==='membro') renderMemberPanel();
+    renderStats();
+  }, SYNC_INTERVAL);
+}
+function stopAutoSync(){if(syncTimer){clearInterval(syncTimer);syncTimer=null}}
+
+function refreshAdmView(){
+  const active=document.querySelector('#admTabs .tab.active');
+  if(!active)return;
+  const t=active.textContent.trim().toLowerCase();
+  if(t.includes('disp'))renderMusicians();
+  else if(t.includes('escala'))renderSchedule();
+  else if(t.includes('aprov'))renderApprovedSchedules();
+  else if(t.includes('envia'))renderSentSchedules();
+  else if(t.includes('alerta')||t.includes('notif')){renderNotifications();updateNotifBadge();}
+}
+
+// ══════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════
+async function init(){
+  const overlay=document.getElementById('loadingOverlay');
+
+  // Verificar se URL foi configurada
+  if(!FIREBASE_URL||FIREBASE_URL==='COLE_SUA_URL_AQUI'){
+    overlay.style.display='none';
+    document.getElementById('configError').style.display='flex';
+    return;
+  }
+
+  // Carregar dados
+  document.getElementById('loadingText').textContent='Carregando dados…';
+  const ok = await loadCloud();
+  overlay.style.display='none';
+
+  if(!ok){
+    showToast('⚠️ Sem conexão com o Firebase. Verifique a URL e a internet.');
+    document.getElementById('configError').style.display='flex';
+    return;
+  }
+
+  // Restaurar sessão
+  const session=ls(LS_SESSION);
+  if(session?.role){
+    if(session.role==='membro'){
+      const m=appData.musicians.find(x=>x.id==session.musicianId);
+      if(m){currentUser=session;currentRole='membro';enterApp();return;}
+    } else if(session.role==='adm'){
+      currentUser=session;currentRole='adm';enterApp();return;
+    }
+  }
+
+  showLoginScreen();
+}
+
+// ── LOGIN ──
+function showLoginScreen(){
   populateMemberSelect();
-  document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('appScreen').style.display   = 'none';
-  document.getElementById('headerRight').innerHTML = `<button class="btn-login" onclick="showLoginScreen()">Entrar</button>`;
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('appScreen').style.display='none';
+  document.getElementById('configError').style.display='none';
+  const hr=document.getElementById('headerRight');
+  hr.innerHTML=`<div class="sync-indicator synced" id="syncIndicator"><div class="sync-dot"></div><span class="sync-text" id="syncText">Conectado</span></div><button class="btn-login" onclick="showLoginScreen()">Entrar</button>`;
 }
 
-function logout() {
-  currentUser = null; currentRole = null;
-  document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('appScreen').style.display   = 'none';
-  document.getElementById('headerRight').innerHTML = `<button class="btn-login" onclick="showLoginScreen()">Entrar</button>`;
+function selectRole(role){
+  selectedRole=role;
+  document.getElementById('roleTabMember').classList.toggle('active',role==='membro');
+  document.getElementById('roleTabAdm').classList.toggle('active',role==='adm');
+  document.getElementById('memberLoginFields').style.display=role==='membro'?'block':'none';
+  document.getElementById('admLoginFields').style.display=role==='adm'?'block':'none';
 }
 
-function enterApp() {
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('appScreen').style.display   = 'block';
-  const isAdm = currentRole === 'adm';
-  const badge = isAdm ? '<span class="adm-badge">🛡 ADM</span>' : '';
-  document.getElementById('appTitle').innerHTML = (isAdm ? 'Painel ADM' : `Olá, ${currentUser.name}!`) + badge;
-  document.getElementById('appSubtitle').textContent = isAdm
-    ? 'Gerencie disponibilidade, escala e exportação'
-    : 'Seus cultos escalados em Abril 2026';
-  document.getElementById('headerRight').innerHTML = `
+async function doLogin(){
+  const btn=document.getElementById('btnEnter');
+  btn.disabled=true;btn.textContent='⏳ Entrando…';
+  try{
+    await loadCloud();
+    if(selectedRole==='adm'){
+      if(document.getElementById('admPassword').value!==ADM_PASSWORD){showToast('Senha incorreta');return}
+      currentUser={name:'Administrador',role:'adm'};
+    } else {
+      const mid=document.getElementById('memberSelect').value;
+      if(!mid){showToast('Selecione seu nome');return}
+      const m=appData.musicians.find(x=>x.id==mid);
+      if(!m){showToast('Músico não encontrado');return}
+      currentUser={name:m.name,role:'membro',musicianId:m.id};
+    }
+    currentRole=currentUser.role;
+    lsW(LS_SESSION,currentUser);
+    enterApp();
+  }finally{
+    btn.disabled=false;btn.textContent='Entrar no Painel →';
+  }
+}
+
+function logout(){
+  stopAutoSync();
+  currentUser=null;currentRole=null;memberPendingAvail={};
+  lsW(LS_SESSION,null);
+  showLoginScreen();
+}
+
+function enterApp(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('appScreen').style.display='block';
+  const isAdm=currentRole==='adm';
+  const badge=isAdm?'<span class="adm-badge">🛡 ADM</span>':'';
+  document.getElementById('appTitle').innerHTML=(isAdm?'Painel ADM':`Olá, ${currentUser.name}!`)+badge;
+  document.getElementById('appSubtitle').textContent=isAdm?'Gerencie disponibilidade, escala e envio':'Sua escala · Abril 2026';
+  document.getElementById('headerRight').innerHTML=`
+    <div class="sync-indicator synced" id="syncIndicator"><div class="sync-dot"></div><span class="sync-text" id="syncText">Sincronizado</span></div>
     <div class="user-chip">
       <div class="user-avatar">${currentUser.name[0].toUpperCase()}</div>
-      <span class="user-name">${currentUser.name}${isAdm ? ' 🛡' : ''}</span>
+      <span class="user-name">${currentUser.name}${isAdm?' 🛡':''}</span>
     </div>
-    <button class="btn-logout" onclick="logout()">Sair</button>
-  `;
-  if (isAdm) {
-    document.getElementById('admTabs').style.display   = 'flex';
-    document.getElementById('admContent').style.display = 'block';
-    document.getElementById('memberPanel').style.display = 'none';
-    renderAll();
+    <button class="btn-logout" onclick="logout()">Sair</button>`;
+  if(isAdm){
+    document.getElementById('admTabs').style.display='flex';
+    document.getElementById('admContent').style.display='block';
+    document.getElementById('memberPanel').style.display='none';
+    renderAll();updateNotifBadge();
   } else {
-    document.getElementById('admTabs').style.display   = 'none';
-    document.getElementById('admContent').style.display = 'none';
-    document.getElementById('memberPanel').style.display = 'block';
-    renderMemberPanel();
+    document.getElementById('admTabs').style.display='none';
+    document.getElementById('admContent').style.display='none';
+    document.getElementById('memberPanel').style.display='block';
+    initMemberPendingAvail();renderMemberPanel();
   }
   renderStats();
+  startAutoSync();
 }
 
-// ══════════════════════════════════════════
-// MEMBER PANEL
-// ══════════════════════════════════════════
-function renderMemberPanel() {
-  const mid = currentUser.musicianId;
-  const m   = musicians.find(x => x.id == mid);
-  if (!m) return;
-  const instr  = INSTRUMENTS[m.instrument];
-  const panel  = document.getElementById('memberPanel');
-  let assigned = 0, available = 0;
-  SUNDAYS.forEach((_,si) => {
-    if (m.avail[si]?.m || m.avail[si]?.n) available++;
-    ['manha','noite'].forEach(srv => {
-      const slot = srv === 'manha' ? 'm' : 'n';
-      if (m.avail[si]?.[slot] && schedule[si]?.[srv]?.[m.instrument] == m.id) assigned++;
+// ── STATS ──
+function renderStats(){
+  if(!appData)return;
+  const bar=document.getElementById('statsBar');
+  const isAdm=currentRole==='adm';
+  const subCount=Object.keys(appData.submissions).filter(id=>appData.submissions[id]?.submitted).length;
+  if(isAdm){
+    bar.innerHTML=`
+      <div class="stat-card"><div class="stat-val">${appData.musicians.length}</div><div class="stat-label">Músicos</div></div>
+      <div class="stat-card"><div class="stat-val">${subCount}</div><div class="stat-label">Disponibilidades</div></div>
+      <div class="stat-card"><div class="stat-val">${appData.approved.length}</div><div class="stat-label">Aprovadas</div></div>
+      <div class="stat-card"><div class="stat-val">${appData.sent?'✓':'—'}</div><div class="stat-label">Escala Ativa</div></div>`;
+  } else {
+    const m=appData.musicians.find(x=>x.id==currentUser?.musicianId);
+    if(!m){bar.innerHTML='';return}
+    const sub=appData.submissions[m.id];
+    let myAssigned=0;
+    if(appData.sent){SUNDAYS.forEach((_,si)=>{['manha','noite'].forEach(srv=>{if(appData.sent.schedule[si]?.[srv]?.[m.instrument]==m.id)myAssigned++})})}
+    const revocs=appData.revocations[m.id]?.length||0;
+    bar.innerHTML=`
+      <div class="stat-card"><div class="stat-val">${SUNDAYS.length}</div><div class="stat-label">Domingos</div></div>
+      <div class="stat-card"><div class="stat-val">${sub?.submitted?'✅':'—'}</div><div class="stat-label">Enviada</div></div>
+      <div class="stat-card"><div class="stat-val">${myAssigned}</div><div class="stat-label">Escalado</div></div>
+      <div class="stat-card"><div class="stat-val">${revocs}</div><div class="stat-label">Revogações</div></div>`;
+  }
+}
+
+// ── MUSICIANS GRID ──
+function renderMusicians(){
+  if(!appData)return;
+  const grid=document.getElementById('musiciansGrid');
+  if(!grid)return;
+  if(!appData.musicians.length){grid.innerHTML='<div class="empty-state"><div class="empty-state-icon">🎵</div><p>Nenhum músico cadastrado.</p></div>';return}
+  grid.innerHTML=appData.musicians.map(m=>{
+    const instr=INSTRUMENTS[m.instrument];
+    const sub=appData.submissions[m.id];
+    const badge=sub?.submitted?`<span class="submitted-badge">✅ Enviou</span>`:`<span class="pending-badge">⏳ Aguardando</span>`;
+    const rows=SUNDAYS.map((_,si)=>`
+      <div class="sunday-row">
+        <span class="sunday-label">${SUNDAYS[si].date}</span>
+        <div class="toggle-group">
+          <button class="toggle-btn manha ${m.avail[si]?.m?'on':''}" onclick="toggleAvail(${m.id},${si},'m')">☀️ M</button>
+          <button class="toggle-btn noite ${m.avail[si]?.n?'on':''}" onclick="toggleAvail(${m.id},${si},'n')">🌙 N</button>
+        </div>
+      </div>`).join('');
+    return `<div class="musician-card ${sub?.submitted?'submitted':''}">
+      <div class="musician-header">
+        <div class="musician-header-left">
+          <div class="musician-icon">${instr.emoji}</div>
+          <div><div class="musician-name">${m.name}</div><div class="musician-instrument">${instr.label}</div></div>
+        </div>${badge}
+      </div>
+      <div class="sundays-avail">${rows}</div>
+      ${sub?.submitted?`<div style="margin-top:8px;font-size:10px;color:var(--text-dim);">Enviado em ${sub.submittedAt}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function renderAll(){renderMusicians();renderSchedule();}
+
+async function toggleAvail(id,si,slot){
+  const m=appData.musicians.find(x=>x.id===id);
+  if(!m.avail[si])m.avail[si]={m:false,n:false};
+  m.avail[si][slot]=!m.avail[si][slot];
+  renderMusicians();
+  await saveCloud();
+  showToast('Disponibilidade atualizada');
+}
+
+// ── SCHEDULE ──
+function generateSchedule(){
+  appData.schedule={};
+  const usageCount={},weekUsed={};
+  SUNDAYS.forEach((_,si)=>{
+    appData.schedule[si]={manha:{},noite:{}};
+    ['manha','noite'].forEach(s=>{
+      const slot=s==='manha'?'m':'n';
+      Object.keys(INSTRUMENTS).forEach(instr=>{
+        const key=`${si}-${instr}`;
+        if(!weekUsed[key])weekUsed[key]=new Set();
+        const avail=appData.musicians.filter(m=>m.instrument===instr&&m.avail[si]?.[slot]&&!weekUsed[key].has(m.id));
+        if(!avail.length)return;
+        avail.sort((a,b)=>(usageCount[a.id]||0)-(usageCount[b.id]||0));
+        const chosen=avail[0];
+        appData.schedule[si][s][instr]=chosen.id;
+        weekUsed[key].add(chosen.id);
+        usageCount[chosen.id]=(usageCount[chosen.id]||0)+1;
+      });
     });
   });
+  renderSchedule();renderStats();
+  const btnApprove=document.getElementById('btnApprove');
+  if(btnApprove)btnApprove.style.display='inline-flex';
+  saveCloud();
+  showToast('Escala gerada! Revise e clique em Aprovar.');
+}
 
-  let html = `
+function renderSchedule(){
+  const container=document.getElementById('scheduleContainer');
+  if(!container||!appData)return;
+  if(!Object.keys(appData.schedule).length){
+    container.innerHTML=`<div class="empty-state"><div class="empty-state-icon">📅</div><p>Nenhuma escala gerada.<br><small>Clique em "Gerar".</small></p></div>`;return;
+  }
+  container.innerHTML=SUNDAYS.map((_,si)=>{
+    const services=['manha','noite'].map(s=>{
+      const isM=s==='manha';
+      const instrRows=Object.keys(INSTRUMENTS).map(instr=>{
+        if(!appData.musicians.some(m=>m.instrument===instr))return'';
+        const mid=appData.schedule[si]?.[s]?.[instr];
+        const opts=appData.musicians.filter(m=>m.instrument===instr).map(m=>`<option value="${m.id}" ${mid==m.id?'selected':''}>${m.name}</option>`).join('');
+        return `<div class="instr-row"><span class="instr-name">${INSTRUMENTS[instr].label}</span>
+          <select class="instr-select" onchange="manualAssign(${si},'${s}','${instr}',this.value)">
+            <option value="">— vago —</option>${opts}
+          </select></div>`;
+      }).filter(Boolean).join('');
+      return `<div class="schedule-service"><div class="service-label ${s}">${isM?'☀️ Manhã':'🌙 Noite'}</div><div class="instr-rows">${instrRows}</div></div>`;
+    }).join('');
+    return `<div class="schedule-sunday">
+      <div class="schedule-sunday-header"><span class="schedule-sunday-title">${SUNDAYS[si].label}</span><span class="schedule-sunday-date">${SUNDAYS[si].date}/2026</span></div>
+      <div class="schedule-services">${services}</div>
+    </div>`;
+  }).join('');
+}
+
+async function manualAssign(si,service,instr,val){
+  if(!appData.schedule[si])appData.schedule[si]={manha:{},noite:{}};
+  appData.schedule[si][service][instr]=val?parseInt(val):null;
+  await saveCloud();showToast('Ajuste salvo');
+}
+
+async function approveSchedule(){
+  if(!Object.keys(appData.schedule).length){showToast('Gere a escala antes de aprovar');return}
+  if(!confirm('Aprovar esta escala?'))return;
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  appData.approved.unshift({id:now.getTime(),label:'Escala Abril 2026',approvedAt:dateStr,schedule:JSON.parse(JSON.stringify(appData.schedule)),sent:false,whatsappText:buildWhatsappText()});
+  document.getElementById('btnApprove').style.display='none';
+  await saveCloud();renderStats();
+  showToast('✅ Escala aprovada!');
+  switchTab('aprovadas',document.querySelectorAll('#admTabs .tab')[4]);
+}
+
+function renderApprovedSchedules(){
+  const c=document.getElementById('approvedContainer');if(!c)return;
+  if(!appData.approved.length){c.innerHTML=`<div class="empty-state"><div class="empty-state-icon">✅</div><p>Nenhuma escala aprovada.</p></div>`;return}
+  c.innerHTML=`<div class="schedule-list">${appData.approved.map((a,idx)=>`
+    <div class="sched-card ${a.sent?'':'approved'}">
+      <div class="sched-card-header" onclick="toggleSchedCard('appr',${idx})">
+        <div class="sched-meta"><div class="sched-title">${a.label}</div><div class="sched-date">Aprovada em ${a.approvedAt}</div></div>
+        <div class="sched-actions">
+          <span class="sched-status ${a.sent?'sent':'approved'}">${a.sent?'📤 Enviada':'✅ Aprovada'}</span>
+          ${!a.sent?`<button class="btn-green" onclick="event.stopPropagation();sendScheduleToAll(${idx})">📤 Enviar a Todos</button>`:''}
+          <span class="sched-toggle" id="apprToggle-${idx}">▾</span>
+        </div>
+      </div>
+      <div class="sched-body" id="apprBody-${idx}"><div class="sched-preview">${a.whatsappText||''}</div></div>
+    </div>`).join('')}</div>`;
+}
+
+function toggleSchedCard(prefix,idx){
+  const body=document.getElementById(`${prefix}Body-${idx}`);
+  const toggle=document.getElementById(`${prefix}Toggle-${idx}`);
+  if(!body)return;
+  const open=body.classList.contains('visible');
+  body.classList.toggle('visible',!open);
+  if(toggle)toggle.classList.toggle('open',!open);
+}
+
+async function sendScheduleToAll(idx){
+  const entry=appData.approved[idx];
+  if(!entry)return;
+  if(!confirm(`Enviar "${entry.label}" para todos os músicos?`))return;
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  appData.sent={id:now.getTime(),label:entry.label,approvedAt:entry.approvedAt,sentAt:dateStr,schedule:JSON.parse(JSON.stringify(entry.schedule)),whatsappText:entry.whatsappText};
+  appData.approved[idx].sent=true;appData.approved[idx].sentAt=dateStr;
+  appData.revocations={};
+  await saveCloud();renderStats();
+  showToast('📤 Escala enviada!');
+  switchTab('enviadas',document.querySelectorAll('#admTabs .tab')[5]);
+}
+
+function renderSentSchedules(){
+  const c=document.getElementById('sentContainer');if(!c)return;
+  if(!appData.sent){c.innerHTML=`<div class="empty-state"><div class="empty-state-icon">📤</div><p>Nenhuma escala enviada.</p></div>`;return}
+  const revocs=appData.revocations||{};
+  let revokedLines='';let hasRevocs=false;
+  Object.keys(revocs).forEach(mid=>{
+    const m=appData.musicians.find(x=>x.id==mid);if(!m)return;
+    revocs[mid].forEach(r=>{
+      hasRevocs=true;
+      revokedLines+=`<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);">
+        <span>⚠️</span><span style="font-size:12px;color:var(--text-mid);">${m.name} · ${SUNDAYS[r.sundayIdx].label} · ${r.service==='manha'?'☀️ Manhã':'🌙 Noite'} <span style="color:var(--red2);font-weight:700;">— Revogado</span></span></div>`;
+    });
+  });
+  c.innerHTML=`<div class="schedule-list"><div class="sched-card sent-active">
+    <div class="sched-card-header" onclick="toggleSchedCard('sent',0)">
+      <div class="sched-meta"><div class="sched-title">${appData.sent.label}</div><div class="sched-date">Enviada em ${appData.sent.sentAt}</div></div>
+      <div class="sched-actions">
+        <span class="sched-status sent">📤 Ativa</span>
+        <button class="btn-danger" onclick="event.stopPropagation();revokeEntireSchedule()">Revogar</button>
+        <span class="sched-toggle" id="sentToggle-0">▾</span>
+      </div>
+    </div>
+    <div class="sched-body" id="sentBody-0">
+      ${hasRevocs?`<div style="margin-bottom:14px;"><div style="font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:var(--red2);text-transform:uppercase;margin-bottom:6px;">⚠️ Revogações</div>${revokedLines}</div>`:''}
+      <div class="sched-preview">${appData.sent.whatsappText||''}</div>
+    </div>
+  </div></div>`;
+}
+
+async function revokeEntireSchedule(){
+  if(!confirm('Revogar a escala ativa?'))return;
+  appData.sent=null;appData.revocations={};
+  await saveCloud();renderStats();renderSentSchedules();showToast('Escala revogada.');
+}
+
+// ── NOTIFICATIONS ──
+function renderNotifications(){
+  const c=document.getElementById('notifContainer');if(!c)return;
+  const notifs=appData.notifications||[];
+  if(!notifs.length){c.innerHTML=`<div class="empty-state"><div class="empty-state-icon">🔔</div><p>Nenhum alerta.</p></div>`;return}
+  c.innerHTML=`<div class="notif-list">${notifs.map((n,idx)=>`
+    <div class="notif-item ${n.read?'read':''}">
+      ${!n.read?'<div class="notif-unread-dot"></div>':''}
+      <div class="notif-item-header"><div class="notif-name">${n.musicianName}</div><div class="notif-time">${n.revokedAt}</div></div>
+      <div class="notif-detail">Revogou no <strong>${n.sundayLabel} (${n.sundayDate})</strong> — ${n.service==='manha'?'☀️ Manhã':'🌙 Noite'}</div>
+      <div>${!n.read?`<button class="btn-outline-green" onclick="markNotifRead(${idx})">✓ Marcar lida</button>`:'<span style="font-size:11px;color:var(--text-dim);">✓ Lida</span>'}</div>
+    </div>`).join('')}</div>`;
+}
+
+async function markNotifRead(idx){if(appData.notifications[idx])appData.notifications[idx].read=true;await saveCloud();renderNotifications();updateNotifBadge();}
+async function markAllNotifRead(){(appData.notifications||[]).forEach(n=>n.read=true);await saveCloud();renderNotifications();updateNotifBadge();}
+function updateNotifBadge(){const badge=document.getElementById('notifBadge');if(!badge)return;const count=(appData?.notifications||[]).filter(n=>!n.read).length;badge.textContent=count;badge.classList.toggle('visible',count>0);}
+
+// ── EXPORT / HISTORY ──
+function buildWhatsappText(){
+  let text=`🎵 *Escala Instrumental – Abril 2026*\n✝️ Igreja Batista do Méier\n\n`;
+  SUNDAYS.forEach((sunday,si)=>{
+    text+=`🔹 *${sunday.label} | ${sunday.date}/2026*\n`;
+    ['manha','noite'].forEach(s=>{
+      text+=s==='manha'?`☀️ *Manhã*\n`:`🌙 *Noite*\n`;
+      const service=appData.schedule[si]?.[s]||{};
+      Object.keys(INSTRUMENTS).forEach(instr=>{
+        if(!appData.musicians.some(m=>m.instrument===instr))return;
+        const mid=service[instr];
+        const m=mid?appData.musicians.find(x=>x.id==mid):null;
+        text+=`${INSTRUMENTS[instr].label}: ${m?m.name:'—'}\n`;
+      });
+      text+=`\n`;
+    });
+  });
+  return text;
+}
+
+function exportSchedule(){const text=buildWhatsappText();const el=document.getElementById('exportText');el.textContent=text;el.classList.add('visible');document.getElementById('exportTitle').style.display='block';showToast('Texto gerado');}
+function copyExport(){const text=document.getElementById('exportText').textContent;if(!text){showToast('Gere o texto primeiro');return}navigator.clipboard.writeText(text).then(()=>showToast('Copiado!'));}
+async function saveToHistory(){
+  if(!Object.keys(appData.schedule).length){showToast('Gere a escala antes de salvar');return}
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  appData.history.unshift({id:now.getTime(),label:'Escala Abril 2026',createdAt:dateStr,whatsappText:buildWhatsappText()});
+  await saveCloud();showToast('Salvo no histórico');
+}
+
+function renderHistory(){
+  const c=document.getElementById('historyContainer');
+  const clearBtn=document.getElementById('clearHistBtn');
+  if(!c)return;
+  const h=appData.history||[];
+  if(!h.length){c.innerHTML=`<div class="history-empty"><span class="history-empty-icon">📂</span><div>Nenhuma escala salva</div></div>`;if(clearBtn)clearBtn.style.display='none';return}
+  if(clearBtn)clearBtn.style.display='inline-flex';
+  c.innerHTML=`<div class="history-list">${h.map((entry,idx)=>`
+    <div class="history-item">
+      <div class="history-item-header" onclick="toggleHistoryItem(${idx})">
+        <div class="history-meta"><div class="history-label">${entry.label}</div><div class="history-date">Salvo em ${entry.createdAt}</div></div>
+        <div class="history-actions">
+          <button class="btn-sm" onclick="event.stopPropagation();copyHistoryItem(${idx})">Copiar</button>
+          <button class="btn-danger" onclick="event.stopPropagation();deleteHistoryItem(${idx})">Excluir</button>
+          <span class="history-toggle" id="histToggle-${idx}">▾</span>
+        </div>
+      </div>
+      <div class="history-body" id="histBody-${idx}"><div class="history-preview">${entry.whatsappText}</div></div>
+    </div>`).join('')}</div>`;
+}
+
+function toggleHistoryItem(idx){
+  const body=document.getElementById(`histBody-${idx}`);
+  const toggle=document.getElementById(`histToggle-${idx}`);
+  if(!body)return;
+  const open=body.classList.contains('visible');
+  body.classList.toggle('visible',!open);
+  if(toggle)toggle.classList.toggle('open',!open);
+}
+function copyHistoryItem(idx){navigator.clipboard.writeText(appData.history[idx].whatsappText).then(()=>showToast('Copiado!'));}
+async function deleteHistoryItem(idx){appData.history.splice(idx,1);await saveCloud();renderHistory();showToast('Removido');}
+async function clearHistory(){if(!confirm('Limpar todo o histórico?'))return;appData.history=[];await saveCloud();renderHistory();showToast('Histórico limpo');}
+
+// ── ADD MUSICIAN ──
+function toggleAddForm(){document.getElementById('addForm').classList.toggle('visible')}
+async function addMusician(){
+  const name=document.getElementById('newName').value.trim();
+  const instr=document.getElementById('newInstr').value;
+  if(!name){showToast('Digite o nome');return}
+  const avail={};SUNDAYS.forEach((_,i)=>avail[i]={m:false,n:false});
+  appData.musicians.push({id:nextId++,name,instrument:instr,avail});
+  document.getElementById('newName').value='';
+  populateMemberSelect();renderAll();
+  await saveCloud();showToast('Músico adicionado');
+}
+
+// ── MEMBER PANEL ──
+function initMemberPendingAvail(){
+  const m=appData.musicians.find(x=>x.id==currentUser.musicianId);
+  if(!m)return;
+  const sub=appData.submissions[m.id];
+  memberPendingAvail={};
+  SUNDAYS.forEach((_,i)=>{
+    memberPendingAvail[i]={
+      m:sub?.submitted?(sub.days[i]?.m||false):(m.avail[i]?.m||false),
+      n:sub?.submitted?(sub.days[i]?.n||false):(m.avail[i]?.n||false),
+    };
+  });
+}
+
+function toggleMemberAvail(si,slot){
+  if(!memberPendingAvail[si])memberPendingAvail[si]={m:false,n:false};
+  memberPendingAvail[si][slot]=!memberPendingAvail[si][slot];
+  renderMemberAvailabilitySelector();
+}
+
+async function submitAvailability(){
+  const m=appData.musicians.find(x=>x.id==currentUser.musicianId);
+  if(!m)return;
+  SUNDAYS.forEach((_,i)=>{m.avail[i]={m:memberPendingAvail[i]?.m||false,n:memberPendingAvail[i]?.n||false}});
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  appData.submissions[m.id]={submitted:true,submittedAt:dateStr,days:JSON.parse(JSON.stringify(memberPendingAvail))};
+  await saveCloud();renderMemberPanel();renderStats();showToast('✅ Disponibilidade enviada!');
+}
+
+function renderMemberPanel(){
+  const mid=currentUser.musicianId;
+  const m=appData.musicians.find(x=>x.id==mid);
+  if(!m){document.getElementById('memberPanel').innerHTML='<div class="empty-state"><p>Músico não encontrado.</p></div>';return}
+  const instr=INSTRUMENTS[m.instrument];
+  const sub=appData.submissions[m.id];
+  let html=`
     <div class="member-hero">
       <div class="member-hero-content">
         <div class="member-avatar-big">${m.name[0].toUpperCase()}</div>
@@ -1195,442 +1117,124 @@ function renderMemberPanel() {
         </div>
       </div>
     </div>
-    <div class="member-summary-bar">
-      <div class="summary-item"><span class="summary-val">${SUNDAYS.length}</span><span class="summary-label">Domingos no Mês</span></div>
-      <div class="summary-item"><span class="summary-val">${available}</span><span class="summary-label">Disponível</span></div>
-      <div class="summary-item"><span class="summary-val" style="color:var(--red2);">${assigned}</span><span class="summary-label">Escalado</span></div>
-    </div>
-    <h2 class="section-title" style="margin-bottom:18px;">Domingos de Abril</h2>
-    <div class="member-calendar">
-  `;
+    <div class="member-summary-bar" id="memberSummary"></div>`;
+  if(appData.sent){html+=renderMemberAssignedView(m);}
+  else{html+=renderMemberAvailabilityView(m,sub);}
+  document.getElementById('memberPanel').innerHTML=html;
+  renderStats();
+  if(!appData.sent){renderMemberAvailabilitySelector();}
+}
 
-  SUNDAYS.forEach((sun, si) => {
-    const avM = m.avail[si]?.m;
-    const avN = m.avail[si]?.n;
-    const assignedM = schedule[si]?.manha?.[m.instrument] == m.id;
-    const assignedN = schedule[si]?.noite?.[m.instrument]  == m.id;
-    const hasSchedule = Object.keys(schedule).length > 0;
+function renderMemberAvailabilityView(m,sub){
+  const hasSub=sub?.submitted;
+  let html='';
+  if(hasSub){html+=`<div class="banner green"><div class="banner-icon">✅</div><div class="banner-text"><strong>Disponibilidade enviada!</strong><span>Enviado em ${sub.submittedAt} · Aguardando o ADM publicar a escala.</span></div></div>`;}
+  else{html+=`<div class="banner red"><div class="banner-icon">📋</div><div class="banner-text"><strong>Selecione sua disponibilidade</strong><span>Marque os cultos que você pode participar e clique em Enviar.</span></div></div>`;}
+  html+=`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
+    <h2 class="section-title">Minha Disponibilidade</h2>
+    ${hasSub?`<button class="btn-sm" onclick="initMemberPendingAvail();renderMemberAvailabilitySelector();showToast('Edite e envie novamente')">✏️ Editar</button>`:''}
+  </div>
+  <div class="avail-cards" id="availCardsContainer"></div>
+  <button class="btn-submit-avail" onclick="submitAvailability()">${hasSub?'🔄 Reatualizar':'📤 Enviar Disponibilidade'}</button>`;
+  return html;
+}
 
-    const buildSlot = (period, isAvail, isAssigned) => {
-      const isManha = period === 'manha';
-      const icon    = isManha ? '☀️' : '🌙';
-      const label   = isManha ? 'Manhã' : 'Noite';
-      const cls     = isManha ? 'manha' : 'noite';
-      if (!isAvail) return `
-        <div class="cult-slot unavailable">
-          <span class="cult-slot-icon">—</span>
-          <div class="cult-slot-info">
-            <div class="cult-slot-label unavail">${icon} ${label}</div>
-            <div class="cult-slot-status">Indisponível</div>
+function renderMemberAvailabilitySelector(){
+  const c=document.getElementById('availCardsContainer');if(!c)return;
+  c.innerHTML=SUNDAYS.map((_,si)=>{
+    const mOn=memberPendingAvail[si]?.m,nOn=memberPendingAvail[si]?.n;
+    return `<div class="avail-card">
+      <div class="avail-card-header"><span class="avail-card-date">Dom ${SUNDAYS[si].date}/2026</span><span class="avail-card-label">${SUNDAYS[si].label}</span></div>
+      <div class="avail-card-body">
+        <button class="avail-slot-btn ${mOn?'manha-on':''}" onclick="toggleMemberAvail(${si},'m')">☀️ Manhã ${mOn?'✓':''}</button>
+        <button class="avail-slot-btn ${nOn?'noite-on':''}" onclick="toggleMemberAvail(${si},'n')">🌙 Noite ${nOn?'✓':''}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderMemberAssignedView(m){
+  const revocs=appData.revocations[m.id]||[];
+  let hasAny=false;
+  let html=`<div class="banner gold"><div class="banner-icon">📤</div><div class="banner-text"><strong>Escala publicada!</strong><span>Enviada em ${appData.sent.sentAt}</span></div></div>`;
+  html+=`<h2 class="section-title" style="margin-bottom:16px;">Meus Cultos Escalados</h2>`;
+  let cards='';
+  SUNDAYS.forEach((_,si)=>{
+    ['manha','noite'].forEach(service=>{
+      if(appData.sent.schedule[si]?.[service]?.[m.instrument]==m.id){
+        hasAny=true;
+        const isRevoked=revocs.some(r=>r.sundayIdx==si&&r.service===service);
+        cards+=`<div class="assigned-card ${isRevoked?'revoked-card':''}">
+          <div class="assigned-card-header">
+            <div class="assigned-date-label">${SUNDAYS[si].label} · ${SUNDAYS[si].date}/2026</div>
+            <span class="assigned-service ${service}">${service==='manha'?'☀️ Manhã':'🌙 Noite'}</span>
+          </div>
+          <div class="assigned-card-body">
+            <div class="assigned-instr">${INSTRUMENTS[m.instrument].emoji} ${INSTRUMENTS[m.instrument].label}</div>
+            ${isRevoked?`<span class="revoked-tag">⚠️ Revogado</span>`:`<button class="btn-danger" onclick="revokeAssignment(${si},'${service}')">Revogar Presença</button>`}
           </div>
         </div>`;
-      if (hasSchedule && isAssigned) return `
-        <div class="cult-slot assigned-${cls}">
-          <span class="cult-slot-icon">${icon}</span>
-          <div class="cult-slot-info">
-            <div class="cult-slot-label ${cls}">${label}</div>
-            <div class="cult-slot-status">Você está escalado!</div>
-          </div>
-          <span class="cult-assigned-tag">ESCALADO</span>
-        </div>`;
-      return `
-        <div class="cult-slot available-${cls}">
-          <span class="cult-slot-icon">${icon}</span>
-          <div class="cult-slot-info">
-            <div class="cult-slot-label ${cls}">${label}</div>
-            <div class="cult-slot-status">${hasSchedule ? 'Disponível / não escalado' : 'Aguardando escala'}</div>
-          </div>
-          <span class="cult-avail-tag">LIVRE</span>
-        </div>`;
-    };
-
-    html += `
-      <div class="member-sunday-card">
-        <div class="member-sunday-header">
-          <div class="date">${sun.label}</div>
-          <div class="day-num">Domingo, ${sun.date}/2026</div>
-        </div>
-        <div class="member-sunday-body">
-          ${buildSlot('manha', avM, assignedM)}
-          ${buildSlot('noite', avN, assignedN)}
-        </div>
-      </div>`;
-  });
-
-  html += `</div>`;
-
-  // Member history section
-  const history = loadHistory();
-  if (history.length > 0) {
-    html += `<h2 class="section-title" style="margin:36px 0 16px;">Histórico de Escalas Anteriores</h2>`;
-    html += `<div class="member-history-list">`;
-    history.forEach(entry => {
-      const myDates = [];
-      SUNDAYS.forEach((sun, si) => {
-        ['manha','noite'].forEach(srv => {
-          const instrKey = m.instrument;
-          const snap = entry.scheduleData;
-          if (snap[si]?.[srv]?.[instrKey] == m.id) {
-            const srvLabel = srv === 'manha' ? 'Manhã' : 'Noite';
-            myDates.push(`${sun.date} ${srvLabel}`);
-          }
-        });
-      });
-      if (myDates.length > 0) {
-        html += `
-          <div class="member-history-item">
-            <div class="member-history-month">${entry.label}</div>
-            <div class="member-history-dates">
-              ${myDates.map(d => `<span class="date-badge">📅 ${d}</span>`).join('')}
-            </div>
-          </div>`;
       }
     });
-    html += `</div>`;
-  }
-
-  if (!hasSchedule) {
-    html += `<div class="info-box" style="margin-top:24px;"><strong>Atenção:</strong> A escala ainda não foi gerada pelo administrador.</div>`;
-  }
-
-  panel.innerHTML = html;
-  // Quick fix: hasSchedule isn't defined in outer scope after assignment
-  // Re-check
-  const hasSchNow = Object.keys(schedule).length > 0;
-  if (!hasSchNow) {
-    const note = panel.querySelector('.info-box');
-    if (note) note.style.display = 'block';
-  }
-}
-
-// ══════════════════════════════════════════
-// RENDER ADM
-// ══════════════════════════════════════════
-function renderAll() { renderStats(); renderMusicians(); renderSchedule(); }
-
-function renderStats() {
-  const byInstr = {};
-  musicians.forEach(m => { byInstr[m.instrument] = (byInstr[m.instrument]||0)+1; });
-  let assigned = 0;
-  SUNDAYS.forEach((_,si) => {
-    ['manha','noite'].forEach(s => {
-      Object.values(schedule[si]?.[s] || {}).forEach(v => { if(v) assigned++; });
-    });
   });
-  document.getElementById('statsBar').innerHTML = `
-    <div class="stat-card"><div class="stat-val">${musicians.length}</div><div class="stat-label">Músicos</div></div>
-    <div class="stat-card"><div class="stat-val">${Object.keys(byInstr).length}</div><div class="stat-label">Instrumentos</div></div>
-    <div class="stat-card"><div class="stat-val">${SUNDAYS.length}</div><div class="stat-label">Domingos</div></div>
-    <div class="stat-card"><div class="stat-val">${assigned}</div><div class="stat-label">Escalados</div></div>
-  `;
+  if(!hasAny||!cards){cards=`<div class="no-assignment"><div class="no-assignment-icon">🎵</div><p>Você não foi escalado nesta escala.</p></div>`;}
+  return html+cards;
 }
 
-function renderMusicians() {
-  const grid = document.getElementById('musiciansGrid');
-  grid.innerHTML = '';
-  musicians.forEach(m => {
-    const instr = INSTRUMENTS[m.instrument];
-    grid.innerHTML += `
-      <div class="musician-card" id="mc-${m.id}">
-        <div class="musician-header">
-          <div>
-            <div class="musician-name">${m.name}</div>
-            <div class="musician-instrument">${instr.emoji} ${instr.label}</div>
-          </div>
-          <div class="musician-icon">${instr.emoji}</div>
-        </div>
-        <div class="sundays-avail">
-          ${SUNDAYS.map((s,i) => `
-            <div class="sunday-row">
-              <span class="sunday-label">Dom ${s.date}</span>
-              <div class="toggle-group">
-                <button class="toggle-btn manha ${m.avail[i]?.m ? 'on' : ''}" onclick="toggleAvail(${m.id},${i},'m')">☀ Manhã</button>
-                <button class="toggle-btn noite ${m.avail[i]?.n ? 'on' : ''}" onclick="toggleAvail(${m.id},${i},'n')">🌙 Noite</button>
-              </div>
-            </div>`).join('')}
-        </div>
-      </div>`;
+async function revokeAssignment(sundayIdx,service){
+  const m=appData.musicians.find(x=>x.id==currentUser.musicianId);
+  if(!m)return;
+  const sunday=SUNDAYS[sundayIdx];
+  if(!confirm(`Revogar presença no ${sunday.label} (${sunday.date}) – ${service==='manha'?'Manhã':'Noite'}?\nO ADM será notificado.`))return;
+  if(!appData.revocations[m.id])appData.revocations[m.id]=[];
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  appData.revocations[m.id].push({sundayIdx,service,revokedAt:dateStr});
+  appData.notifications.unshift({id:now.getTime(),musicianId:m.id,musicianName:m.name,instrument:m.instrument,sundayLabel:sunday.label,sundayDate:sunday.date,service,revokedAt:dateStr,read:false});
+  await saveCloud();renderMemberPanel();renderStats();showToast('⚠️ Presença revogada. ADM notificado.');
+}
+
+// ── TABS ──
+function switchTab(name,btn){
+  ['disponibilidade','escala','exportar','historico','aprovadas','enviadas','notificacoes'].forEach(t=>{
+    const el=document.getElementById('tab-'+t);if(el)el.style.display='none';
+  });
+  const target=document.getElementById('tab-'+name);
+  if(target)target.style.display='block';
+  document.querySelectorAll('#admTabs .tab').forEach(t=>t.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  if(name==='historico')renderHistory();
+  if(name==='aprovadas')renderApprovedSchedules();
+  if(name==='enviadas')renderSentSchedules();
+  if(name==='notificacoes'){renderNotifications();markAllNotifRead()}
+}
+
+function populateMemberSelect(){
+  const sel=document.getElementById('memberSelect');if(!sel||!appData)return;
+  sel.innerHTML='<option value="">— Selecione seu nome —</option>';
+  [...appData.musicians].sort((a,b)=>a.name.localeCompare(b.name)).forEach(m=>{
+    sel.innerHTML+=`<option value="${m.id}">${m.name} (${INSTRUMENTS[m.instrument].emoji} ${INSTRUMENTS[m.instrument].label})</option>`;
   });
 }
 
-function renderSchedule() {
-  const container = document.getElementById('scheduleContainer');
-  const instrOrder = ['violao','guitarra','teclado','baixo','bateria','percussao','backing'];
-  container.innerHTML = '';
-  SUNDAYS.forEach((sunday, si) => {
-    const sd = schedule[si] || { manha:{}, noite:{} };
-    container.innerHTML += `
-      <div class="sunday-block">
-        <div class="sunday-block-header">
-          <div>
-            <div class="sunday-date">${sunday.label}
-              <span>Domingo, ${sunday.date}/2026</span>
-            </div>
-          </div>
-          <div class="sunday-num">${sunday.num}</div>
-        </div>
-        <div class="services-grid">
-          ${['manha','noite'].map(s => {
-            const isM   = s === 'manha';
-            const label = isM ? '☀️ Culto da Manhã' : '🌙 Culto da Noite';
-            const service = sd[s] || {};
-            return `
-              <div class="service-col">
-                <div class="service-header">
-                  <div class="service-dot ${s}"></div>
-                  <span class="service-label ${s}">${label}</span>
-                </div>
-                ${instrOrder.filter(instr => musicians.some(m=>m.instrument===instr)).map(instr => {
-                  const inI      = INSTRUMENTS[instr];
-                  const assigned = service[instr];
-                  const musician = assigned ? musicians.find(m=>m.id===assigned) : null;
-                  const available = musicians.filter(m => m.instrument===instr && m.avail[si]?.[isM?'m':'n']);
-                  return `
-                    <div class="instrument-row">
-                      <span class="instr-name"><span class="instr-emoji">${inI.emoji}</span>${inI.label}</span>
-                      <span class="musician-assigned">
-                        <select onchange="manualAssign(${si},'${s}','${instr}',this.value)">
-                          <option value="">— não definido —</option>
-                          ${available.map(m=>`<option value="${m.id}" ${musician?.id===m.id?'selected':''}>${m.name}</option>`).join('')}
-                          ${musician && !available.find(m=>m.id===musician.id) ? `<option value="${musician.id}" selected>${musician.name} ⚠️</option>` : ''}
-                        </select>
-                      </span>
-                    </div>`;
-                }).join('')}
-              </div>`;
-          }).join('')}
-        </div>
-      </div>`;
+let toastTimer=null;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  if(toastTimer)clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+// Parallax
+(function(){
+  const o1=document.getElementById('orb1'),o2=document.getElementById('orb2'),o3=document.getElementById('orb3');
+  let t=false;
+  window.addEventListener('scroll',()=>{
+    if(!t){requestAnimationFrame(()=>{const y=window.scrollY;o1.style.transform=`translateY(${y*.25}px)`;o2.style.transform=`translateY(${y*-.15}px)`;o3.style.transform=`translateY(${y*.1}px) translateX(${y*.05}px)`;t=false});t=true}
   });
-}
+})();
 
-// ══════════════════════════════════════════
-// HISTORY TAB
-// ══════════════════════════════════════════
-function renderHistory() {
-  const container = document.getElementById('historyContainer');
-  const history   = loadHistory();
-  const clearBtn  = document.getElementById('clearHistBtn');
-  if (!history.length) {
-    container.innerHTML = `
-      <div class="history-empty">
-        <span class="history-empty-icon">🗂</span>
-        <div class="history-empty-text">Nenhuma escala salva ainda</div>
-        <div class="history-empty-sub">Vá à aba Exportar e clique em "Salvar no Histórico"</div>
-      </div>`;
-    clearBtn.style.display = 'none';
-    return;
-  }
-  clearBtn.style.display = 'inline-flex';
-  container.innerHTML = `<div class="history-list">
-    ${history.map((entry, idx) => `
-      <div class="history-item">
-        <div class="history-item-header" onclick="toggleHistoryItem(${idx})">
-          <div class="history-meta">
-            <div class="history-label">${entry.label}</div>
-            <div class="history-date">Salvo em ${entry.createdAt}</div>
-          </div>
-          <div class="history-actions">
-            <button class="btn-sm" onclick="event.stopPropagation();reExport(${idx})" style="font-size:10px;">Re-exportar</button>
-            <button class="btn-danger" onclick="event.stopPropagation();deleteHistoryItem(${idx})" style="font-size:10px;">Excluir</button>
-            <span class="history-toggle" id="histToggle-${idx}">▾</span>
-          </div>
-        </div>
-        <div class="history-body" id="histBody-${idx}">
-          <div class="history-preview">${entry.whatsappText}</div>
-        </div>
-      </div>`).join('')}
-  </div>`;
-}
-
-function toggleHistoryItem(idx) {
-  const body   = document.getElementById(`histBody-${idx}`);
-  const toggle = document.getElementById(`histToggle-${idx}`);
-  const isOpen = body.classList.contains('visible');
-  body.classList.toggle('visible', !isOpen);
-  toggle.classList.toggle('open', !isOpen);
-}
-
-function reExport(idx) {
-  const history = loadHistory();
-  const entry   = history[idx];
-  if (!entry) return;
-  const el = document.getElementById('exportText');
-  el.textContent = entry.whatsappText;
-  el.classList.add('visible');
-  document.getElementById('exportTitle').style.display = 'block';
-  switchTab('exportar', document.querySelector('#admTabs .tab:nth-child(3)'));
-  showToast('Escala histórica carregada no exportar');
-}
-
-function deleteHistoryItem(idx) {
-  const history = loadHistory();
-  history.splice(idx, 1);
-  saveHistory(history);
-  renderHistory();
-  showToast('Entrada removida do histórico');
-}
-
-function clearHistory() {
-  if (!confirm('Limpar todo o histórico de escalas?')) return;
-  saveHistory([]);
-  renderHistory();
-  showToast('Histórico limpo');
-}
-
-// ══════════════════════════════════════════
-// AVAILABILITY TOGGLE
-// ══════════════════════════════════════════
-function toggleAvail(id, si, slot) {
-  const m = musicians.find(x=>x.id===id);
-  if (!m.avail[si]) m.avail[si] = {m:false,n:false};
-  m.avail[si][slot] = !m.avail[si][slot];
-  renderMusicians();
-  showToast('Disponibilidade atualizada');
-}
-
-// ══════════════════════════════════════════
-// GENERATE SCHEDULE
-// ══════════════════════════════════════════
-function generateSchedule() {
-  schedule = {};
-  const usageCount = {};
-  const weekUsed   = {};
-  SUNDAYS.forEach((_, si) => {
-    schedule[si] = { manha:{}, noite:{} };
-    ['manha','noite'].forEach(s => {
-      const isM = s === 'manha';
-      const slot = isM ? 'm' : 'n';
-      ['violao','guitarra','teclado','baixo','bateria','percussao','backing'].forEach(instr => {
-        const key = `${si}-${instr}`;
-        if (!weekUsed[key]) weekUsed[key] = new Set();
-        const available = musicians.filter(m =>
-          m.instrument === instr && m.avail[si]?.[slot] && !weekUsed[key].has(m.id)
-        );
-        if (!available.length) return;
-        available.sort((a,b) => (usageCount[a.id]||0) - (usageCount[b.id]||0));
-        const chosen = available[0];
-        schedule[si][s][instr] = chosen.id;
-        weekUsed[key].add(chosen.id);
-        usageCount[chosen.id] = (usageCount[chosen.id]||0)+1;
-      });
-    });
-  });
-  saveScheduleToLS();
-  renderSchedule();
-  renderStats();
-  showToast('Escala gerada com sucesso');
-  switchTab('escala', document.querySelector('#admTabs .tab:nth-child(2)'));
-}
-
-function manualAssign(si, service, instr, val) {
-  if (!schedule[si]) schedule[si] = { manha:{}, noite:{} };
-  if (!schedule[si][service]) schedule[si][service] = {};
-  schedule[si][service][instr] = val ? parseInt(val) : null;
-  saveScheduleToLS();
-  renderStats();
-  showToast('Ajuste manual salvo');
-}
-
-// ══════════════════════════════════════════
-// EXPORT
-// ══════════════════════════════════════════
-function buildWhatsappText() {
-  const instrOrder = ['violao','guitarra','teclado','baixo','bateria','percussao','backing'];
-  let text = `🎵 *Escala Instrumental – Abril 2026*\n`;
-  text += `✝️ Igreja Batista do Méier\n\n`;
-  SUNDAYS.forEach((sunday, si) => {
-    text += `🔹 *${sunday.label} | ${sunday.date}/2026*\n`;
-    ['manha','noite'].forEach(s => {
-      text += s === 'manha' ? `☀️ *Manhã*\n` : `🌙 *Noite*\n`;
-      const service = schedule[si]?.[s] || {};
-      instrOrder.forEach(instr => {
-        if (!musicians.some(m=>m.instrument===instr)) return;
-        const mid = service[instr];
-        const m   = mid ? musicians.find(x=>x.id===mid) : null;
-        text += `${INSTRUMENTS[instr].label}: ${m ? m.name : '—'}\n`;
-      });
-      text += `\n`;
-    });
-  });
-  return text;
-}
-
-function exportSchedule() {
-  const text = buildWhatsappText();
-  const el = document.getElementById('exportText');
-  el.textContent = text;
-  el.classList.add('visible');
-  document.getElementById('exportTitle').style.display = 'block';
-  showToast('Texto gerado');
-}
-
-function copyExport() {
-  const text = document.getElementById('exportText').textContent;
-  if (!text) { showToast('Gere o texto primeiro'); return; }
-  navigator.clipboard.writeText(text).then(() => showToast('Copiado para a área de transferência'));
-}
-
-function saveToHistory() {
-  if (!Object.keys(schedule).length) { showToast('Gere a escala antes de salvar'); return; }
-  const history = loadHistory();
-  const now     = new Date();
-  const dateStr = now.toLocaleDateString('pt-BR') + ' às ' + now.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
-  history.unshift({
-    id:           now.getTime(),
-    label:        'Escala Abril 2026',
-    createdAt:    dateStr,
-    scheduleData: JSON.parse(JSON.stringify(schedule)),
-    whatsappText: buildWhatsappText(),
-  });
-  saveHistory(history);
-  showToast('Escala salva no histórico');
-}
-
-// ══════════════════════════════════════════
-// ADD MUSICIAN
-// ══════════════════════════════════════════
-function toggleAddForm() { document.getElementById('addForm').classList.toggle('visible'); }
-function addMusician() {
-  const name  = document.getElementById('newName').value.trim();
-  const instr = document.getElementById('newInstr').value;
-  if (!name) { showToast('Digite o nome'); return; }
-  const avail = {};
-  SUNDAYS.forEach((_,i) => avail[i] = {m:false,n:false});
-  musicians.push({ id: nextId++, name, instrument: instr, avail });
-  document.getElementById('newName').value = '';
-  populateMemberSelect();
-  renderAll();
-  showToast('Músico adicionado');
-}
-
-// ══════════════════════════════════════════
-// TABS
-// ══════════════════════════════════════════
-function switchTab(name, btn) {
-  ['disponibilidade','escala','exportar','historico'].forEach(t => {
-    document.getElementById('tab-'+t).style.display = 'none';
-  });
-  document.getElementById('tab-'+name).style.display = 'block';
-  document.querySelectorAll('#admTabs .tab').forEach(t => t.classList.remove('active'));
-  if (btn) btn.classList.add('active');
-  if (name === 'historico') renderHistory();
-}
-
-// ══════════════════════════════════════════
-// TOAST
-// ══════════════════════════════════════════
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
-}
-
-// ══════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════
-loadScheduleFromLS();
-populateMemberSelect();
+window.addEventListener('DOMContentLoaded',init);
 </script>
 </body>
 </html>
