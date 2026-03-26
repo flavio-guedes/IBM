@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Escala Musical – IBMéier v9</title>
+<title>Escala Musical – IBMéier v8</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<!-- GSAP for animations -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 <style>
@@ -33,43 +34,47 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 .orb-3{width:400px;height:400px;top:40%;left:50%;background:radial-gradient(circle,rgba(212,168,83,0.06) 0%,transparent 70%)}
 .grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E")}
 
+/* ── BG PHOTO LAYERS ── */
 .bg-photo-layer{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.06}
 .bg-photo-layer img{width:100%;height:100%;object-fit:cover;mix-blend-mode:luminosity}
 
-/* HEADER */
-header{position:sticky;top:0;z-index:300;background:rgba(6,6,14,0.88);backdrop-filter:blur(28px) saturate(200%);border-bottom:1px solid var(--border);padding:0 24px;transition:box-shadow 0.3s}
+/* ── HEADER ── */
+header{position:sticky;top:0;z-index:300;background:rgba(6,6,14,0.88);backdrop-filter:blur(28px) saturate(200%);-webkit-backdrop-filter:blur(28px) saturate(200%);border-bottom:1px solid var(--border);padding:0 24px;transition:box-shadow 0.3s}
 header.scrolled{box-shadow:0 4px 40px rgba(0,0,0,0.5)}
 .header-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:62px;gap:12px}
 .logo-area{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
-.logo-img{height:34px;width:auto;object-fit:contain;flex-shrink:0}
+.logo-img{height:34px;width:auto;object-fit:contain;flex-shrink:0;transition:filter 0.3s,transform 0.3s}
 .logo-img:hover{filter:drop-shadow(0 0 12px rgba(212,168,83,0.6));transform:scale(1.04)}
 .logo-divider{width:1px;height:26px;background:var(--border2);flex-shrink:0}
 .logo-sub{display:flex;flex-direction:column;gap:1px;min-width:0}
 .logo-panel{font-family:'Syne',sans-serif;font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:0.18em;font-weight:700;white-space:nowrap}
 .logo-desc{font-size:10px;color:var(--text-dim);letter-spacing:0.04em;white-space:nowrap}
 .header-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.sync-indicator{display:flex;align-items:center;gap:6px;font-size:11px;padding:5px 10px;border-radius:20px;background:var(--surface);border:1px solid var(--border);color:var(--text-dim)}
-.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--text-dim);flex-shrink:0}
+.sync-indicator{display:flex;align-items:center;gap:6px;font-size:11px;padding:5px 10px;border-radius:20px;background:var(--surface);border:1px solid var(--border);color:var(--text-dim);transition:all 0.3s;white-space:nowrap}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--text-dim);flex-shrink:0;transition:all 0.3s}
 .sync-indicator.syncing .sync-dot{background:var(--gold2);box-shadow:0 0 8px var(--gold2);animation:pulse 1s infinite}
 .sync-indicator.synced .sync-dot{background:var(--green);box-shadow:0 0 6px var(--green)}
 .sync-indicator.error .sync-dot{background:var(--red2);box-shadow:0 0 6px var(--red2)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-.btn-login{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--red),#9a2219);color:white;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;transition:all 0.25s;box-shadow:0 0 20px var(--red-glow);white-space:nowrap}
+.btn-login{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--red),#9a2219);color:white;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;transition:all 0.25s;box-shadow:0 0 20px var(--red-glow);white-space:nowrap;min-height:38px}
 .btn-login:hover{background:linear-gradient(135deg,var(--red2),#b52e22);transform:translateY(-2px);box-shadow:0 6px 28px rgba(192,57,43,0.5)}
-.user-chip{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border2);padding:4px 12px 4px 4px;border-radius:40px}
-.user-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:white;flex-shrink:0}
+.user-chip{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border2);padding:4px 12px 4px 4px;border-radius:40px;transition:border-color 0.2s}
+.user-chip:hover{border-color:rgba(212,168,83,0.4)}
+.user-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:white;flex-shrink:0;transition:transform 0.2s}
+.user-chip:hover .user-avatar{transform:scale(1.1)}
 .user-name{font-size:12px;color:var(--text);font-weight:500;white-space:nowrap;max-width:110px;overflow:hidden;text-overflow:ellipsis}
-.btn-logout{background:none;border:1px solid var(--border);color:var(--text-dim);cursor:pointer;font-size:11px;padding:5px 10px;border-radius:6px;transition:all 0.2s}
+.btn-logout{background:none;border:1px solid var(--border);color:var(--text-dim);cursor:pointer;font-size:11px;padding:5px 10px;border-radius:6px;font-family:'DM Sans',sans-serif;transition:all 0.2s;white-space:nowrap;min-height:34px}
 .btn-logout:hover{border-color:var(--red);color:var(--red2);background:rgba(192,57,43,0.05)}
 main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-index:2}
 
-/* LOADING */
+/* ── LOADING ── */
 .loading-overlay{position:fixed;inset:0;background:rgba(6,6,14,0.97);backdrop-filter:blur(12px);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
 .loading-spinner{width:52px;height:52px;border:3px solid rgba(192,57,43,0.15);border-top-color:var(--red);border-right-color:var(--gold);border-radius:50%;animation:spin 0.9s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-text{font-family:'Syne',sans-serif;font-size:14px;color:var(--text-dim);font-weight:700;letter-spacing:0.08em}
+.loading-text{font-family:'Syne',sans-serif;font-size:14px;color:var(--text-dim);font-weight:700;letter-spacing:0.08em;animation:textPulse 1.5s ease infinite}
+@keyframes textPulse{0%,100%{opacity:0.5}50%{opacity:1}}
 
-/* CONFIG ERROR */
+/* ── CONFIG ERROR ── */
 #configError{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:88vh;text-align:center}
 .config-card{background:rgba(12,12,24,0.9);border:1px solid var(--border2);border-radius:20px;padding:36px;max-width:500px;width:100%;margin:0 auto}
 .config-card-top{height:2px;background:linear-gradient(90deg,transparent,var(--red),var(--gold),transparent);border-radius:2px;margin-bottom:28px}
@@ -78,156 +83,188 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
 .config-steps{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:left;margin-bottom:20px}
 .config-step{display:flex;gap:10px;margin-bottom:12px;font-size:12px;color:var(--text-mid);align-items:flex-start}
 .config-step:last-child{margin-bottom:0}
-.step-num{width:20px;height:20px;border-radius:50%;background:rgba(192,57,43,0.2);border:1px solid rgba(192,57,43,0.4);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:9px;font-weight:800;color:var(--red2);flex-shrink:0}
-.config-code{font-family:'DM Mono','Courier New',monospace;font-size:11px;background:rgba(212,168,83,0.08);border:1px solid rgba(212,168,83,0.2);border-radius:8px;padding:12px;color:var(--gold2);line-height:1.8}
+.step-num{width:20px;height:20px;border-radius:50%;background:rgba(192,57,43,0.2);border:1px solid rgba(192,57,43,0.4);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:9px;font-weight:800;color:var(--red2);flex-shrink:0;margin-top:1px}
+.config-code{font-family:'DM Mono','Courier New',monospace;font-size:11px;background:rgba(212,168,83,0.08);border:1px solid rgba(212,168,83,0.2);border-radius:8px;padding:12px;color:var(--gold2);line-height:1.8;margin-top:6px;word-break:break-all}
 
-/* LOGIN */
+/* ── LOGIN ── */
 #loginScreen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:88vh;text-align:center;position:relative}
 .login-bg-photo{position:absolute;inset:0;overflow:hidden;z-index:0}
 .login-bg-photo img{width:100%;height:100%;object-fit:cover;opacity:0.07;filter:grayscale(60%)}
 .login-bg-text{position:absolute;font-family:'Syne',sans-serif;font-size:clamp(60px,15vw,200px);font-weight:800;color:rgba(255,255,255,0.012);pointer-events:none;user-select:none;letter-spacing:-0.04em;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;z-index:0}
 .login-content{position:relative;z-index:1;width:100%}
-.login-logo-big{width:150px;height:auto;margin:0 auto 22px;display:block;filter:drop-shadow(0 6px 35px rgba(192,57,43,0.4))}
-.login-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--red2);margin-bottom:10px}
-.login-title{font-family:'Syne',sans-serif;font-size:clamp(22px,5vw,46px);font-weight:800;line-height:1.05;background:linear-gradient(140deg,#ffffff 0%,var(--gold2) 55%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;letter-spacing:-0.02em}
-.login-sub{color:var(--text-dim);font-size:13px;line-height:1.7;max-width:340px;margin:0 auto 32px}
-.login-card{background:rgba(12,12,24,0.82);backdrop-filter:blur(36px);border:1px solid var(--border2);border-radius:22px;padding:30px 34px;max-width:420px;margin:0 auto;box-shadow:0 40px 90px rgba(0,0,0,0.7);position:relative;overflow:hidden}
-.login-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(192,57,43,0.06) 0%,transparent 50%,rgba(212,168,83,0.04) 100%)}
+.login-logo-big{width:150px;height:auto;margin:0 auto 22px;display:block;filter:drop-shadow(0 6px 35px rgba(192,57,43,0.4)) brightness(1.1);animation:logoFloat 4s ease-in-out infinite}
+@keyframes logoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.login-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--red2);margin-bottom:10px;animation:fadeUp 0.6s ease 0.2s both}
+.login-title{font-family:'Syne',sans-serif;font-size:clamp(22px,5vw,46px);font-weight:800;line-height:1.05;background:linear-gradient(140deg,#ffffff 0%,var(--gold2) 55%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;letter-spacing:-0.02em;animation:fadeUp 0.6s ease 0.35s both}
+.login-sub{color:var(--text-dim);font-size:13px;line-height:1.7;max-width:340px;margin:0 auto 32px;animation:fadeUp 0.6s ease 0.5s both}
+.login-card{background:rgba(12,12,24,0.82);backdrop-filter:blur(36px);-webkit-backdrop-filter:blur(36px);border:1px solid var(--border2);border-radius:22px;padding:30px 34px;max-width:420px;margin:0 auto;box-shadow:0 40px 90px rgba(0,0,0,0.7);position:relative;overflow:hidden;animation:fadeUp 0.7s ease 0.6s both;transition:box-shadow 0.3s,transform 0.3s}
+.login-card:hover{box-shadow:0 48px 100px rgba(0,0,0,0.8),0 0 60px rgba(192,57,43,0.08)}
+.login-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(192,57,43,0.06) 0%,transparent 50%,rgba(212,168,83,0.04) 100%);pointer-events:none}
 .login-card-top-line{position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--red),var(--gold),transparent)}
 .login-card-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--text);margin-bottom:4px}
 .login-card-sub{font-size:12px;color:var(--text-dim);margin-bottom:20px}
 .login-role-tabs{display:flex;gap:8px;margin-bottom:18px}
-.role-tab{flex:1;padding:11px 8px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text-dim);cursor:pointer;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.25s;display:flex;flex-direction:column;align-items:center;gap:5px}
-.role-tab .role-icon{font-size:18px}
+.role-tab{flex:1;padding:11px 8px;border-radius:10px;border:1px solid var(--border);background:var(--surface);color:var(--text-dim);cursor:pointer;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;transition:all 0.25s;display:flex;flex-direction:column;align-items:center;gap:5px;min-height:44px;justify-content:center}
+.role-tab .role-icon{font-size:18px;transition:transform 0.25s}
+.role-tab:hover .role-icon{transform:scale(1.2) rotate(-5deg)}
+.role-tab:hover{background:rgba(255,255,255,0.06);border-color:var(--border2)}
 .role-tab.active{background:rgba(192,57,43,0.15);border-color:rgba(192,57,43,0.5);color:var(--gold)}
-.login-input,.login-select{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:13px 16px;border-radius:10px;outline:none;transition:border-color 0.2s,box-shadow 0.2s}
+.login-input,.login-select{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:13px 16px;border-radius:10px;outline:none;transition:border-color 0.2s,box-shadow 0.2s,background 0.2s;appearance:none;-webkit-appearance:none;min-height:48px}
 .login-input:focus,.login-select:focus{border-color:rgba(192,57,43,0.6);box-shadow:0 0 0 3px rgba(192,57,43,0.12);background:rgba(255,255,255,0.07)}
+.login-input::placeholder{color:var(--text-dim)}
 .login-input-wrap,.login-select-wrap{position:relative;margin-bottom:14px}
 .select-arrow{position:absolute;right:14px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--text-dim);font-size:10px}
-.btn-enter{width:100%;background:linear-gradient(135deg,var(--red) 0%,#8b1a14 100%);border:none;color:white;padding:15px;border-radius:10px;cursor:pointer;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.05em;transition:all 0.25s;box-shadow:0 8px 28px rgba(192,57,43,0.35);margin-top:8px}
+.btn-enter{width:100%;background:linear-gradient(135deg,var(--red) 0%,#8b1a14 100%);border:none;color:white;padding:15px;border-radius:10px;cursor:pointer;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.05em;transition:all 0.25s;box-shadow:0 8px 28px rgba(192,57,43,0.35);margin-top:8px;min-height:52px;display:flex;align-items:center;justify-content:center;gap:8px;position:relative;overflow:hidden}
+.btn-enter::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0) 100%);transform:translateX(-100%);transition:transform 0.5s}
+.btn-enter:hover::after{transform:translateX(100%)}
 .btn-enter:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(192,57,43,0.55)}
 .btn-enter:disabled{opacity:0.5;cursor:not-allowed;transform:none}
 
-/* APP */
+/* ── APP ── */
 #appScreen{display:none;animation:fadeUp 0.4s ease}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
-/* PAGE HERO */
+/* ── HERO ── */
 .page-hero{padding:56px 0 40px;margin-bottom:28px;position:relative;overflow:hidden}
 .page-hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--border2),transparent)}
 .hero-bg-photo{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden}
 .hero-bg-photo img{width:100%;height:100%;object-fit:cover;opacity:0.055;filter:grayscale(40%) blur(1px)}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.25);padding:5px 14px;border-radius:40px;margin-bottom:16px;font-size:10px;color:var(--red2);font-weight:600;text-transform:uppercase;letter-spacing:0.15em;position:relative;z-index:1}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.25);padding:5px 14px;border-radius:40px;margin-bottom:16px;font-size:10px;color:var(--red2);font-weight:600;text-transform:uppercase;letter-spacing:0.15em;position:relative;z-index:1;transition:all 0.25s}
+.hero-eyebrow:hover{background:rgba(192,57,43,0.16);border-color:rgba(192,57,43,0.4)}
 .hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--red2);box-shadow:0 0 8px var(--red2);animation:pulse 2s infinite}
 .page-hero h1{font-family:'Syne',sans-serif;font-size:clamp(22px,4vw,48px);font-weight:800;line-height:1.0;letter-spacing:-0.025em;background:linear-gradient(140deg,#ffffff 0%,var(--gold2) 60%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;position:relative;z-index:1}
 .page-hero p{color:var(--text-dim);font-size:13px;position:relative;z-index:1}
 .hero-glow{position:absolute;top:0;left:-100px;width:500px;height:300px;background:radial-gradient(ellipse,rgba(192,57,43,0.09) 0%,transparent 70%);pointer-events:none;z-index:0}
 
-/* STATS BAR */
+/* ── STATS BAR ── */
 .stats-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-bottom:28px}
-.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;position:relative;overflow:hidden;transition:all 0.3s}
-.stat-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--red),var(--gold),transparent);opacity:0.6}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px 18px;position:relative;overflow:hidden;transition:all 0.3s;cursor:default}
+.stat-card::before{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--red),var(--gold),transparent);opacity:0.6;transition:opacity 0.3s}
 .stat-card:hover{transform:translateY(-3px);border-color:rgba(212,168,83,0.25);box-shadow:0 12px 36px rgba(0,0,0,0.3)}
-.stat-val{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--gold2);line-height:1}
+.stat-card:hover::before{opacity:1}
+.stat-val{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--gold2);line-height:1;transition:transform 0.2s}
+.stat-card:hover .stat-val{transform:scale(1.05)}
 .stat-label{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.12em;margin-top:5px}
 
-/* TABS */
+/* ── TABS ── */
 .tabs{display:flex;gap:2px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:32px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
-.tab{padding:8px 16px;border-radius:9px;cursor:pointer;border:none;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;background:none;color:var(--text-dim);transition:all 0.22s;letter-spacing:0.04em;text-transform:uppercase;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:5px}
+.tab{padding:8px 16px;border-radius:9px;cursor:pointer;border:none;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;background:none;color:var(--text-dim);transition:all 0.22s;letter-spacing:0.04em;text-transform:uppercase;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:5px;min-height:40px;position:relative}
+.tab:hover:not(.active){color:var(--text);background:rgba(255,255,255,0.05)}
 .tab.active{background:linear-gradient(135deg,var(--red),#8b1a14);color:white;box-shadow:0 4px 16px rgba(192,57,43,0.38)}
-.tab-badge{background:var(--red2);color:white;font-size:9px;padding:1px 5px;border-radius:10px;min-width:16px;text-align:center;display:none}
-.tab-badge.visible{display:inline-block}
+.tab-badge{background:var(--red2);color:white;font-size:9px;padding:1px 5px;border-radius:10px;min-width:16px;text-align:center;line-height:1.6;font-weight:800;display:none}
+.tab-badge.visible{display:inline-block;animation:badgePop 0.3s ease}
+@keyframes badgePop{0%{transform:scale(0)}80%{transform:scale(1.2)}100%{transform:scale(1)}}
 .tab-content{animation:fadeUp 0.25s ease}
 
-/* SECTION HEADINGS */
-.section-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--text);margin-bottom:4px}
+/* ── SECTION HEADINGS ── */
+.section-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--text);margin-bottom:4px;transition:color 0.2s}
 .section-sub{font-size:12px;color:var(--text-dim);margin-bottom:22px}
 .section-header{display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:18px}
 
-/* BUTTONS */
-.btn-primary,.btn-red,.btn-gold,.btn-green,.btn-blue,.btn-sm,.btn-danger,.btn-outline-green{transition:all 0.22s}
-.btn-primary{display:inline-flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:9px 16px;border-radius:9px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;white-space:nowrap}
-.btn-primary:hover{background:rgba(255,255,255,0.1);transform:translateY(-1px)}
-.btn-red{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--red),#8b1a14);color:white;border:none;padding:9px 16px;border-radius:9px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;box-shadow:0 4px 18px var(--red-glow);white-space:nowrap}
+/* ── BUTTONS ── */
+.btn-primary,.btn-red,.btn-gold,.btn-green,.btn-blue,.btn-sm,.btn-danger,.btn-outline-green{transition:all 0.22s;position:relative;overflow:hidden}
+.btn-primary{display:inline-flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:9px 16px;border-radius:9px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;white-space:nowrap;min-height:40px}
+.btn-primary:hover{background:rgba(255,255,255,0.1);transform:translateY(-1px);border-color:rgba(255,255,255,0.2)}
+.btn-red{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--red),#8b1a14);color:white;border:none;padding:9px 16px;border-radius:9px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;box-shadow:0 4px 18px var(--red-glow);white-space:nowrap;min-height:40px}
 .btn-red:hover{box-shadow:0 8px 28px rgba(192,57,43,0.55);transform:translateY(-2px)}
-.btn-gold{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--gold),#b8893c);color:#000;border:none;padding:9px 16px;border-radius:9px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;white-space:nowrap}
+.btn-gold{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--gold),#b8893c);color:#000;border:none;padding:9px 16px;border-radius:9px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;box-shadow:0 4px 18px rgba(212,168,83,0.3);white-space:nowrap;min-height:40px}
 .btn-gold:hover{box-shadow:0 8px 28px rgba(212,168,83,0.5);transform:translateY(-2px)}
-.btn-green{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#27ae60,#1e8449);color:white;border:none;padding:9px 16px;border-radius:9px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;white-space:nowrap}
+.btn-green{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#27ae60,#1e8449);color:white;border:none;padding:9px 16px;border-radius:9px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;box-shadow:0 4px 18px rgba(39,174,96,0.3);white-space:nowrap;min-height:40px}
 .btn-green:hover{box-shadow:0 8px 28px rgba(39,174,96,0.5);transform:translateY(-2px)}
-.btn-sm{display:inline-flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border2);color:var(--text-mid);padding:7px 13px;border-radius:8px;cursor:pointer;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;white-space:nowrap}
+.btn-blue{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--blue),#1a6fa6);color:white;border:none;padding:9px 16px;border-radius:9px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;box-shadow:0 4px 18px rgba(52,152,219,0.3);white-space:nowrap;min-height:40px}
+.btn-blue:hover{box-shadow:0 8px 28px rgba(52,152,219,0.5);transform:translateY(-2px)}
+.btn-sm{display:inline-flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border2);color:var(--text-mid);padding:7px 13px;border-radius:8px;cursor:pointer;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;white-space:nowrap;min-height:36px}
 .btn-sm:hover{background:rgba(255,255,255,0.1);color:var(--text);transform:translateY(-1px)}
-.btn-danger{display:inline-flex;align-items:center;gap:5px;background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.25);color:var(--red2);padding:7px 13px;border-radius:8px;cursor:pointer;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;white-space:nowrap}
+.btn-danger{display:inline-flex;align-items:center;gap:5px;background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.25);color:var(--red2);padding:7px 13px;border-radius:8px;cursor:pointer;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;white-space:nowrap;min-height:36px}
 .btn-danger:hover{background:rgba(192,57,43,0.2);border-color:var(--red);transform:translateY(-1px)}
+.btn-outline-green{display:inline-flex;align-items:center;gap:5px;background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.25);color:var(--green);padding:7px 13px;border-radius:8px;cursor:pointer;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;white-space:nowrap;min-height:36px}
+.btn-outline-green:hover{background:rgba(46,204,113,0.18);transform:translateY(-1px)}
+.btn-amber{display:inline-flex;align-items:center;gap:5px;background:rgba(241,194,27,0.1);border:1px solid rgba(241,194,27,0.3);color:var(--morning);padding:7px 13px;border-radius:8px;cursor:pointer;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;white-space:nowrap;min-height:36px;transition:all 0.22s}
+.btn-amber:hover{background:rgba(241,194,27,0.2);transform:translateY(-1px)}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
 
-/* MUSICIAN CARDS */
+/* ── MUSICIAN CARDS — FIXED LAYOUT ── */
 .musicians-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:32px}
-.musician-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:20px;transition:all 0.3s;position:relative;display:flex;flex-direction:column;gap:14px}
+.musician-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:20px;transition:all 0.3s;position:relative;overflow:hidden;display:flex;flex-direction:column;gap:14px}
+.musician-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(192,57,43,0.5),transparent);transition:opacity 0.3s}
 .musician-card:hover{transform:translateY(-3px);border-color:rgba(192,57,43,0.3);box-shadow:0 14px 40px rgba(0,0,0,0.35)}
+.musician-card:hover::before{opacity:0}
+.musician-card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity 0.3s}
+.musician-card:hover::after{opacity:1}
 .musician-card.submitted{border-color:rgba(46,204,113,0.18)}
-.musician-header{display:flex;align-items:center;justify-content:space-between;gap:10px}
+/* HEADER: flex row, fixed height */
+.musician-header{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:40px}
 .musician-header-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
-.musician-icon{width:36px;height:36px;border-radius:10px;background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.2);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.musician-icon{width:36px;height:36px;border-radius:10px;background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.2);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;transition:transform 0.25s,background 0.25s}
+.musician-card:hover .musician-icon{transform:rotate(-8deg) scale(1.12);background:rgba(192,57,43,0.18)}
 .musician-name-wrap{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
 .musician-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .musician-instrument{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em}
+/* badges: shrink-0 so they don't push text */
 .status-badge-wrap{flex-shrink:0;display:flex;flex-direction:column;gap:4px;align-items:flex-end}
-.submitted-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(46,204,113,0.1);border:1px solid rgba(46,204,113,0.28);color:var(--green);padding:3px 8px;border-radius:20px;font-size:9px;font-weight:700}
-.pending-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(241,194,27,0.08);border:1px solid rgba(241,194,27,0.22);color:var(--morning);padding:3px 8px;border-radius:20px;font-size:9px;font-weight:700}
-.role-badge-leader{display:inline-flex;align-items:center;gap:3px;background:rgba(212,168,83,0.12);border:1px solid rgba(212,168,83,0.35);color:var(--gold2);padding:3px 8px;border-radius:20px;font-size:9px;font-weight:700}
-.role-badge-vocal{display:inline-flex;align-items:center;gap:3px;background:rgba(138,63,252,0.12);border:1px solid rgba(138,63,252,0.35);color:#b57bff;padding:3px 8px;border-radius:20px;font-size:9px;font-weight:700}
+.submitted-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(46,204,113,0.1);border:1px solid rgba(46,204,113,0.28);color:var(--green);padding:3px 8px;border-radius:20px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap}
+.pending-badge{display:inline-flex;align-items:center;gap:3px;background:rgba(241,194,27,0.08);border:1px solid rgba(241,194,27,0.22);color:var(--morning);padding:3px 8px;border-radius:20px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap}
+.role-badge-leader{display:inline-flex;align-items:center;gap:3px;background:rgba(212,168,83,0.12);border:1px solid rgba(212,168,83,0.35);color:var(--gold2);padding:3px 8px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:0.06em;white-space:nowrap}
+.role-badge-vocal{display:inline-flex;align-items:center;gap:3px;background:rgba(138,63,252,0.12);border:1px solid rgba(138,63,252,0.35);color:#b57bff;padding:3px 8px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:0.06em;white-space:nowrap}
+/* AVAIL rows */
 .sundays-avail{display:flex;flex-direction:column;gap:6px}
 .sunday-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .sunday-label{font-size:11px;color:var(--text-dim);min-width:52px;flex-shrink:0}
 .toggle-group{display:flex;gap:4px;flex-shrink:0}
-.toggle-btn{padding:5px 11px;border-radius:20px;border:1px solid transparent;font-size:10px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;font-weight:600}
+.toggle-btn{padding:5px 11px;border-radius:20px;border:1px solid transparent;font-size:10px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;font-weight:600;min-height:30px;display:flex;align-items:center;gap:3px}
+/* VERDE = disponível, VERMELHO = indisponível */
 .toggle-btn.manha{background:var(--avail-no);border-color:var(--avail-no-border);color:var(--red2)}
 .toggle-btn.manha.on{background:var(--avail-yes);border-color:var(--avail-yes-border);color:var(--green);box-shadow:0 0 10px rgba(46,204,113,0.2)}
 .toggle-btn.noite{background:var(--avail-no);border-color:var(--avail-no-border);color:var(--red2)}
 .toggle-btn.noite.on{background:var(--avail-yes);border-color:var(--avail-yes-border);color:var(--green);box-shadow:0 0 10px rgba(46,204,113,0.2)}
-.role-manage-row{display:flex;align-items:center;gap:8px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
-.role-manage-label{font-size:10px;color:var(--text-dim);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;flex-shrink:0}
-.role-toggle-btn{padding:3px 10px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-dim);cursor:pointer;font-family:'Syne',sans-serif;font-size:10px;font-weight:700;transition:all 0.2s}
-.role-toggle-btn.leader-on{background:rgba(212,168,83,0.15);border-color:rgba(212,168,83,0.4);color:var(--gold2)}
-.role-toggle-btn.vocal-on{background:rgba(138,63,252,0.15);border-color:rgba(138,63,252,0.4);color:#b57bff}
+.toggle-btn:hover{transform:scale(1.06)}
 
-/* MEMBER HERO */
-.member-hero{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:26px;margin-bottom:22px;position:relative;overflow:hidden}
+/* ── MEMBER HERO ── */
+.member-hero{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:26px;margin-bottom:22px;position:relative;overflow:hidden;transition:border-color 0.3s}
+.member-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 0% 50%,rgba(192,57,43,0.07) 0%,transparent 60%);pointer-events:none}
 .member-hero-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
 .member-hero-bg img{width:100%;height:100%;object-fit:cover;opacity:0.05;filter:grayscale(60%)}
 .member-hero-content{position:relative;z-index:1;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.member-avatar-big{width:58px;height:58px;border-radius:15px;flex-shrink:0;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:white;box-shadow:0 8px 26px rgba(192,57,43,0.38)}
+.member-avatar-big{width:58px;height:58px;border-radius:15px;flex-shrink:0;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:white;box-shadow:0 8px 26px rgba(192,57,43,0.38);transition:transform 0.3s}
+.member-hero:hover .member-avatar-big{transform:scale(1.07) rotate(3deg)}
 .member-info h2{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--text);letter-spacing:-0.01em;margin-bottom:3px}
 .member-info p{font-size:12px;color:var(--text-dim);margin-bottom:7px}
-.instr-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(212,168,83,0.1);border:1px solid rgba(212,168,83,0.25);padding:3px 10px;border-radius:20px;font-size:11px;color:var(--gold2);font-weight:600}
+.instr-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(212,168,83,0.1);border:1px solid rgba(212,168,83,0.25);padding:3px 10px;border-radius:20px;font-size:11px;color:var(--gold2);font-weight:600;transition:all 0.2s}
+.instr-badge:hover{background:rgba(212,168,83,0.18)}
 .member-summary-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(95px,1fr));gap:8px;margin-bottom:24px}
-.member-tabs{display:flex;gap:2px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:3px;margin-bottom:20px;overflow-x:auto}
-.member-tab{padding:7px 14px;border-radius:8px;cursor:pointer;border:none;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;background:none;color:var(--text-dim);transition:all 0.22s;white-space:nowrap;display:flex;align-items:center;gap:5px}
-.member-tab.active{background:linear-gradient(135deg,var(--red),#8b1a14);color:white;box-shadow:0 4px 14px rgba(192,57,43,0.35)}
 
-/* AVAIL CARDS */
+/* ── AVAIL CARDS (MEMBER) ── */
 .avail-cards{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
-.avail-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.avail-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all 0.25s}
+.avail-card:hover{border-color:rgba(255,255,255,0.12);transform:translateY(-1px)}
 .avail-card-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(6,6,14,0.5);border-bottom:1px solid var(--border)}
 .avail-card-date{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--text)}
 .avail-card-label{font-size:11px;color:var(--text-dim)}
 .avail-card-body{padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.avail-slot-btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 14px;border-radius:10px;border:1px solid var(--avail-no-border);background:var(--avail-no);color:var(--red2);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all 0.22s;flex:1;min-width:100px}
+/* Member avail buttons: RED = unavailable, GREEN = available */
+.avail-slot-btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 14px;border-radius:10px;border:1px solid var(--avail-no-border);background:var(--avail-no);color:var(--red2);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all 0.22s;flex:1;min-width:100px;min-height:44px}
+.avail-slot-btn:hover{transform:translateY(-2px)}
 .avail-slot-btn.on{background:var(--avail-yes);border-color:var(--avail-yes-border);color:var(--green);box-shadow:0 4px 16px rgba(46,204,113,0.2)}
-.btn-submit-avail{width:100%;background:linear-gradient(135deg,var(--red) 0%,#8b1a14 100%);border:none;color:white;padding:15px;border-radius:12px;cursor:pointer;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.05em;transition:all 0.25s;box-shadow:0 8px 28px rgba(192,57,43,0.35);margin-top:6px}
+.btn-submit-avail{width:100%;background:linear-gradient(135deg,var(--red) 0%,#8b1a14 100%);border:none;color:white;padding:15px;border-radius:12px;cursor:pointer;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.05em;transition:all 0.25s;box-shadow:0 8px 28px rgba(192,57,43,0.35);margin-top:6px;min-height:52px;display:flex;align-items:center;justify-content:center;gap:8px;position:relative;overflow:hidden}
+.btn-submit-avail::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0),rgba(255,255,255,0.1),rgba(255,255,255,0));transform:translateX(-100%);transition:transform 0.5s}
+.btn-submit-avail:hover::after{transform:translateX(100%)}
+.btn-submit-avail:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(192,57,43,0.55)}
+.btn-submit-avail:disabled{opacity:0.5;cursor:not-allowed;transform:none}
 
-/* BANNERS */
-.banner{border-radius:12px;padding:13px 16px;margin-bottom:18px;display:flex;align-items:flex-start;gap:10px;font-size:12px}
-.banner-icon{font-size:18px;flex-shrink:0}
+/* ── BANNERS ── */
+.banner{border-radius:12px;padding:13px 16px;margin-bottom:18px;display:flex;align-items:flex-start;gap:10px;font-size:12px;transition:all 0.25s}
+.banner:hover{transform:translateX(4px)}
+.banner-icon{font-size:18px;flex-shrink:0;margin-top:1px}
 .banner-text strong{display:block;font-weight:700;margin-bottom:2px;font-size:13px}
 .banner.green{background:rgba(46,204,113,0.07);border:1px solid rgba(46,204,113,0.22);color:var(--green)}
 .banner.gold{background:rgba(212,168,83,0.07);border:1px solid rgba(212,168,83,0.22);color:var(--gold2)}
 .banner.red{background:rgba(192,57,43,0.07);border:1px solid rgba(192,57,43,0.18);color:var(--red2)}
 .banner.blue{background:rgba(52,152,219,0.07);border:1px solid rgba(52,152,219,0.18);color:var(--blue)}
 
-/* SCHEDULE */
-.assigned-card{background:var(--surface);border:1px solid rgba(46,204,113,0.18);border-radius:12px;overflow:hidden;margin-bottom:10px}
+/* ── SCHEDULE ── */
+.assigned-card{background:var(--surface);border:1px solid rgba(46,204,113,0.18);border-radius:12px;overflow:hidden;margin-bottom:10px;transition:all 0.25s}
+.assigned-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.3)}
 .assigned-card.revoked-card{border-color:rgba(192,57,43,0.18);opacity:0.6}
 .assigned-card-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(6,6,14,0.5);border-bottom:1px solid rgba(255,255,255,0.04);flex-wrap:wrap;gap:8px}
 .assigned-date-label{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--text)}
@@ -240,7 +277,8 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
 .no-assignment{text-align:center;padding:36px 20px;color:var(--text-dim)}
 .no-assignment-icon{font-size:36px;opacity:0.3;margin-bottom:10px}
 .schedule-container{display:flex;flex-direction:column;gap:14px}
-.schedule-sunday{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.schedule-sunday{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all 0.25s}
+.schedule-sunday:hover{border-color:rgba(192,57,43,0.25);box-shadow:0 8px 28px rgba(0,0,0,0.3)}
 .schedule-sunday-header{padding:14px 18px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,6,14,0.6);border-bottom:1px solid var(--border);flex-wrap:wrap;gap:8px}
 .schedule-sunday-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--text)}
 .schedule-sunday-date{font-size:11px;color:var(--text-dim)}
@@ -253,11 +291,13 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
 .instr-rows{display:flex;flex-direction:column;gap:5px}
 .instr-row{display:flex;align-items:center;justify-content:space-between;gap:6px}
 .instr-name{font-size:10px;color:var(--text-dim);min-width:58px}
-.instr-select{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:11px;padding:4px 8px;border-radius:7px;outline:none;flex:1;min-width:0;cursor:pointer}
+.instr-select{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:11px;padding:4px 8px;border-radius:7px;outline:none;flex:1;min-width:0;cursor:pointer;min-height:30px;transition:border-color 0.2s}
+.instr-select:focus,.instr-select:hover{border-color:rgba(192,57,43,0.5)}
 
-/* SCHED CARDS */
+/* ── SCHED CARDS ── */
 .schedule-list{display:flex;flex-direction:column;gap:12px}
-.sched-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.sched-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all 0.25s}
+.sched-card:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(0,0,0,0.3)}
 .sched-card.approved{border-color:rgba(46,204,113,0.18)}
 .sched-card.sent-active{border-color:rgba(212,168,83,0.25)}
 .sched-card-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;cursor:pointer}
@@ -273,13 +313,17 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
 .sched-body{border-top:1px solid var(--border);padding:18px 20px;display:none}
 .sched-body.visible{display:block;animation:fadeUp 0.2s ease}
 .sched-preview{font-family:'DM Mono','Courier New',monospace;font-size:12px;color:var(--text-mid);line-height:1.9;white-space:pre-wrap;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;padding:14px;max-height:260px;overflow-y:auto}
+
+/* ── ALTERAR INLINE MODAL ── */
 .alterar-panel{display:none;padding:18px 20px;border-top:1px solid rgba(212,168,83,0.2);background:rgba(212,168,83,0.03)}
-.alterar-panel.visible{display:block}
+.alterar-panel.visible{display:block;animation:fadeUp 0.2s ease}
+.alterar-panel-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--gold2);margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .alterar-actions{display:flex;gap:8px;flex-wrap:wrap}
 
-/* NOTIFICATIONS */
+/* ── NOTIFICATIONS ── */
 .notif-list{display:flex;flex-direction:column;gap:10px}
-.notif-item{background:var(--surface);border:1px solid rgba(192,57,43,0.2);border-left:3px solid var(--red);border-radius:12px;padding:16px;position:relative}
+.notif-item{background:var(--surface);border:1px solid rgba(192,57,43,0.2);border-left:3px solid var(--red);border-radius:12px;padding:16px;position:relative;transition:all 0.25s}
+.notif-item:hover{transform:translateX(4px);border-color:rgba(192,57,43,0.35)}
 .notif-item.read{border-left-color:var(--border);border-color:var(--border);opacity:0.6}
 .notif-item.info{border-left-color:var(--blue);border-color:rgba(52,152,219,0.2)}
 .notif-item.avail-req{border-left-color:var(--gold);border-color:rgba(212,168,83,0.2)}
@@ -287,110 +331,185 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
 .notif-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--text)}
 .notif-time{font-size:10px;color:var(--text-dim);flex-shrink:0}
 .notif-detail{font-size:12px;color:var(--text-mid);margin-bottom:10px;line-height:1.5}
-.notif-unread-dot{position:absolute;top:14px;right:14px;width:8px;height:8px;background:var(--red2);border-radius:50%;box-shadow:0 0 10px var(--red2)}
+.notif-unread-dot{position:absolute;top:14px;right:14px;width:8px;height:8px;background:var(--red2);border-radius:50%;box-shadow:0 0 10px var(--red2);animation:pulse 1.5s infinite}
 
-/* AVISO CARDS */
-.aviso-card{background:var(--surface);border:1px solid rgba(212,168,83,0.2);border-left:3px solid var(--gold);border-radius:12px;padding:16px;margin-bottom:10px}
-.aviso-card.pinned{border-color:rgba(192,57,43,0.4);border-left-color:var(--red)}
-.aviso-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px;flex-wrap:wrap}
-.aviso-card-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--gold2)}
-.aviso-card-time{font-size:10px;color:var(--text-dim)}
-.aviso-card-body{font-size:13px;color:var(--text-mid);line-height:1.6}
-
-/* CHAT */
-.chat-wrap{display:flex;flex-direction:column;height:480px;border:1px solid var(--border);border-radius:14px;overflow:hidden}
-.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:rgba(6,6,14,0.5)}
-.chat-msg{display:flex;gap:10px;align-items:flex-start}
-.chat-msg.mine{flex-direction:row-reverse}
-.chat-avatar{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:white}
-.chat-avatar.adm{background:linear-gradient(135deg,var(--gold),#b8893c)}
-.chat-bubble{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:14px;border-top-left-radius:4px;padding:10px 14px;max-width:70%;font-size:13px;line-height:1.5}
-.chat-msg.mine .chat-bubble{background:rgba(192,57,43,0.12);border-color:rgba(192,57,43,0.2);border-radius:14px;border-top-right-radius:4px}
-.chat-name{font-size:10px;font-weight:700;color:var(--text-dim);margin-bottom:3px}
-.chat-text{color:var(--text);word-break:break-word}
-.chat-time{font-size:10px;color:var(--text-dim);margin-top:3px}
-.chat-input-row{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);background:rgba(6,6,14,0.8)}
-.chat-input{flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 14px;border-radius:10px;outline:none}
-.chat-input:focus{border-color:rgba(192,57,43,0.5);background:rgba(255,255,255,0.07)}
-.chat-send-btn{background:linear-gradient(135deg,var(--red),#8b1a14);color:white;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700}
-
-/* ADD FORM */
-.add-form{display:none;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:20px}
+/* ── LEGEND / INFO ── */
+.legend-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-dim);transition:color 0.2s}
+.legend-item:hover{color:var(--text)}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+.avail-legend{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;font-size:11px}
+.avail-leg-item{display:flex;align-items:center;gap:5px}
+.avail-leg-dot{width:10px;height:10px;border-radius:3px}
+.info-box{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:12px;color:var(--text-dim);margin-bottom:18px;line-height:1.6;transition:all 0.2s}
+.info-box:hover{background:rgba(255,255,255,0.05);border-color:var(--border2)}
+.export-area{font-family:'DM Mono','Courier New',monospace;font-size:12px;color:var(--text-mid);line-height:1.9;white-space:pre-wrap;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:16px;min-height:100px;max-height:400px;overflow-y:auto}
+.add-form{display:none;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:20px;animation:fadeUp 0.2s ease}
 .add-form.visible{display:block}
 .form-row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
 .form-group{display:flex;flex-direction:column;gap:6px;flex:1;min-width:160px}
 .form-group label{font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em}
-.form-group input,.form-group select,.form-group textarea{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 12px;border-radius:9px;outline:none}
-.form-group input:focus,.form-group select:focus{border-color:rgba(192,57,43,0.5);background:rgba(255,255,255,0.07)}
+.form-group input,.form-group select,.form-group textarea{background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 12px;border-radius:9px;outline:none;transition:border-color 0.2s,background 0.2s;min-height:40px}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:rgba(192,57,43,0.5);background:rgba(255,255,255,0.07)}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--text-dim)}
 .form-group textarea{min-height:80px;resize:vertical}
+.adm-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(192,57,43,0.15);border:1px solid rgba(192,57,43,0.35);padding:3px 9px;border-radius:20px;margin-left:10px;font-size:10px;color:var(--red2);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;vertical-align:middle}
+.empty-state{text-align:center;padding:56px 20px;color:var(--text-dim)}
+.empty-state-icon{font-size:44px;opacity:0.3;margin-bottom:14px;display:block;animation:float 3s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.empty-state p{font-size:14px;line-height:1.6}
+.empty-state small{font-size:12px;opacity:0.7}
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(12,12,24,0.96);backdrop-filter:blur(20px);border:1px solid var(--border2);border-radius:12px;padding:10px 20px;font-size:13px;color:var(--text);z-index:9999;pointer-events:none;opacity:0;transition:all 0.3s cubic-bezier(.22,1,.36,1);white-space:nowrap;font-weight:500;box-shadow:0 14px 36px rgba(0,0,0,0.5);max-width:90vw;overflow:hidden}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* MODAL */
+/* ── NOTIFICATION OVERLAY ── */
 .notif-overlay{position:fixed;inset:0;background:rgba(6,6,14,0.88);backdrop-filter:blur(20px);z-index:500;display:none;align-items:center;justify-content:center;padding:20px}
-.notif-overlay.show{display:flex}
-.notif-modal{background:rgba(12,12,24,0.98);border:1px solid var(--border2);border-radius:22px;padding:28px;max-width:520px;width:100%;position:relative}
+.notif-overlay.show{display:flex;animation:fadeUp 0.3s ease}
+.notif-modal{background:rgba(12,12,24,0.98);border:1px solid var(--border2);border-radius:22px;padding:28px;max-width:440px;width:100%;position:relative;box-shadow:0 50px 100px rgba(0,0,0,0.8);animation:modalPop 0.35s cubic-bezier(0.175,0.885,0.32,1.275) both}
+@keyframes modalPop{from{opacity:0;transform:scale(0.9) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .notif-modal-top{height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);border-radius:2px;margin-bottom:20px}
-.notif-modal-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--gold2);margin-bottom:8px}
-.notif-modal-sub{font-size:13px;color:var(--text-dim);margin-bottom:20px;line-height:1.6}
+.notif-modal-icon{font-size:36px;margin-bottom:12px;text-align:center;animation:iconBounce 0.6s ease 0.3s both}
+@keyframes iconBounce{0%{transform:scale(0) rotate(-30deg)}80%{transform:scale(1.2) rotate(5deg)}100%{transform:scale(1) rotate(0)}}
+.notif-modal-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--gold2);text-align:center;margin-bottom:8px}
+.notif-modal-sub{font-size:13px;color:var(--text-dim);text-align:center;margin-bottom:20px;line-height:1.6}
 .notif-modal-actions{display:flex;gap:10px;flex-wrap:wrap}
+.notif-modal-actions > *{flex:1}
 
-/* CALENDAR */
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:16px}
-.cal-day-name{text-align:center;font-size:9px;color:var(--text-dim);font-weight:700;text-transform:uppercase;padding:4px 0}
-.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;font-size:12px;border:1px solid transparent}
-.cal-day.sunday{color:var(--red2);font-weight:700}
-.cal-day.selected{background:rgba(192,57,43,0.22);border-color:var(--red2);color:white;font-weight:700}
-.selected-dates-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;margin-bottom:16px}
-.date-chip{display:inline-flex;align-items:center;gap:5px;background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.3);color:var(--red2);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600}
-.date-chip .remove{cursor:pointer;opacity:0.6}
-.date-chip .remove:hover{opacity:1}
-.month-selector{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
-.month-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-dim);cursor:pointer;font-family:'Syne',sans-serif;font-size:11px;font-weight:700}
-.month-btn.active{background:rgba(192,57,43,0.15);border-color:rgba(192,57,43,0.4);color:var(--red2)}
-
-/* AGENDA GRID */
+/* ── AGENDA CARDS ── */
 .agenda-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-bottom:28px}
-.agenda-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;cursor:pointer;transition:all 0.3s}
+.agenda-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;transition:all 0.3s;cursor:pointer}
 .agenda-card:hover{transform:translateY(-4px);border-color:rgba(192,57,43,0.35);box-shadow:0 16px 48px rgba(0,0,0,0.45)}
-.agenda-card-stripe{height:3px;background:linear-gradient(90deg,var(--red),var(--gold))}
+.agenda-card-stripe{height:3px;background:linear-gradient(90deg,var(--red),var(--gold));transition:height 0.25s}
+.agenda-card:hover .agenda-card-stripe{height:4px}
 .agenda-card-body{padding:18px}
-.agenda-card-month{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.15em;margin-bottom:6px}
-.agenda-card-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--text);margin-bottom:8px}
+.agenda-card-month{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.15em;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.agenda-card-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--text);margin-bottom:8px;transition:color 0.2s}
+.agenda-card:hover .agenda-card-title{color:var(--gold2)}
 .agenda-card-dates{font-size:12px;color:var(--text-mid);margin-bottom:12px;line-height:1.6}
-.agenda-card-status{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700}
+.agenda-card-status{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em}
 .agenda-status-draft{background:rgba(107,122,154,0.1);border:1px solid rgba(107,122,154,0.3);color:var(--text-dim)}
 .agenda-status-collecting{background:rgba(241,194,27,0.1);border:1px solid rgba(241,194,27,0.3);color:var(--morning)}
 .agenda-status-approved{background:rgba(46,204,113,0.1);border:1px solid rgba(46,204,113,0.3);color:var(--green)}
 .agenda-status-sent{background:rgba(212,168,83,0.1);border:1px solid rgba(212,168,83,0.3);color:var(--gold2)}
 .agenda-card-footer{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-top:1px solid var(--border);background:rgba(6,6,14,0.4)}
+.agenda-card-actions{display:flex;gap:6px}
 
-/* AVISO LEGEND */
-.avail-legend{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;font-size:11px}
-.avail-leg-item{display:flex;align-items:center;gap:5px}
-.avail-leg-dot{width:10px;height:10px;border-radius:3px}
-.info-box{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-size:12px;color:var(--text-dim);margin-bottom:18px;line-height:1.6}
-.legend-bar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px}
-.legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-dim)}
-.legend-dot{width:8px;height:8px;border-radius:50%}
-.empty-state{text-align:center;padding:56px 20px;color:var(--text-dim)}
-.empty-state-icon{font-size:44px;opacity:0.3;margin-bottom:14px;display:block}
-.adm-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(192,57,43,0.15);border:1px solid rgba(192,57,43,0.35);padding:3px 9px;border-radius:20px;margin-left:10px;font-size:10px;color:var(--red2);font-weight:700}
-.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(12,12,24,0.96);backdrop-filter:blur(20px);border:1px solid var(--border2);border-radius:12px;padding:10px 20px;font-size:13px;color:var(--text);z-index:9999;pointer-events:none;opacity:0;transition:all 0.3s;white-space:nowrap;max-width:90vw}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* ── CALENDAR PICKER ── */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:16px}
+.cal-day-name{text-align:center;font-size:9px;color:var(--text-dim);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:4px 0}
+.cal-day{position:relative;aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;font-size:12px;font-weight:500;transition:all 0.18s;border:1px solid transparent}
+.cal-day.empty{cursor:default}
+.cal-day.sunday{color:var(--red2);font-weight:700}
+.cal-day:not(.empty).sunday:hover{background:rgba(192,57,43,0.15);border-color:rgba(192,57,43,0.4);transform:scale(1.1)}
+.cal-day.selected{background:rgba(192,57,43,0.22);border-color:var(--red2);color:white;font-weight:700;box-shadow:0 4px 12px rgba(192,57,43,0.3)}
+.cal-day.selected.sunday{color:var(--gold2)}
+.cal-day.today{background:rgba(212,168,83,0.1);border-color:rgba(212,168,83,0.3)}
+.cal-month-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-month-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--text)}
+.cal-nav-btn{background:var(--surface2);border:1px solid var(--border2);color:var(--text-mid);padding:5px 10px;border-radius:8px;cursor:pointer;font-size:12px;transition:all 0.2s}
+.cal-nav-btn:hover{border-color:var(--red);color:var(--red2);transform:scale(1.05)}
+.selected-dates-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;margin-bottom:16px;min-height:28px}
+.date-chip{display:inline-flex;align-items:center;gap:5px;background:rgba(192,57,43,0.12);border:1px solid rgba(192,57,43,0.3);color:var(--red2);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;transition:all 0.2s;animation:chipIn 0.2s ease}
+@keyframes chipIn{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}
+.date-chip:hover{background:rgba(192,57,43,0.2)}
+.date-chip .remove{cursor:pointer;opacity:0.6;transition:opacity 0.15s}
+.date-chip .remove:hover{opacity:1}
+
+/* ── CHAT ── */
+.chat-wrap{display:flex;flex-direction:column;height:480px;border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color 0.2s}
+.chat-wrap:focus-within{border-color:rgba(192,57,43,0.3)}
+.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:rgba(6,6,14,0.5)}
+.chat-msg{display:flex;gap:10px;align-items:flex-start;animation:msgSlideIn 0.25s ease}
+@keyframes msgSlideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.chat-msg.mine{flex-direction:row-reverse}
+.chat-avatar{width:30px;height:30px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:white;transition:transform 0.2s}
+.chat-avatar:hover{transform:scale(1.15)}
+.chat-avatar.adm{background:linear-gradient(135deg,var(--gold),#b8893c)}
+.chat-bubble{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:14px;border-top-left-radius:4px;padding:10px 14px;max-width:70%;font-size:13px;line-height:1.5;transition:all 0.2s}
+.chat-bubble:hover{border-color:var(--border2)}
+.chat-msg.mine .chat-bubble{background:rgba(192,57,43,0.12);border-color:rgba(192,57,43,0.2);border-radius:14px;border-top-right-radius:4px}
+.chat-msg.adm-msg .chat-bubble{background:rgba(212,168,83,0.08);border-color:rgba(212,168,83,0.2)}
+.chat-name{font-size:10px;font-weight:700;color:var(--text-dim);margin-bottom:3px}
+.chat-text{color:var(--text);word-break:break-word}
+.chat-time{font-size:10px;color:var(--text-dim);margin-top:3px}
+.chat-input-row{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);background:rgba(6,6,14,0.8)}
+.chat-input{flex:1;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:10px 14px;border-radius:10px;outline:none;transition:all 0.2s}
+.chat-input:focus{border-color:rgba(192,57,43,0.5);background:rgba(255,255,255,0.07)}
+.chat-input::placeholder{color:var(--text-dim)}
+.chat-send-btn{background:linear-gradient(135deg,var(--red),#8b1a14);color:white;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;white-space:nowrap;min-height:42px;transition:all 0.22s}
+.chat-send-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(192,57,43,0.4)}
+
+/* ── AVISOS ── */
+.aviso-card{background:var(--surface);border:1px solid rgba(212,168,83,0.2);border-left:3px solid var(--gold);border-radius:12px;padding:16px;margin-bottom:10px;transition:all 0.25s}
+.aviso-card:hover{transform:translateX(4px);border-color:rgba(212,168,83,0.35)}
+.aviso-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px;flex-wrap:wrap}
+.aviso-card-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--gold2)}
+.aviso-card-time{font-size:10px;color:var(--text-dim)}
+.aviso-card-body{font-size:13px;color:var(--text-mid);line-height:1.6}
+.aviso-card.pinned{border-color:rgba(192,57,43,0.4);border-left-color:var(--red)}
+
+/* ── MONTH SELECTOR ── */
+.month-selector{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px}
+.month-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-dim);cursor:pointer;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;transition:all 0.2s}
+.month-btn:hover{border-color:var(--border2);color:var(--text);transform:translateY(-1px)}
+.month-btn.active{background:rgba(192,57,43,0.15);border-color:rgba(192,57,43,0.4);color:var(--red2)}
+
+/* ── MEMBER TABS ── */
+.member-tabs{display:flex;gap:2px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:3px;margin-bottom:20px;overflow-x:auto}
+.member-tab{padding:7px 14px;border-radius:8px;cursor:pointer;border:none;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;background:none;color:var(--text-dim);transition:all 0.22s;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:5px;min-height:36px}
+.member-tab:hover:not(.active){background:rgba(255,255,255,0.05);color:var(--text)}
+.member-tab.active{background:linear-gradient(135deg,var(--red),#8b1a14);color:white;box-shadow:0 4px 14px rgba(192,57,43,0.35)}
+.member-tab-badge{background:var(--red2);color:white;font-size:9px;padding:1px 5px;border-radius:10px;min-width:16px;text-align:center;line-height:1.6;font-weight:800;display:none}
+.member-tab-badge.visible{display:inline-block}
+
+/* ── AVAIL STATUS TABLE ── */
+.avail-table-wrap{overflow-x:auto;margin-bottom:20px;border-radius:12px;border:1px solid var(--border)}
+.avail-table{width:100%;border-collapse:collapse;font-size:12px}
+.avail-table th{padding:9px 12px;text-align:left;font-family:'Syne',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-dim);border-bottom:1px solid var(--border);background:rgba(6,6,14,0.5)}
+.avail-table td{padding:8px 12px;border-bottom:1px solid var(--border)}
+.avail-table tr:last-child td{border-bottom:none}
+.avail-table tr:hover td{background:rgba(255,255,255,0.02)}
+.avail-badge-yes{display:inline-flex;align-items:center;gap:3px;background:var(--avail-yes);border:1px solid var(--avail-yes-border);color:var(--green);padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}
+.avail-badge-no{display:inline-flex;align-items:center;gap:3px;background:var(--avail-no);border:1px solid var(--avail-no-border);color:var(--red2);padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}
+.avail-badge-partial{display:inline-flex;align-items:center;gap:3px;background:rgba(241,194,27,0.1);border:1px solid rgba(241,194,27,0.25);color:var(--morning);padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700}
+
+/* ── ROLE MANAGEMENT (ADM only) ── */
+.role-manage-row{display:flex;align-items:center;gap:8px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+.role-manage-label{font-size:10px;color:var(--text-dim);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;flex-shrink:0}
+.role-toggle-btn{padding:3px 10px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--text-dim);cursor:pointer;font-family:'Syne',sans-serif;font-size:10px;font-weight:700;transition:all 0.2s;white-space:nowrap}
+.role-toggle-btn:hover{transform:scale(1.05)}
+.role-toggle-btn.leader-on{background:rgba(212,168,83,0.15);border-color:rgba(212,168,83,0.4);color:var(--gold2)}
+.role-toggle-btn.vocal-on{background:rgba(138,63,252,0.15);border-color:rgba(138,63,252,0.4);color:#b57bff}
+
 @media(max-width:768px){
-  header{padding:0 14px}.header-inner{height:54px}.logo-img{height:28px}.logo-desc{display:none}
-  main{padding:0 14px 80px}.page-hero{padding:32px 0 24px}.stats-bar{grid-template-columns:repeat(2,1fr)}
-  .tab{padding:7px 12px;font-size:10px}.musicians-grid{grid-template-columns:1fr}
-  .schedule-services{grid-template-columns:1fr}.schedule-service:first-child{border-right:none;border-bottom:1px solid var(--border)}
-  .agenda-grid{grid-template-columns:1fr}.chat-wrap{height:360px}
+  header{padding:0 14px}
+  .header-inner{height:54px;gap:8px}
+  .logo-img{height:28px}
+  .logo-desc{display:none}
+  main{padding:0 14px 80px}
+  .page-hero{padding:32px 0 24px;margin-bottom:20px}
+  .stats-bar{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:20px}
+  .tab{padding:7px 12px;font-size:10px}
+  .musicians-grid{grid-template-columns:1fr}
+  .member-summary-bar{grid-template-columns:repeat(2,1fr)}
+  .schedule-services{grid-template-columns:1fr}
+  .schedule-service:first-child{border-right:none;border-bottom:1px solid var(--border)}
+  .agenda-grid{grid-template-columns:1fr}
+  .chat-wrap{height:360px}
 }
 @media(max-width:480px){
-  .logo-divider,.logo-sub{display:none}.user-name{display:none}.user-chip{padding:4px}
-  .stats-bar{grid-template-columns:1fr 1fr}.form-group{min-width:100%}
+  .logo-divider,.logo-sub{display:none}
+  .user-name{display:none}
+  .user-chip{padding:4px}
+  .sync-indicator span.sync-text{display:none}
+  .stats-bar{grid-template-columns:1fr 1fr}
+  .form-group{min-width:100%}
 }
 </style>
 </head>
 <body>
 
+<!-- BG PHOTO LAYER (church photos) -->
 <div class="bg-photo-layer">
   <img src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=1600&q=60&auto=format" alt="" onerror="this.parentElement.style.display='none'">
 </div>
@@ -404,9 +523,10 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
 
 <div class="loading-overlay" id="loadingOverlay">
   <div class="loading-spinner"></div>
-  <div class="loading-text" id="loadingText">Conectando ao servidor master...</div>
+  <div class="loading-text" id="loadingText">Conectando…</div>
 </div>
 
+<!-- NOTIFICATION OVERLAY -->
 <div class="notif-overlay" id="notifOverlay">
   <div class="notif-modal">
     <div class="notif-modal-top"></div>
@@ -441,33 +561,37 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
 
 <main>
 
+<!-- CONFIG ERROR -->
 <div id="configError">
   <div class="config-card">
     <div class="config-card-top"></div>
-    <div class="config-title">⚠️ Time não encontrado</div>
-    <div class="config-sub" id="configErrorMsg">Verifique se o parâmetro team=ID está correto na URL.</div>
+    <div class="config-title">⚠️ Erro de Conexão Firebase</div>
+    <div class="config-sub">O app está configurado para o banco <code style="color:var(--gold2);font-size:11px;">ibm-53e5f-default-rtdb</code>, mas não conseguiu conectar.</div>
     <div class="config-steps">
-      <div class="config-step"><div class="step-num">1</div><span>URL deve conter: <code id="urlExample" style="color:var(--gold2);">?team=team_ibm</code></span></div>
-      <div class="config-step"><div class="step-num">2</div><span>Ou acesse via Master Admin para obter o link correto</span></div>
+      <div class="config-step"><div class="step-num">1</div><span>Acesse <a href="https://console.firebase.google.com/project/ibm-53e5f/database/ibm-53e5f-default-rtdb/rules" target="_blank" style="color:var(--gold2);">Firebase Console → Rules</a></span></div>
+      <div class="config-step"><div class="step-num">2</div><span>Substitua as regras por:</span></div>
+      <div class="config-step"><div class="step-num">3</div><span>Clique em <strong>Publicar</strong></span></div>
     </div>
+    <div class="config-code">{"rules": {".read": true, ".write": true}}</div>
     <button class="btn-enter" onclick="location.reload()" style="margin-top:18px;">↻ Tentar Novamente</button>
   </div>
 </div>
 
+<!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-bg-photo">
     <img src="https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=1400&q=50&auto=format" alt="" onerror="this.style.display='none'">
   </div>
-  <div class="login-bg-text" id="loginBgText">IBMéier</div>
+  <div class="login-bg-text">IBMéier</div>
   <div class="login-content">
     <img class="login-logo-big" src="https://static.wixstatic.com/media/430a01_070855f78e42434680537abbc733ed44~mv2.png/v1/fill/w_456,h_220,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/marca_ibmeier_horizontal_original.png" alt="IBMéier" onerror="this.style.display='none'">
-    <div class="login-eyebrow" id="loginEyebrow">Escala Instrumental · 2026</div>
-    <div class="login-title" id="loginTitle">Painel de Cultos<br>Dominicais</div>
-    <p class="login-sub" id="loginSub">Disponibilidade, escalas e comunicação da equipe musical.</p>
+    <div class="login-eyebrow">Escala Instrumental · 2026</div>
+    <div class="login-title">Painel de Cultos<br>Dominicais</div>
+    <p class="login-sub">Disponibilidade, escalas e comunicação da equipe musical.</p>
     <div class="login-card">
       <div class="login-card-top-line"></div>
       <div class="login-card-title">Acesso ao Painel</div>
-      <div class="login-card-sub" id="loginTeamName">Carregando time...</div>
+      <div class="login-card-sub">Selecione seu perfil para continuar</div>
       <div class="login-role-tabs">
         <button class="role-tab active" id="roleTabMember" onclick="selectRole('membro')">
           <span class="role-icon">🎸</span>Músico
@@ -492,6 +616,7 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
   </div>
 </div>
 
+<!-- APP -->
 <div id="appScreen">
   <div class="page-hero">
     <div class="hero-bg-photo">
@@ -500,10 +625,11 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
     <div class="hero-glow"></div>
     <div class="hero-eyebrow" id="heroEyebrow">2026</div>
     <h1 id="appTitle">Escala Instrumental</h1>
-    <p id="appSubtitle" class="appSubtitle">Cultos da Manhã e Noite</p>
+    <p id="appSubtitle">Cultos da Manhã e Noite · Igreja Batista do Méier</p>
   </div>
   <div class="stats-bar" id="statsBar"></div>
 
+  <!-- ADM TABS -->
   <div class="tabs" id="admTabs" style="display:none;">
     <button class="tab active" onclick="switchAdmTab('agendas',this)">📅 Agendas</button>
     <button class="tab" onclick="switchAdmTab('disponibilidade',this)">Disponibilidade<span class="tab-badge" id="availBadge"></span></button>
@@ -517,6 +643,8 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
   <div id="memberPanel" style="display:none;"></div>
 
   <div id="admContent" style="display:none;">
+
+    <!-- TAB: AGENDAS -->
     <div id="tab-agendas" class="tab-content">
       <div class="section-header">
         <div><h2 class="section-title">Agendas</h2><p class="section-sub">Gerencie escalas por mês · Calendário 2026</p></div>
@@ -526,14 +654,19 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
       <div id="agendasGrid"></div>
     </div>
 
+    <!-- TAB: DISPONIBILIDADE -->
     <div id="tab-disponibilidade" class="tab-content" style="display:none;">
       <div class="section-header">
-        <div><h2 class="section-title">Disponibilidade</h2><p class="section-sub" id="dispAgendaLabel">Selecione uma agenda para gerenciar disponibilidades</p></div>
+        <div>
+          <h2 class="section-title">Disponibilidade</h2>
+          <p class="section-sub" id="dispAgendaLabel">Selecione uma agenda para gerenciar disponibilidades</p>
+        </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
           <button class="btn-gold" onclick="requestAvailability()" id="btnRequestAvail">📨 Solicitar Disponibilidade</button>
           <button class="btn-sm" onclick="toggleAddForm()">+ Adicionar Músico</button>
         </div>
       </div>
+      <!-- Legend -->
       <div class="avail-legend">
         <div class="avail-leg-item"><div class="avail-leg-dot" style="background:var(--green);border-radius:3px;box-shadow:0 0 6px rgba(46,204,113,0.4)"></div><span style="color:var(--text-dim);font-size:11px;">Disponível</span></div>
         <div class="avail-leg-item"><div class="avail-leg-dot" style="background:var(--red2);border-radius:3px;box-shadow:0 0 6px rgba(192,57,43,0.4)"></div><span style="color:var(--text-dim);font-size:11px;">Indisponível</span></div>
@@ -557,6 +690,7 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
       <div class="musicians-grid" id="musiciansGrid"></div>
     </div>
 
+    <!-- TAB: ESCALA -->
     <div id="tab-escala" class="tab-content" style="display:none;">
       <div class="section-header">
         <div><h2 class="section-title">Escala</h2><p class="section-sub" id="escalaAgendaLabel">Gerada com base nas disponibilidades enviadas</p></div>
@@ -574,44 +708,80 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
       <div class="schedule-container" id="scheduleContainer"></div>
     </div>
 
+    <!-- TAB: APROVADAS -->
     <div id="tab-aprovadas" class="tab-content" style="display:none;">
-      <div class="section-header"><div><h2 class="section-title">✅ Aprovadas</h2><p class="section-sub">Escalas aprovadas — prontas para envio</p></div></div>
+      <div class="section-header">
+        <div><h2 class="section-title">✅ Aprovadas</h2><p class="section-sub">Escalas aprovadas — prontas para envio</p></div>
+      </div>
       <div id="approvedContainer"></div>
     </div>
 
+    <!-- TAB: ENVIADAS -->
     <div id="tab-enviadas" class="tab-content" style="display:none;">
-      <div class="section-header"><div><h2 class="section-title">📤 Enviadas</h2><p class="section-sub">Escalas publicadas e visíveis para os músicos</p></div></div>
+      <div class="section-header">
+        <div><h2 class="section-title">📤 Enviadas</h2><p class="section-sub">Escalas publicadas e visíveis para os músicos</p></div>
+      </div>
       <div id="sentContainer"></div>
     </div>
 
+    <!-- TAB: ALERTAS -->
     <div id="tab-alertas" class="tab-content" style="display:none;">
-      <div class="section-header"><div><h2 class="section-title">🔔 Alertas</h2><p class="section-sub">Revogações, disponibilidades e sinalizações da equipe</p></div><button class="btn-sm" onclick="markAllNotifRead()">Marcar todas lidas</button></div>
+      <div class="section-header">
+        <div><h2 class="section-title">🔔 Alertas</h2><p class="section-sub">Revogações, disponibilidades e sinalizações da equipe</p></div>
+        <button class="btn-sm" onclick="markAllNotifRead()">Marcar todas lidas</button>
+      </div>
       <div id="notifContainer"></div>
     </div>
 
+    <!-- TAB: COMUNICAÇÃO -->
     <div id="tab-comunicacao" class="tab-content" style="display:none;">
-      <div class="section-header"><div><h2 class="section-title">💬 Comunicação</h2><p class="section-sub">Chat por agenda, painel geral e avisos</p></div></div>
+      <div class="section-header">
+        <div><h2 class="section-title">💬 Comunicação</h2><p class="section-sub">Chat por agenda, painel geral e avisos</p></div>
+      </div>
       <div class="member-tabs" id="commSubTabs">
         <button class="member-tab active" onclick="switchCommTab('avisos',this)">📢 Avisos ADM</button>
         <button class="member-tab" onclick="switchCommTab('geral',this)">💬 Chat Geral</button>
         <button class="member-tab" onclick="switchCommTab('agenda-chat',this)">📅 Chat por Agenda</button>
       </div>
-      <div id="commTab-avisos"><div id="avisosContainer"></div></div>
+      <div id="commTab-avisos">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
+          <button class="btn-gold" onclick="openNewAvisoModal()">📢 Novo Aviso</button>
+        </div>
+        <div id="avisosContainer"></div>
+      </div>
       <div id="commTab-geral" style="display:none;">
         <div class="banner blue" style="margin-bottom:14px;"><div class="banner-icon">💬</div><div class="banner-text"><strong>Chat Geral</strong><span>Comunicação aberta com toda a equipe musical.</span></div></div>
-        <div class="chat-wrap"><div class="chat-messages" id="chatGeralMessages"></div><div class="chat-input-row"><input type="text" class="chat-input" id="chatGeralInput" placeholder="Mensagem para toda a equipe…" onkeydown="if(event.key==='Enter')sendGeralMsg()"><button class="chat-send-btn" onclick="sendGeralMsg()">Enviar</button></div></div>
+        <div class="chat-wrap">
+          <div class="chat-messages" id="chatGeralMessages"></div>
+          <div class="chat-input-row">
+            <input type="text" class="chat-input" id="chatGeralInput" placeholder="Mensagem para toda a equipe…" onkeydown="if(event.key==='Enter')sendGeralMsg()">
+            <button class="chat-send-btn" onclick="sendGeralMsg()">Enviar</button>
+          </div>
+        </div>
       </div>
       <div id="commTab-agenda-chat" style="display:none;">
         <div class="banner gold" style="margin-bottom:14px;"><div class="banner-icon">📅</div><div class="banner-text"><strong>Chat por Agenda</strong><span>Mensagens específicas para os integrantes de cada agenda.</span></div></div>
-        <div style="margin-bottom:14px;"><select id="agendaChatSelector" onchange="loadAgendaChat()" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 12px;border-radius:9px;outline:none;min-height:40px;width:100%;max-width:320px;"><option value="">— Selecione uma agenda —</option></select></div>
-        <div class="chat-wrap" id="agendaChatWrap" style="display:none;"><div class="chat-messages" id="agendaChatMessages"></div><div class="chat-input-row"><input type="text" class="chat-input" id="agendaChatInput" placeholder="Mensagem para os integrantes desta agenda…" onkeydown="if(event.key==='Enter')sendAgendaMsg()"><button class="chat-send-btn" onclick="sendAgendaMsg()">Enviar</button></div></div>
+        <div style="margin-bottom:14px;">
+          <select id="agendaChatSelector" onchange="loadAgendaChat()" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 12px;border-radius:9px;outline:none;min-height:40px;width:100%;max-width:320px;">
+            <option value="">— Selecione uma agenda —</option>
+          </select>
+        </div>
+        <div class="chat-wrap" id="agendaChatWrap" style="display:none;">
+          <div class="chat-messages" id="agendaChatMessages"></div>
+          <div class="chat-input-row">
+            <input type="text" class="chat-input" id="agendaChatInput" placeholder="Mensagem para os integrantes desta agenda…" onkeydown="if(event.key==='Enter')sendAgendaMsg()">
+            <button class="chat-send-btn" onclick="sendAgendaMsg()">Enviar</button>
+          </div>
+        </div>
       </div>
     </div>
+
   </div>
 </div>
 
 </main>
 
+<!-- SWAP MODAL -->
 <div class="notif-overlay" id="swapModal">
   <div class="notif-modal" style="max-width:520px;">
     <div class="notif-modal-top"></div>
@@ -621,40 +791,89 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
       <select id="swapSunday" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 12px;border-radius:9px;outline:none;min-height:40px;" onchange="populateSwapInstruments()"></select>
     </div>
     <div class="form-row" style="gap:10px;margin-bottom:12px;">
-      <div class="form-group"><label>Culto</label><select id="swapService" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 12px;border-radius:9px;outline:none;min-height:40px;" onchange="populateSwapInstruments()"><option value="manha">☀️ Manhã</option><option value="noite">🌙 Noite</option></select></div>
-      <div class="form-group"><label>Instrumento</label><select id="swapInstrument" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 12px;border-radius:9px;outline:none;min-height:40px;" onchange="populateSwapTarget()"></select></div>
+      <div class="form-group">
+        <label>Culto</label>
+        <select id="swapService" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 12px;border-radius:9px;outline:none;min-height:40px;" onchange="populateSwapInstruments()">
+          <option value="manha">☀️ Manhã</option>
+          <option value="noite">🌙 Noite</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Instrumento / Função</label>
+        <select id="swapInstrument" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 12px;border-radius:9px;outline:none;min-height:40px;" onchange="populateSwapTarget()"></select>
+      </div>
     </div>
-    <div class="form-group" style="margin-bottom:16px;"><label>Substituir por</label><select id="swapTarget" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 12px;border-radius:9px;outline:none;min-height:40px;"></select></div>
-    <div class="notif-modal-actions"><button class="btn-primary" onclick="document.getElementById('swapModal').classList.remove('show')">Cancelar</button><button class="btn-red" onclick="applySwap()">Confirmar Troca</button></div>
+    <div class="form-group" style="margin-bottom:16px;">
+      <label>Substituir por</label>
+      <select id="swapTarget" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 12px;border-radius:9px;outline:none;min-height:40px;"></select>
+    </div>
+    <div class="notif-modal-actions">
+      <button class="btn-primary" onclick="document.getElementById('swapModal').classList.remove('show')">Cancelar</button>
+      <button class="btn-red" onclick="applySwap()">Confirmar Troca</button>
+    </div>
   </div>
 </div>
 
+<!-- NEW AGENDA MODAL -->
 <div class="notif-overlay" id="newAgendaModal">
-  <div class="notif-modal" style="max-width:560px;max-height:90vh;overflow-y:auto;">
+  <div class="notif-modal" style="max-width:560px;overflow-y:auto;max-height:90vh;">
     <div class="notif-modal-top"></div>
     <div class="notif-modal-title" style="text-align:left;margin-bottom:4px;">📅 Nova Agenda</div>
     <div style="font-size:12px;color:var(--text-dim);margin-bottom:16px;">Preencha os dados e selecione os domingos do calendário 2026</div>
-    <div class="form-group" style="margin-bottom:12px;"><label>Título da Agenda</label><input type="text" id="newAgendaTitle" placeholder="ex: Escala de Maio 2026"></div>
+    <div class="form-group" style="margin-bottom:12px;">
+      <label>Título da Agenda</label>
+      <input type="text" id="newAgendaTitle" placeholder="ex: Escala de Maio 2026">
+    </div>
     <div class="form-row" style="margin-bottom:12px;">
-      <div class="form-group"><label>Mês</label><select id="newAgendaMonth" onchange="renderCalPicker()"><option value="1">Janeiro</option><option value="2">Fevereiro</option><option value="3">Março</option><option value="4" selected>Abril</option><option value="5">Maio</option><option value="6">Junho</option><option value="7">Julho</option><option value="8">Agosto</option><option value="9">Setembro</option><option value="10">Outubro</option><option value="11">Novembro</option><option value="12">Dezembro</option></select></div>
-      <div class="form-group"><label>Ano</label><select id="newAgendaYear" onchange="renderCalPicker()"><option value="2026" selected>2026</option></select></div>
+      <div class="form-group">
+        <label>Mês</label>
+        <select id="newAgendaMonth" onchange="renderCalPicker()">
+          <option value="1">Janeiro</option><option value="2">Fevereiro</option><option value="3">Março</option>
+          <option value="4" selected>Abril</option><option value="5">Maio</option><option value="6">Junho</option>
+          <option value="7">Julho</option><option value="8">Agosto</option><option value="9">Setembro</option>
+          <option value="10">Outubro</option><option value="11">Novembro</option><option value="12">Dezembro</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Ano</label>
+        <select id="newAgendaYear" onchange="renderCalPicker()"><option value="2026" selected>2026</option></select>
+      </div>
     </div>
     <div style="margin-bottom:6px;font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;">Selecione os domingos:</div>
     <div id="calPicker" style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:10px;"></div>
     <div class="selected-dates-list" id="selectedDatesList"></div>
-    <div class="form-group" style="margin-bottom:16px;"><label>Descrição (opcional)</label><textarea id="newAgendaDesc" placeholder="Observações sobre esta agenda…"></textarea></div>
-    <div class="notif-modal-actions"><button class="btn-primary" onclick="document.getElementById('newAgendaModal').classList.remove('show')">Cancelar</button><button class="btn-red" onclick="createAgenda()">Criar Agenda & Notificar Equipe</button></div>
+    <div class="form-group" style="margin-bottom:16px;">
+      <label>Descrição (opcional)</label>
+      <textarea id="newAgendaDesc" placeholder="Observações sobre esta agenda…"></textarea>
+    </div>
+    <div class="notif-modal-actions">
+      <button class="btn-primary" onclick="document.getElementById('newAgendaModal').classList.remove('show')">Cancelar</button>
+      <button class="btn-red" onclick="createAgenda()">Criar Agenda & Notificar Equipe</button>
+    </div>
   </div>
 </div>
 
+<!-- NEW AVISO MODAL -->
 <div class="notif-overlay" id="newAvisoModal">
   <div class="notif-modal">
     <div class="notif-modal-top"></div>
     <div class="notif-modal-title" style="text-align:left;margin-bottom:16px;">📢 Novo Aviso</div>
-    <div class="form-group" style="margin-bottom:12px;"><label>Título</label><input type="text" id="newAvisoTitle" placeholder="Título do aviso"></div>
-    <div class="form-group" style="margin-bottom:16px;"><label>Mensagem</label><textarea id="newAvisoBody" placeholder="Escreva seu aviso para toda a equipe…" style="min-height:100px;"></textarea></div>
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;"><input type="checkbox" id="newAvisoPinned" style="accent-color:var(--red);width:16px;height:16px;"><label for="newAvisoPinned" style="font-size:12px;color:var(--text-mid);cursor:pointer;">📌 Fixar aviso no topo</label></div>
-    <div class="notif-modal-actions"><button class="btn-primary" onclick="document.getElementById('newAvisoModal').classList.remove('show')">Cancelar</button><button class="btn-gold" onclick="postAviso()">Publicar Aviso</button></div>
+    <div class="form-group" style="margin-bottom:12px;">
+      <label>Título</label>
+      <input type="text" id="newAvisoTitle" placeholder="Título do aviso">
+    </div>
+    <div class="form-group" style="margin-bottom:16px;">
+      <label>Mensagem</label>
+      <textarea id="newAvisoBody" placeholder="Escreva seu aviso para toda a equipe…" style="min-height:100px;"></textarea>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+      <input type="checkbox" id="newAvisoPinned" style="accent-color:var(--red);width:16px;height:16px;">
+      <label for="newAvisoPinned" style="font-size:12px;color:var(--text-mid);cursor:pointer;">📌 Fixar aviso no topo</label>
+    </div>
+    <div class="notif-modal-actions">
+      <button class="btn-primary" onclick="document.getElementById('newAvisoModal').classList.remove('show')">Cancelar</button>
+      <button class="btn-gold" onclick="postAviso()">Publicar Aviso</button>
+    </div>
   </div>
 </div>
 
@@ -662,476 +881,965 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
 
 <script>
 // ══════════════════════════════════════════════════════════
-// CONFIGURAÇÃO MASTER - URL do Firebase Central
-const MASTER_FIREBASE_URL = 'https://ibm-53e5f-default-rtdb.firebaseio.com';
-const MASTER_PATH = '/master_admin.json';
-
+const FIREBASE_URL = 'https://ibm-53e5f-default-rtdb.firebaseio.com';
+const ADM_PASSWORD  = 'ibmeier2026';
+const LS_SESSION    = 'ibm_session_v8';
+const SYNC_INTERVAL = 30000;
+const DB_PATH       = '/escalav8.json';
 // ══════════════════════════════════════════════════════════
-// VARIÁVEIS GLOBAIS
-let appData = null;
-let currentUser = null;
-let currentRole = null;
-let selectedRole = 'membro';
-let currentAgendaId = null;
-let memberPendingAvail = {};
-let syncTimer = null;
-let saving = false;
-let currentTeam = null;
-let teamFirebaseUrl = null;
-let teamAdmPassword = null;
 
-// ══════════════════════════════════════════════════════════
-// FUNÇÕES AUXILIARES
-function ls(k, d = null) {
-  try { const v = localStorage.getItem(k); return v != null ? JSON.parse(v) : d; } catch { return d; }
-}
-function lsW(k, v) {
-  try { localStorage.setItem(k, JSON.stringify(v)); } catch { }
-}
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
-function getUrlParameter(name) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(name);
-}
+const MONTHS_PT = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
-// ══════════════════════════════════════════════════════════
-// CARREGA CONFIGURAÇÃO DO TIME A PARTIR DO MASTER ADMIN
-async function loadTeamConfig() {
-  const teamId = getUrlParameter('team');
-  
-  if (!teamId) {
-    const savedTeam = ls('current_team');
-    if (savedTeam) {
-      currentTeam = savedTeam;
-      teamFirebaseUrl = currentTeam.firebaseUrl;
-      teamAdmPassword = currentTeam.admPassword;
-      document.getElementById('loginTeamName').textContent = currentTeam.name;
-      document.getElementById('loginTitle').innerHTML = `Painel de Cultos<br>${currentTeam.name}`;
-      document.getElementById('appSubtitle').innerHTML = `Cultos da Manhã e Noite · ${currentTeam.name}`;
-      document.getElementById('heroEyebrow').innerHTML = currentTeam.name;
-      document.getElementById('loginBgText').innerHTML = currentTeam.name;
-      return true;
-    }
-    showConfigError('Parâmetro "team" não encontrado na URL. Exemplo: ?team=team_ibm');
-    return false;
-  }
-  
-  try {
-    const response = await fetch(MASTER_FIREBASE_URL + MASTER_PATH);
-    if (!response.ok) throw new Error('Erro ao buscar dados master');
-    const masterData = await response.json();
-    
-    const teams = masterData?.teams || [];
-    currentTeam = teams.find(t => t.id === teamId);
-    
-    if (!currentTeam) {
-      showConfigError(`Time "${teamId}" não encontrado no Master Admin. Verifique se o ID está correto.`);
-      return false;
-    }
-    
-    teamFirebaseUrl = currentTeam.firebaseUrl;
-    teamAdmPassword = currentTeam.admPassword;
-    
-    lsW('current_team', currentTeam);
-    
-    document.getElementById('loginTeamName').textContent = currentTeam.name;
-    document.getElementById('loginTitle').innerHTML = `Painel de Cultos<br>${currentTeam.name}`;
-    document.getElementById('appSubtitle').innerHTML = `Cultos da Manhã e Noite · ${currentTeam.name}`;
-    document.getElementById('heroEyebrow').innerHTML = currentTeam.name;
-    document.getElementById('loginBgText').innerHTML = currentTeam.name;
-    
-    return true;
-  } catch (error) {
-    console.error('Erro ao carregar time:', error);
-    showConfigError('Erro de conexão com o servidor master. Verifique sua internet.');
-    return false;
-  }
-}
+const INSTRUMENTS = {
+  violao:   {label:'Violão',           emoji:'🎸'},
+  guitarra: {label:'Guitarra',         emoji:'🎸'},
+  teclado:  {label:'Teclado',          emoji:'🎹'},
+  baixo:    {label:'Baixo',            emoji:'🎸'},
+  bateria:  {label:'Bateria',          emoji:'🥁'},
+  percussao:{label:'Percussão',        emoji:'🥁'},
+  backing:  {label:'Backing',          emoji:'🎤'},
+  vocal:    {label:'Vocal',            emoji:'🎤'},
+  lider:    {label:'Líder de Louvor',  emoji:'👑'},
+};
 
-function showConfigError(message) {
-  const configError = document.getElementById('configError');
-  const msgEl = document.getElementById('configErrorMsg');
-  if (msgEl) msgEl.innerHTML = message;
-  if (configError) configError.style.display = 'flex';
-  document.getElementById('loadingOverlay').style.display = 'none';
-}
+const DEFAULT_MUSICIANS = [
+  {id:1, name:'Leo Correa',        instrument:'violao',   avail:{},roles:{}},
+  {id:2, name:'Natã',              instrument:'violao',   avail:{},roles:{}},
+  {id:3, name:'Bernardo',          instrument:'violao',   avail:{},roles:{}},
+  {id:4, name:'Cassio Leopoldino', instrument:'violao',   avail:{},roles:{}},
+  {id:5, name:'Endy Viegas',       instrument:'violao',   avail:{},roles:{}},
+  {id:6, name:'Flávio',            instrument:'guitarra', avail:{},roles:{}},
+  {id:7, name:'Adriano',           instrument:'guitarra', avail:{},roles:{}},
+  {id:8, name:'Wellerson',         instrument:'teclado',  avail:{},roles:{}},
+  {id:9, name:'Clésio',            instrument:'teclado',  avail:{},roles:{}},
+  {id:10,name:'Leandro Aguiar',    instrument:'teclado',  avail:{},roles:{}},
+  {id:11,name:'Wladia Pacheco',    instrument:'teclado',  avail:{},roles:{}},
+  {id:12,name:'Wellinton',         instrument:'teclado',  avail:{},roles:{}},
+  {id:13,name:'Paulo Beco',        instrument:'baixo',    avail:{},roles:{}},
+  {id:14,name:'Gab IBM',           instrument:'baixo',    avail:{},roles:{}},
+  {id:15,name:'Vinicius IBM',      instrument:'baixo',    avail:{},roles:{}},
+  {id:16,name:'Rafael Naso',       instrument:'baixo',    avail:{},roles:{}},
+  {id:17,name:'Rodrigo',           instrument:'bateria',  avail:{},roles:{}},
+  {id:18,name:'Rodrigo Serejo',    instrument:'bateria',  avail:{},roles:{}},
+  {id:19,name:'Eduardo Santos',    instrument:'bateria',  avail:{},roles:{}},
+  {id:20,name:'Vinícius Louzada',  instrument:'bateria',  avail:{},roles:{}},
+  {id:21,name:'Nelson Fernandes',  instrument:'percussao',avail:{},roles:{}},
+];
 
-// ══════════════════════════════════════════════════════════
-// FUNÇÕES DO FIREBASE DO TIME
-async function fbReadTeam() {
-  if (!teamFirebaseUrl) throw new Error('Firebase URL não configurada');
-  const path = teamFirebaseUrl + '/escalav8.json';
-  const r = await fetch(path);
-  if (!r.ok) throw new Error('Firebase time ' + r.status);
-  return await r.json();
-}
+let appData=null,currentUser=null,currentRole=null,selectedRole='membro';
+let nextId=22,memberPendingAvail={},syncTimer=null,saving=false;
+let currentAgendaId=null,calSelectedDates=[],calViewMonth=4,calViewYear=2026;
+let currentAgendaChatId=null;
 
-async function fbWriteTeam(data) {
-  if (!teamFirebaseUrl) throw new Error('Firebase URL não configurada');
-  const path = teamFirebaseUrl + '/escalav8.json';
-  const r = await fetch(path, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
-  if (!r.ok) throw new Error('Firebase write ' + r.status);
-  return await r.json();
-}
+function ls(k,d=null){try{const v=localStorage.getItem(k);return v!=null?JSON.parse(v):d}catch{return d}}
+function lsW(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
 
-function setSyncState(state, text) {
-  const indicator = document.getElementById('syncIndicator');
-  const syncText = document.getElementById('syncText');
-  if (indicator) {
-    indicator.className = 'sync-indicator ' + state;
-    if (syncText) syncText.textContent = text;
-  }
-}
-
-async function saveCloud() {
-  if (!appData || saving) return;
-  saving = true;
-  setSyncState('syncing', 'Salvando...');
-  try {
-    await fbWriteTeam(appData);
-    setSyncState('synced', 'Salvo ✓');
-    setTimeout(() => setSyncState('synced', 'Sincronizado'), 2000);
-  } catch (e) {
-    console.error('Erro ao salvar:', e);
-    setSyncState('error', 'Erro ao salvar');
-    showToast('⚠️ Erro ao salvar. Tente novamente.');
-  } finally {
-    saving = false;
-  }
-}
-
-async function loadCloud() {
-  if (!teamFirebaseUrl) return false;
-  setSyncState('syncing', 'Sincronizando...');
-  try {
-    const data = await fbReadTeam();
-    if (!data) {
-      appData = emptyAppData();
-      await fbWriteTeam(appData);
-    } else {
-      appData = data;
-      // Garantir que musicians seja um array
-      if (!appData.musicians || !Array.isArray(appData.musicians)) {
-        appData.musicians = []; // COMEÇA VAZIO para times novos!
-      }
-      appData.musicians.forEach(m => { if (!m.roles) m.roles = {}; });
-      if (!Array.isArray(appData.agendas)) appData.agendas = [];
-      if (!Array.isArray(appData.notifications)) appData.notifications = [];
-      if (!appData.revocations) appData.revocations = {};
-      if (!Array.isArray(appData.chatGeral)) appData.chatGeral = [];
-      if (!Array.isArray(appData.avisos)) appData.avisos = [];
-      if (!appData.agendaChats) appData.agendaChats = {};
-    }
-    setSyncState('synced', 'Sincronizado');
-    return true;
-  } catch (e) {
-    console.error('Erro ao carregar:', e);
-    setSyncState('error', 'Erro de conexão');
-    return false;
-  }
-}
-
-// FUNÇÃO CRÍTICA: NOVOS TIMES COMEÇAM SEM MÚSICOS!
-function emptyAppData() {
+function emptyAppData(){
   return {
-    musicians: [],  // ← COMEÇA VAZIO! ADM adiciona os músicos manualmente
-    agendas: [],
-    notifications: [],
-    revocations: {},
-    chatGeral: [],
-    avisos: [],
-    agendaChats: {}
+    musicians:JSON.parse(JSON.stringify(DEFAULT_MUSICIANS)),
+    agendas:[],notifications:[],revocations:{},
+    chatGeral:[],avisos:[],agendaChats:{}
   };
 }
 
-const INSTRUMENTS = {
-  violao: { label: 'Violão', emoji: '🎸' },
-  guitarra: { label: 'Guitarra', emoji: '🎸' },
-  teclado: { label: 'Teclado', emoji: '🎹' },
-  baixo: { label: 'Baixo', emoji: '🎸' },
-  bateria: { label: 'Bateria', emoji: '🥁' },
-  percussao: { label: 'Percussão', emoji: '🥁' },
-  backing: { label: 'Backing', emoji: '🎤' },
-  vocal: { label: 'Vocal', emoji: '🎤' },
-  lider: { label: 'Líder de Louvor', emoji: '👑' },
-};
-
-const MONTHS_PT = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-
-let nextId = 1;
-let calSelectedDates = [];
-let calViewMonth = 4;
-let calViewYear = 2026;
-let currentAgendaChatId = null;
-let activeMonthFilter = null;
-let memberCurrentAgendaChat = null;
-
-// ══════════════════════════════════════════════════════════
-// FUNÇÕES DE LOGIN
-function populateMemberSelect() {
-  const sel = document.getElementById('memberSelect');
-  if (!sel || !appData) return;
-  sel.innerHTML = '<option value="">— Selecione seu nome —</option>';
-  if (!appData.musicians || appData.musicians.length === 0) {
-    sel.innerHTML += '<option value="" disabled>Nenhum músico cadastrado ainda</option>';
-    return;
-  }
-  [...appData.musicians].sort((a, b) => a.name.localeCompare(b.name)).forEach(m => {
-    sel.innerHTML += `<option value="${m.id}">${m.name} (${INSTRUMENTS[m.instrument]?.emoji || ''} ${INSTRUMENTS[m.instrument]?.label || m.instrument}${m.roles?.leader ? ' 👑' : ''}${m.roles?.vocal ? ' 🎤' : ''})</option>`;
-  });
+// ── FIREBASE ──
+async function fbRead(){const r=await fetch(FIREBASE_URL+DB_PATH);if(!r.ok)throw new Error('Firebase '+r.status);return await r.json()}
+async function fbWrite(data){const r=await fetch(FIREBASE_URL+DB_PATH,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});if(!r.ok)throw new Error('Firebase write '+r.status);return await r.json()}
+function setSyncState(s,t){const e=document.getElementById('syncIndicator'),x=document.getElementById('syncText');if(e)e.className='sync-indicator '+s;if(x)x.textContent=t}
+async function saveCloud(){
+  if(!appData||saving)return;saving=true;setSyncState('syncing','Salvando…');
+  try{await fbWrite(appData);setSyncState('synced','Salvo ✓');setTimeout(()=>setSyncState('synced','Sincronizado'),2000)}
+  catch(e){setSyncState('error','Erro ao salvar');showToast('⚠️ Erro ao salvar.')}
+  finally{saving=false}
 }
-
-function selectRole(role) {
-  selectedRole = role;
-  document.getElementById('roleTabMember').classList.toggle('active', role === 'membro');
-  document.getElementById('roleTabAdm').classList.toggle('active', role === 'adm');
-  document.getElementById('memberLoginFields').style.display = role === 'membro' ? 'block' : 'none';
-  document.getElementById('admLoginFields').style.display = role === 'adm' ? 'block' : 'none';
-}
-
-async function doLogin() {
-  const btn = document.getElementById('btnEnter');
-  btn.disabled = true;
-  btn.textContent = '⏳ Entrando…';
-  try {
-    await loadCloud();
-    if (selectedRole === 'adm') {
-      const enteredPass = document.getElementById('admPassword').value;
-      if (enteredPass !== teamAdmPassword) {
-        showToast('Senha ADM incorreta');
-        return;
-      }
-      currentUser = { name: 'Administrador', role: 'adm' };
-      currentRole = 'adm';
-    } else {
-      const mid = parseInt(document.getElementById('memberSelect').value);
-      if (isNaN(mid)) {
-        showToast('Selecione seu nome');
-        return;
-      }
-      const m = appData.musicians.find(x => x.id === mid);
-      if (!m) {
-        showToast('Músico não encontrado');
-        return;
-      }
-      currentUser = { name: m.name, role: 'membro', musicianId: m.id };
-      currentRole = 'membro';
+async function loadCloud(){
+  setSyncState('syncing','Sincronizando…');
+  try{
+    const data=await fbRead();
+    if(!data){appData=emptyAppData();await fbWrite(appData)}
+    else{
+      appData=data;
+      if(!appData.musicians||!Array.isArray(appData.musicians))appData.musicians=JSON.parse(JSON.stringify(DEFAULT_MUSICIANS));
+      appData.musicians.forEach(m=>{if(!m.roles)m.roles={}});
+      if(!Array.isArray(appData.agendas))appData.agendas=[];
+      if(!Array.isArray(appData.notifications))appData.notifications=[];
+      if(!appData.revocations)appData.revocations={};
+      if(!Array.isArray(appData.chatGeral))appData.chatGeral=[];
+      if(!Array.isArray(appData.avisos))appData.avisos=[];
+      if(!appData.agendaChats)appData.agendaChats={};
     }
-    lsW('ibm_session_v9', currentUser);
-    enterApp();
-  } catch (e) {
-    console.error(e);
-    showToast('Erro ao fazer login');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'Entrar no Painel →';
-  }
+    nextId=appData.musicians.reduce((max,m)=>Math.max(max,m.id),0)+1;
+    setSyncState('synced','Sincronizado');return true;
+  }catch(e){setSyncState('error','Erro de conexão');return false}
 }
+function startAutoSync(){stopAutoSync();syncTimer=setInterval(async()=>{const ok=await loadCloud();if(ok&&currentRole==='adm')refreshAdmView();if(ok&&currentRole==='membro')renderMemberPanel();renderStats()},SYNC_INTERVAL)}
+function stopAutoSync(){if(syncTimer){clearInterval(syncTimer);syncTimer=null}}
 
-function logout() {
-  if (syncTimer) clearInterval(syncTimer);
-  currentUser = null;
-  currentRole = null;
-  memberPendingAvail = {};
-  lsW('ibm_session_v9', null);
+// ── INIT ──
+async function init(){
+  const overlay=document.getElementById('loadingOverlay');
+  if(!FIREBASE_URL||FIREBASE_URL.includes('COLE_SUA_URL')){overlay.style.display='none';document.getElementById('configError').style.display='flex';return}
+  const ok=await loadCloud();overlay.style.display='none';
+  if(!ok){document.getElementById('configError').style.display='flex';return}
+  const session=ls(LS_SESSION);
+  if(session?.role){
+    if(session.role==='membro'){const m=appData.musicians.find(x=>x.id==session.musicianId);if(m){currentUser=session;currentRole='membro';enterApp();return}}
+    else if(session.role==='adm'){currentUser=session;currentRole='adm';enterApp();return}
+  }
   showLoginScreen();
 }
 
-function enterApp() {
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('appScreen').style.display = 'block';
-  const isAdm = currentRole === 'adm';
-  const badge = isAdm ? '<span class="adm-badge">🛡 ADM</span>' : '';
-  document.getElementById('appTitle').innerHTML = (isAdm ? 'Painel ADM' : `Olá, ${currentUser.name}!`) + badge;
-  document.getElementById('appSubtitle').innerHTML = `Cultos da Manhã e Noite · ${currentTeam?.name || 'Igreja Batista'}`;
-  
-  document.getElementById('headerRight').innerHTML = `
-    <div class="sync-indicator synced" id="syncIndicator"><div class="sync-dot"></div><span class="sync-text" id="syncText">Sincronizado</span></div>
-    <div class="user-chip"><div class="user-avatar">${currentUser.name[0].toUpperCase()}</div><span class="user-name">${currentUser.name}${isAdm ? ' 🛡' : ''}</span></div>
-    <button class="btn-logout" onclick="logout()">Sair</button>`;
-  
-  if (isAdm) {
-    document.getElementById('admTabs').style.display = 'flex';
-    document.getElementById('admContent').style.display = 'block';
-    document.getElementById('memberPanel').style.display = 'none';
-    renderMonthSelector();
-    renderAgendas();
-    updateNotifBadge();
-    populateAgendaChatSelector();
-    renderAvisos();
-    renderGeralChat();
-  } else {
-    document.getElementById('admTabs').style.display = 'none';
-    document.getElementById('admContent').style.display = 'none';
-    document.getElementById('memberPanel').style.display = 'block';
-    initMemberPendingAvail();
-    renderMemberPanel();
-    checkPendingNotifForMember();
-  }
-  renderStats();
-  startAutoSync();
-}
-
-function startAutoSync() {
-  if (syncTimer) clearInterval(syncTimer);
-  syncTimer = setInterval(async () => {
-    const ok = await loadCloud();
-    if (ok && currentRole === 'adm') refreshAdmView();
-    if (ok && currentRole === 'membro') renderMemberPanel();
-    renderStats();
-  }, 30000);
-}
-
-function showLoginScreen() {
+// ── LOGIN ──
+function showLoginScreen(){
   populateMemberSelect();
-  document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('appScreen').style.display = 'none';
-  document.getElementById('configError').style.display = 'none';
-  document.getElementById('loadingOverlay').style.display = 'none';
-  const hr = document.getElementById('headerRight');
-  hr.innerHTML = `<div class="sync-indicator synced" id="syncIndicator"><div class="sync-dot"></div><span class="sync-text" id="syncText">Conectado</span></div><button class="btn-login" onclick="showLoginScreen()">Entrar</button>`;
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('appScreen').style.display='none';
+  document.getElementById('configError').style.display='none';
+  const hr=document.getElementById('headerRight');
+  hr.innerHTML=`<div class="sync-indicator synced" id="syncIndicator"><div class="sync-dot"></div><span class="sync-text" id="syncText">Conectado</span></div><button class="btn-login" onclick="showLoginScreen()">Entrar</button>`;
+}
+function selectRole(role){
+  selectedRole=role;
+  document.getElementById('roleTabMember').classList.toggle('active',role==='membro');
+  document.getElementById('roleTabAdm').classList.toggle('active',role==='adm');
+  document.getElementById('memberLoginFields').style.display=role==='membro'?'block':'none';
+  document.getElementById('admLoginFields').style.display=role==='adm'?'block':'none';
+}
+async function doLogin(){
+  const btn=document.getElementById('btnEnter');btn.disabled=true;btn.textContent='⏳ Entrando…';
+  try{
+    await loadCloud();
+    if(selectedRole==='adm'){if(document.getElementById('admPassword').value!==ADM_PASSWORD){showToast('Senha incorreta');return}
+      currentUser={name:'Administrador',role:'adm'}}
+    else{const mid=document.getElementById('memberSelect').value;if(!mid){showToast('Selecione seu nome');return}
+      const m=appData.musicians.find(x=>x.id==mid);if(!m){showToast('Músico não encontrado');return}
+      currentUser={name:m.name,role:'membro',musicianId:m.id}}
+    currentRole=currentUser.role;lsW(LS_SESSION,currentUser);enterApp();
+  }finally{btn.disabled=false;btn.textContent='Entrar no Painel →'}
+}
+function logout(){stopAutoSync();currentUser=null;currentRole=null;memberPendingAvail={};lsW(LS_SESSION,null);showLoginScreen()}
+function enterApp(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('appScreen').style.display='block';
+  const isAdm=currentRole==='adm';
+  const badge=isAdm?'<span class="adm-badge">🛡 ADM</span>':'';
+  document.getElementById('appTitle').innerHTML=(isAdm?'Painel ADM':`Olá, ${currentUser.name}!`)+badge;
+  document.getElementById('appSubtitle').textContent=isAdm?'Gerencie agendas, escala e comunicação':'Suas escalas · Igreja Batista do Méier';
+  document.getElementById('headerRight').innerHTML=`
+    <div class="sync-indicator synced" id="syncIndicator"><div class="sync-dot"></div><span class="sync-text" id="syncText">Sincronizado</span></div>
+    <div class="user-chip"><div class="user-avatar">${currentUser.name[0].toUpperCase()}</div><span class="user-name">${currentUser.name}${isAdm?' 🛡':''}</span></div>
+    <button class="btn-logout" onclick="logout()">Sair</button>`;
+  if(isAdm){
+    document.getElementById('admTabs').style.display='flex';
+    document.getElementById('admContent').style.display='block';
+    document.getElementById('memberPanel').style.display='none';
+    renderMonthSelector();renderAgendas();updateNotifBadge();populateAgendaChatSelector();renderAvisos();renderGeralChat();
+  }else{
+    document.getElementById('admTabs').style.display='none';
+    document.getElementById('admContent').style.display='none';
+    document.getElementById('memberPanel').style.display='block';
+    initMemberPendingAvail();renderMemberPanel();checkPendingNotifForMember();
+  }
+  renderStats();startAutoSync();
+  // GSAP entry animation
+  if(window.gsap){
+    gsap.from('#statsBar .stat-card',{opacity:0,y:20,stagger:0.08,duration:0.5,ease:'power2.out',delay:0.2});
+    gsap.from('#admTabs .tab',{opacity:0,y:-10,stagger:0.04,duration:0.4,ease:'power2.out',delay:0.1});
+  }
 }
 
-// ══════════════════════════════════════════════════════════
-// FUNÇÕES DE RENDERIZAÇÃO (versão simplificada - mantenha as funções do original)
-function renderStats() {
-  const bar = document.getElementById('statsBar');
-  if (!bar || !appData) return;
-  if (currentRole === 'adm') {
-    const total = appData.agendas?.length || 0;
-    const sent = (appData.agendas || []).filter(a => a.status === 'sent').length;
-    const approved = (appData.agendas || []).filter(a => a.status === 'approved').length;
-    bar.innerHTML = `
+// ── STATS ──
+function renderStats(){
+  if(!appData)return;
+  const bar=document.getElementById('statsBar');if(!bar)return;
+  if(currentRole==='adm'){
+    const total=appData.agendas.length,sent=(appData.agendas||[]).filter(a=>a.status==='sent').length,approved=(appData.agendas||[]).filter(a=>a.status==='approved').length;
+    bar.innerHTML=`
       <div class="stat-card"><div class="stat-val">${total}</div><div class="stat-label">Agendas</div></div>
-      <div class="stat-card"><div class="stat-val">${appData.musicians?.length || 0}</div><div class="stat-label">Músicos</div></div>
+      <div class="stat-card"><div class="stat-val">${appData.musicians.length}</div><div class="stat-label">Músicos</div></div>
       <div class="stat-card"><div class="stat-val">${approved}</div><div class="stat-label">Aprovadas</div></div>
       <div class="stat-card"><div class="stat-val">${sent}</div><div class="stat-label">Enviadas</div></div>`;
-  }
+  }else{bar.innerHTML=''}
 }
 
-// FUNÇÃO PARA ADICIONAR MÚSICO (ADM)
-async function addMusician() {
-  const name = document.getElementById('newName').value.trim();
-  const instr = document.getElementById('newInstr').value;
-  if (!name) { showToast('Digite o nome'); return; }
-  if (!appData.musicians) appData.musicians = [];
-  const newId = Date.now();
-  appData.musicians.push({
-    id: newId,
-    name: name,
-    instrument: instr,
-    avail: {},
-    roles: {}
+// ── MONTH SELECTOR ──
+function renderMonthSelector(){
+  const el=document.getElementById('monthSelector');if(!el)return;
+  el.innerHTML='<button class="month-btn active" onclick="filterAgendaByMonth(null,this)">Todos</button>'+
+    MONTHS_PT.map((m,i)=>`<button class="month-btn" onclick="filterAgendaByMonth(${i+1},this)">${m}</button>`).join('');
+}
+let activeMonthFilter=null;
+function filterAgendaByMonth(month,btn){
+  activeMonthFilter=month;
+  document.querySelectorAll('.month-selector .month-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderAgendas();
+}
+
+// ── AGENDAS ──
+function renderAgendas(){
+  const grid=document.getElementById('agendasGrid');if(!grid||!appData)return;
+  let list=appData.agendas||[];
+  if(activeMonthFilter)list=list.filter(a=>a.month==activeMonthFilter);
+  if(!list.length){grid.innerHTML=`<div class="empty-state"><span class="empty-state-icon">📅</span><p>Nenhuma agenda encontrada.<br><small>Clique em "+ Nova Agenda" para começar.</small></p></div>`;return}
+  const sL={draft:'Rascunho',collecting:'Coletando Disponibilidade',approved:'Aprovada',sent:'Enviada'};
+  const sC={draft:'agenda-status-draft',collecting:'agenda-status-collecting',approved:'agenda-status-approved',sent:'agenda-status-sent'};
+  grid.innerHTML=`<div class="agenda-grid">${list.map(a=>`
+    <div class="agenda-card" onclick="selectAgenda('${a.id}')">
+      <div class="agenda-card-stripe"></div>
+      <div class="agenda-card-body">
+        <div class="agenda-card-month">📅 ${MONTHS_PT[(a.month||4)-1]} ${a.year||2026}</div>
+        <div class="agenda-card-title">${a.title}</div>
+        <div class="agenda-card-dates">${(a.sundays||[]).map(d=>d.label+' ('+d.date+')').join(' · ')||'—'}</div>
+        <span class="agenda-card-status ${sC[a.status]||'agenda-status-draft'}">${sL[a.status]||'Rascunho'}</span>
+        ${a.description?`<div style="font-size:11px;color:var(--text-dim);margin-top:8px;">${a.description}</div>`:''}
+      </div>
+      <div class="agenda-card-footer">
+        <span style="font-size:10px;color:var(--text-dim);">Criada em ${a.createdAt||'—'}</span>
+        <div class="agenda-card-actions">
+          ${a.status==='draft'||a.status==='collecting'?`<button class="btn-sm" onclick="event.stopPropagation();requestAvailabilityForAgenda('${a.id}')">📨 Solicitar</button>`:''}
+          ${a.status==='approved'?`<button class="btn-green" style="font-size:11px;padding:5px 11px;" onclick="event.stopPropagation();sendAgendaToAll('${a.id}')">📤 Enviar</button>`:''}
+          ${a.status==='sent'?`<button class="btn-amber" style="font-size:11px;padding:5px 11px;" onclick="event.stopPropagation();editSentAgenda('${a.id}')">✏️ Editar</button>`:''}
+          <button class="btn-danger" style="font-size:11px;padding:5px 11px;" onclick="event.stopPropagation();deleteAgenda('${a.id}')">🗑</button>
+        </div>
+      </div>
+    </div>`).join('')}</div>`;
+  if(window.gsap){gsap.from('.agenda-card',{opacity:0,y:16,stagger:0.07,duration:0.45,ease:'power2.out'})}
+}
+
+function selectAgenda(id){
+  currentAgendaId=id;const ag=appData.agendas.find(a=>a.id===id);if(!ag)return;
+  document.getElementById('dispAgendaLabel').textContent=`Gerenciando: ${ag.title} · ${MONTHS_PT[(ag.month||4)-1]} ${ag.year||2026}`;
+  document.getElementById('escalaAgendaLabel').textContent=`${ag.title} — baseada nas disponibilidades enviadas`;
+  initAgendaAvail(ag);switchAdmTab('disponibilidade',null);
+  document.querySelectorAll('#admTabs .tab').forEach((t,i)=>t.classList.toggle('active',i===1));
+}
+function initAgendaAvail(ag){
+  if(!ag.avail)ag.avail={};if(!ag.submissions)ag.submissions={};if(!ag.schedule)ag.schedule={};if(ag.approved===undefined)ag.approved=false;
+  appData.musicians.forEach(m=>{if(!ag.avail[m.id])ag.avail[m.id]={};(ag.sundays||[]).forEach((_,si)=>{if(!ag.avail[m.id][si])ag.avail[m.id][si]={m:false,n:false}})});
+}
+
+async function createAgenda(){
+  const title=document.getElementById('newAgendaTitle').value.trim();
+  const month=parseInt(document.getElementById('newAgendaMonth').value);
+  const year=parseInt(document.getElementById('newAgendaYear').value);
+  if(!title){showToast('Digite o título da agenda');return}
+  if(calSelectedDates.length===0){showToast('Selecione ao menos um domingo');return}
+  const now=new Date();const dateStr=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  const id='ag_'+now.getTime();
+  const sundays=calSelectedDates.slice().sort((a,b)=>a.dayNum-b.dayNum).map((d,i)=>({date:d.label,label:`${i+1}º Domingo`,dayNum:d.dayNum}));
+  const newAgenda={id,title,month,year,sundays,description:document.getElementById('newAgendaDesc').value.trim(),status:'collecting',createdAt:dateStr,avail:{},submissions:{},schedule:{},approved:false,sent:false,sentAt:null,whatsappText:''};
+  if(!Array.isArray(appData.agendas))appData.agendas=[];
+  appData.agendas.unshift(newAgenda);initAgendaAvail(newAgenda);
+  appData.notifications.unshift({id:now.getTime(),type:'new-agenda',agendaId:id,agendaTitle:title,createdAt:dateStr,read:false,msg:`Nova agenda "${title}" criada. Informe sua disponibilidade.`});
+  await saveCloud();document.getElementById('newAgendaModal').classList.remove('show');
+  calSelectedDates=[];document.getElementById('newAgendaTitle').value='';document.getElementById('newAgendaDesc').value='';
+  renderAgendas();updateNotifBadge();showToast('📅 Agenda criada! Equipe notificada.');
+}
+async function deleteAgenda(id){if(!confirm('Excluir esta agenda?'))return;appData.agendas=appData.agendas.filter(a=>a.id!==id);await saveCloud();renderAgendas();showToast('Agenda excluída.')}
+async function sendAgendaToAll(id){
+  const ag=appData.agendas.find(a=>a.id===id);if(!ag||!confirm(`Enviar "${ag.title}" para todos os músicos?`))return;
+  const now=new Date();ag.status='sent';ag.sentAt=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  await saveCloud();renderAgendas();renderStats();showToast('📤 Agenda enviada para todos!');
+}
+// ALTERAR: reabre agenda de volta para approved + volta para aba escala
+async function editSentAgenda(id){
+  const ag=appData.agendas.find(a=>a.id===id);if(!ag)return;
+  const action=confirm(`Alterar a agenda "${ag.title}"?\n\nIsso vai retirar a publicação para que você possa editar a escala.\nOs músicos serão notificados quando você reenviar.`);
+  if(!action)return;
+  ag.status='approved';ag.sentAt=null;
+  currentAgendaId=id;
+  await saveCloud();renderAgendas();renderSentSchedules();
+  showToast('✏️ Agenda reaberta para edição.');
+  switchAdmTab('escala',null);
+  document.querySelectorAll('#admTabs .tab').forEach((t,i)=>t.classList.toggle('active',i===2));
+}
+
+async function requestAvailabilityForAgenda(id){
+  const ag=appData.agendas.find(a=>a.id===id);if(!ag)return;
+  const now=new Date();const dateStr=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  appData.notifications.unshift({id:now.getTime(),type:'avail-request',agendaId:ag.id,agendaTitle:ag.title,createdAt:dateStr,read:false,msg:`ADM solicitou sua disponibilidade para "${ag.title}".`});
+  ag.status='collecting';await saveCloud();updateNotifBadge();renderAgendas();showToast('📨 Disponibilidade solicitada à equipe!');
+}
+async function requestAvailability(){if(!currentAgendaId){showToast('Selecione uma agenda primeiro');return}await requestAvailabilityForAgenda(currentAgendaId)}
+
+// ── ROLES (ADM only) ──
+async function toggleMusicianRole(id,role){
+  if(currentRole!=='adm'){showToast('Apenas o ADM pode alterar funções');return}
+  const m=appData.musicians.find(x=>x.id==id);if(!m)return;
+  if(!m.roles)m.roles={};
+  m.roles[role]=!m.roles[role];
+  await saveCloud();renderMusicians();showToast(`Função ${role==='leader'?'Líder de Louvor':'Vocal'} ${m.roles[role]?'atribuída':'removida'} para ${m.name}`);
+}
+
+// ── MUSICIANS GRID ──
+function renderMusicians(){
+  if(!appData)return;
+  const grid=document.getElementById('musiciansGrid');if(!grid)return;
+  const ag=currentAgendaId?appData.agendas.find(a=>a.id===currentAgendaId):null;
+  if(!ag){grid.innerHTML='<div class="empty-state"><span class="empty-state-icon">📅</span><p>Selecione uma agenda primeiro.</p></div>';return}
+  const sundays=ag.sundays||[];
+  renderAvailStatus(ag,sundays);
+  if(!appData.musicians.length){grid.innerHTML='<div class="empty-state"><span class="empty-state-icon">🎵</span><p>Nenhum músico cadastrado.</p></div>';return}
+  grid.innerHTML=appData.musicians.map(m=>{
+    const instr=INSTRUMENTS[m.instrument]||{label:m.instrument,emoji:'🎸'};
+    const sub=ag.submissions?.[m.id];
+    const badge=sub?.submitted?`<span class="submitted-badge">✅ Enviou</span>`:`<span class="pending-badge">⏳ Aguardando</span>`;
+    const isLeader=!!(m.roles?.leader);const isVocal=!!(m.roles?.vocal);
+    const roleBadges=(isLeader?`<span class="role-badge-leader">👑 Líder</span>`:'')+(isVocal?`<span class="role-badge-vocal">🎤 Vocal</span>`:'');
+    // avail rows: GREEN = disponível, RED = indisponível
+    const rows=sundays.map((s,si)=>{
+      const mOn=!!(ag.avail?.[m.id]?.[si]?.m);const nOn=!!(ag.avail?.[m.id]?.[si]?.n);
+      return `<div class="sunday-row">
+        <span class="sunday-label">${s.date}</span>
+        <div class="toggle-group">
+          <button class="toggle-btn manha ${mOn?'on':''}" title="${mOn?'Disponível manhã':'Indisponível manhã'}" onclick="toggleAvail('${ag.id}',${m.id},${si},'m')">☀️ ${mOn?'✓':'✗'}</button>
+          <button class="toggle-btn noite ${nOn?'on':''}" title="${nOn?'Disponível noite':'Indisponível noite'}" onclick="toggleAvail('${ag.id}',${m.id},${si},'n')">🌙 ${nOn?'✓':'✗'}</button>
+        </div>
+      </div>`;
+    }).join('');
+    return `<div class="musician-card ${sub?.submitted?'submitted':''}">
+      <div class="musician-header">
+        <div class="musician-header-left">
+          <div class="musician-icon">${instr.emoji}</div>
+          <div class="musician-name-wrap">
+            <div class="musician-name">${m.name}</div>
+            <div class="musician-instrument">${instr.label}</div>
+          </div>
+        </div>
+        <div class="status-badge-wrap">${badge}${roleBadges}</div>
+      </div>
+      <div class="sundays-avail">${rows||'<span style="font-size:11px;color:var(--text-dim);">Nenhum domingo nesta agenda</span>'}</div>
+      ${sub?.submitted?`<div style="font-size:10px;color:var(--text-dim);">Enviado em ${sub.submittedAt}</div>`:''}
+      ${currentRole==='adm'?`<div class="role-manage-row">
+        <span class="role-manage-label">Função:</span>
+        <button class="role-toggle-btn ${isLeader?'leader-on':''}" onclick="toggleMusicianRole(${m.id},'leader')">👑 ${isLeader?'Líder ✓':'Líder'}</button>
+        <button class="role-toggle-btn ${isVocal?'vocal-on':''}" onclick="toggleMusicianRole(${m.id},'vocal')">🎤 ${isVocal?'Vocal ✓':'Vocal'}</button>
+      </div>`:''}
+    </div>`;
+  }).join('');
+  if(window.gsap){gsap.from('.musician-card',{opacity:0,y:12,stagger:0.05,duration:0.4,ease:'power2.out'})}
+}
+
+function renderAvailStatus(ag,sundays){
+  const area=document.getElementById('availStatusArea');if(!area||!sundays.length)return;
+  const submitted=appData.musicians.filter(m=>ag.submissions?.[m.id]?.submitted).length;
+  const total=appData.musicians.length;
+  area.innerHTML=`<div class="banner ${submitted===total?'green':submitted>0?'gold':'red'}" style="margin-bottom:14px;">
+    <div class="banner-icon">${submitted===total?'✅':submitted>0?'⏳':'📋'}</div>
+    <div class="banner-text"><strong>${submitted} de ${total} músicos enviaram disponibilidade</strong>
+    <span>${submitted===total?'Todos enviaram! Pronto para gerar a escala.':submitted>0?'Aguardando os demais…':'Clique em "Solicitar Disponibilidade" para notificar a equipe.'}</span></div>
+  </div>`;
+}
+
+async function toggleAvail(agendaId,musicianId,si,slot){
+  const ag=appData.agendas.find(a=>a.id===agendaId);if(!ag)return;
+  if(!ag.avail[musicianId])ag.avail[musicianId]={};if(!ag.avail[musicianId][si])ag.avail[musicianId][si]={m:false,n:false};
+  ag.avail[musicianId][si][slot]=!ag.avail[musicianId][si][slot];
+  renderMusicians();await saveCloud();showToast('Disponibilidade atualizada');
+}
+
+// ── SCHEDULE ──
+function generateSchedule(){
+  const ag=currentAgendaId?appData.agendas.find(a=>a.id===currentAgendaId):null;
+  if(!ag){showToast('Selecione uma agenda primeiro');return}
+  const sundays=ag.sundays||[];ag.schedule={};
+  const usageCount={},weekUsed={};
+  sundays.forEach((_,si)=>{
+    ag.schedule[si]={manha:{},noite:{}};
+    ['manha','noite'].forEach(s=>{
+      const slot=s==='manha'?'m':'n';
+      Object.keys(INSTRUMENTS).forEach(instr=>{
+        const key=`${si}-${instr}`;if(!weekUsed[key])weekUsed[key]=new Set();
+        const avail=appData.musicians.filter(m=>m.instrument===instr&&ag.avail?.[m.id]?.[si]?.[slot]&&!weekUsed[key].has(m.id));
+        if(!avail.length)return;avail.sort((a,b)=>(usageCount[a.id]||0)-(usageCount[b.id]||0));
+        const chosen=avail[0];ag.schedule[si][s][instr]=chosen.id;weekUsed[key].add(chosen.id);usageCount[chosen.id]=(usageCount[chosen.id]||0)+1;
+      });
+    });
   });
-  document.getElementById('newName').value = '';
-  populateMemberSelect();
-  renderMusicians();
-  await saveCloud();
-  showToast('✅ Músico adicionado!');
+  renderSchedule();
+  const b1=document.getElementById('btnApprove'),b2=document.getElementById('btnSwap');
+  if(b1)b1.style.display='inline-flex';if(b2)b2.style.display='inline-flex';
+  saveCloud();showToast('Escala gerada! Revise e clique em Aprovar.');
 }
 
-function toggleAddForm() {
-  document.getElementById('addForm').classList.toggle('visible');
+function renderSchedule(){
+  const container=document.getElementById('scheduleContainer');if(!container||!appData)return;
+  const ag=currentAgendaId?appData.agendas.find(a=>a.id===currentAgendaId):null;
+  if(!ag){container.innerHTML=`<div class="empty-state"><span class="empty-state-icon">📅</span><p>Selecione uma agenda primeiro.</p></div>`;return}
+  const sundays=ag.sundays||[];
+  if(!ag.schedule||!Object.keys(ag.schedule).length){container.innerHTML=`<div class="empty-state"><span class="empty-state-icon">📅</span><p>Nenhuma escala gerada.<br><small>Clique em "Gerar".</small></p></div>`;return}
+  container.innerHTML=sundays.map((_,si)=>{
+    const services=['manha','noite'].map(s=>{
+      const isM=s==='manha';
+      const instrRows=Object.keys(INSTRUMENTS).map(instr=>{
+        if(!appData.musicians.some(m=>m.instrument===instr))return'';
+        const mid=ag.schedule[si]?.[s]?.[instr];
+        const opts=appData.musicians.filter(m=>m.instrument===instr).map(m=>`<option value="${m.id}" ${mid==m.id?'selected':''}>${m.name}${m.roles?.leader?' 👑':''}${m.roles?.vocal?' 🎤':''}</option>`).join('');
+        return `<div class="instr-row"><span class="instr-name">${INSTRUMENTS[instr].label}</span>
+          <select class="instr-select" onchange="manualAssign(${si},'${s}','${instr}',this.value)">
+            <option value="">— vago —</option>${opts}
+          </select></div>`;
+      }).filter(Boolean).join('');
+      return `<div class="schedule-service"><div class="service-label ${s}">${isM?'☀️ Manhã':'🌙 Noite'}</div><div class="instr-rows">${instrRows}</div></div>`;
+    }).join('');
+    return `<div class="schedule-sunday">
+      <div class="schedule-sunday-header"><span class="schedule-sunday-title">${sundays[si].label}</span><span class="schedule-sunday-date">${sundays[si].date}</span></div>
+      <div class="schedule-services">${services}</div>
+    </div>`;
+  }).join('');
 }
 
-function renderMusicians() {
-  const grid = document.getElementById('musiciansGrid');
-  if (!grid || !appData) return;
-  const ag = currentAgendaId ? appData.agendas.find(a => a.id === currentAgendaId) : null;
-  if (!ag) {
-    grid.innerHTML = '<div class="empty-state"><span class="empty-state-icon">📅</span><p>Selecione uma agenda primeiro.</p></div>';
-    return;
-  }
-  if (!appData.musicians || appData.musicians.length === 0) {
-    grid.innerHTML = '<div class="empty-state"><span class="empty-state-icon">🎵</span><p>Nenhum músico cadastrado.<br><small>Clique em "+ Adicionar Músico" para começar.</small></p></div>';
-    return;
-  }
-  // continua renderização normal...
-  // (manter o resto da função renderMusicians do original)
+async function manualAssign(si,service,instr,val){
+  const ag=currentAgendaId?appData.agendas.find(a=>a.id===currentAgendaId):null;if(!ag)return;
+  if(!ag.schedule[si])ag.schedule[si]={manha:{},noite:{}};
+  ag.schedule[si][service][instr]=val?parseInt(val):null;
+  await saveCloud();showToast('Ajuste salvo');
 }
 
-// ══════════════════════════════════════════════════════════
-// INICIALIZAÇÃO
-async function init() {
-  const overlay = document.getElementById('loadingOverlay');
-  overlay.style.display = 'flex';
-  
-  const teamLoaded = await loadTeamConfig();
-  if (!teamLoaded) return;
-  
-  const ok = await loadCloud();
-  overlay.style.display = 'none';
-  
-  if (!ok) {
-    document.getElementById('configError').style.display = 'flex';
-    return;
-  }
-  
-  const session = ls('ibm_session_v9');
-  if (session?.role === 'adm') {
-    currentUser = session;
-    currentRole = 'adm';
-    enterApp();
-  } else if (session?.role === 'membro') {
-    const m = appData.musicians?.find(x => x.id === session.musicianId);
-    if (m) {
-      currentUser = session;
-      currentRole = 'membro';
-      enterApp();
-    } else {
-      showLoginScreen();
-    }
-  } else {
-    showLoginScreen();
-  }
+async function approveSchedule(){
+  const ag=currentAgendaId?appData.agendas.find(a=>a.id===currentAgendaId):null;
+  if(!ag||!ag.schedule||!Object.keys(ag.schedule).length){showToast('Gere a escala antes de aprovar');return}
+  if(!confirm('Aprovar esta escala?'))return;
+  const now=new Date();ag.status='approved';
+  ag.approvedAt=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  ag.whatsappText=buildWhatsappTextForAgenda(ag);
+  document.getElementById('btnApprove').style.display='none';
+  await saveCloud();renderStats();renderAgendas();showToast('✅ Escala aprovada!');
+  switchAdmTab('aprovadas',null);document.querySelectorAll('#admTabs .tab').forEach((t,i)=>t.classList.toggle('active',i===3));
 }
 
-// Placeholder functions (mantenha as funções completas do original)
-function renderMonthSelector() {}
-function renderAgendas() {}
-function updateNotifBadge() {}
-function populateAgendaChatSelector() {}
-function renderAvisos() {}
-function renderGeralChat() {}
-function initMemberPendingAvail() {}
-function renderMemberPanel() {}
-function checkPendingNotifForMember() {}
-function refreshAdmView() {}
-function switchAdmTab(name, btn) {}
-function openNewAgendaModal() {}
-function requestAvailability() {}
-function generateSchedule() {}
-function openSwapModal() {}
-function approveSchedule() {}
-function markAllNotifRead() {}
-function switchCommTab(name, btn) {}
-function sendGeralMsg() {}
-function loadAgendaChat() {}
-function sendAgendaMsg() {}
-function closeNotifOverlay() {}
-function goToAvailability() {}
-function toggleAvail(agendaId, musicianId, si, slot) {}
-function populateSwapInstruments() {}
-function populateSwapTarget() {}
-function applySwap() {}
-function renderCalPicker() {}
-function createAgenda() {}
-function postAviso() {}
-function buildWhatsappTextForAgenda(ag) { return ''; }
+// ── SWAP ──
+function openSwapModal(){
+  const ag=currentAgendaId?appData.agendas.find(a=>a.id===currentAgendaId):null;if(!ag){showToast('Selecione uma agenda primeiro');return}
+  const sel=document.getElementById('swapSunday');
+  sel.innerHTML=(ag.sundays||[]).map((s,i)=>`<option value="${i}">${s.label} (${s.date})</option>`).join('');
+  populateSwapInstruments();document.getElementById('swapModal').classList.add('show');
+}
+function populateSwapInstruments(){
+  const ag=currentAgendaId?appData.agendas.find(a=>a.id===currentAgendaId):null;if(!ag)return;
+  const si=parseInt(document.getElementById('swapSunday').value);
+  const svc=document.getElementById('swapService').value;
+  const instrSel=document.getElementById('swapInstrument');
+  const used=Object.keys(ag.schedule?.[si]?.[svc]||{}).filter(instr=>ag.schedule[si][svc][instr]);
+  instrSel.innerHTML=used.length?used.map(instr=>`<option value="${instr}">${INSTRUMENTS[instr]?.label||instr}</option>`).join(''):`<option value="">— Nenhum —</option>`;
+  populateSwapTarget();
+}
+function populateSwapTarget(){
+  const ag=currentAgendaId?appData.agendas.find(a=>a.id===currentAgendaId):null;if(!ag)return;
+  const instr=document.getElementById('swapInstrument').value;
+  document.getElementById('swapTarget').innerHTML=appData.musicians.filter(m=>m.instrument===instr).map(m=>`<option value="${m.id}">${m.name}${m.roles?.leader?' 👑':''}${m.roles?.vocal?' 🎤':''}</option>`).join('');
+}
+async function applySwap(){
+  const ag=currentAgendaId?appData.agendas.find(a=>a.id===currentAgendaId):null;if(!ag)return;
+  const si=parseInt(document.getElementById('swapSunday').value);
+  const svc=document.getElementById('swapService').value;
+  const instr=document.getElementById('swapInstrument').value;
+  const targetId=parseInt(document.getElementById('swapTarget').value);
+  if(!ag.schedule[si])ag.schedule[si]={manha:{},noite:{}};
+  ag.schedule[si][svc][instr]=targetId;
+  await saveCloud();document.getElementById('swapModal').classList.remove('show');renderSchedule();showToast('🔄 Troca aplicada!');
+}
 
-window.addEventListener('DOMContentLoaded', init);
-window.addEventListener('scroll', () => {
-  document.getElementById('mainHeader')?.classList.toggle('scrolled', window.scrollY > 10);
-});
+// ── APPROVED / SENT ──
+function renderApprovedSchedules(){
+  const c=document.getElementById('approvedContainer');if(!c||!appData)return;
+  const list=(appData.agendas||[]).filter(a=>a.status==='approved'||a.status==='sent');
+  if(!list.length){c.innerHTML=`<div class="empty-state"><span class="empty-state-icon">✅</span><p>Nenhuma escala aprovada.</p></div>`;return}
+  c.innerHTML=`<div class="schedule-list">${list.map(a=>`
+    <div class="sched-card approved">
+      <div class="sched-card-header" onclick="toggleSchedCard('appr','${a.id}')">
+        <div class="sched-meta"><div class="sched-title">${a.title}</div><div class="sched-date">Aprovada em ${a.approvedAt||'—'}</div></div>
+        <div class="sched-actions">
+          <span class="sched-status ${a.status==='sent'?'sent':'approved'}">${a.status==='sent'?'📤 Enviada':'✅ Aprovada'}</span>
+          ${a.status==='approved'?`<button class="btn-green" onclick="event.stopPropagation();sendAgendaToAll('${a.id}')">📤 Enviar a Todos</button>`:''}
+          <span class="sched-toggle" id="apprToggle-${a.id}">▾</span>
+        </div>
+      </div>
+      <div class="sched-body" id="apprBody-${a.id}"><div class="sched-preview">${a.whatsappText||buildWhatsappTextForAgenda(a)}</div></div>
+    </div>`).join('')}</div>`;
+}
+
+function renderSentSchedules(){
+  const c=document.getElementById('sentContainer');if(!c||!appData)return;
+  const list=(appData.agendas||[]).filter(a=>a.status==='sent');
+  if(!list.length){c.innerHTML=`<div class="empty-state"><span class="empty-state-icon">📤</span><p>Nenhuma escala enviada.</p></div>`;return}
+  c.innerHTML=`<div class="schedule-list">${list.map(a=>`
+    <div class="sched-card sent-active">
+      <div class="sched-card-header" onclick="toggleSchedCard('sent','${a.id}')">
+        <div class="sched-meta"><div class="sched-title">${a.title}</div><div class="sched-date">Enviada em ${a.sentAt||'—'}</div></div>
+        <div class="sched-actions">
+          <span class="sched-status sent">📤 Ativa</span>
+          <button class="btn-sm" onclick="event.stopPropagation();copyScheduleText('${a.id}')">📋 Copiar</button>
+          <button class="btn-amber" onclick="event.stopPropagation();toggleAlterarPanel('${a.id}')">✏️ Alterar</button>
+          <button class="btn-danger" onclick="event.stopPropagation();cancelSentAgenda('${a.id}')">✕ Cancelar Envio</button>
+          <span class="sched-toggle" id="sentToggle-${a.id}">▾</span>
+        </div>
+      </div>
+      <!-- ALTERAR PANEL -->
+      <div class="alterar-panel" id="alterar-${a.id}">
+        <div class="alterar-panel-title">✏️ O que deseja alterar?</div>
+        <div class="alterar-actions">
+          <button class="btn-red" onclick="editSentAgenda('${a.id}')">🔄 Reeditar Escala</button>
+          <button class="btn-amber" onclick="reopenAvailability('${a.id}')">📨 Reabrir Disponibilidade</button>
+          <button class="btn-primary" onclick="toggleAlterarPanel('${a.id}')">Fechar</button>
+        </div>
+        <div style="margin-top:10px;font-size:11px;color:var(--text-dim);">⚠️ Ao editar, a escala sairá do ar temporariamente até você reenviar.</div>
+      </div>
+      <div class="sched-body" id="sentBody-${a.id}"><div class="sched-preview">${a.whatsappText||buildWhatsappTextForAgenda(a)}</div></div>
+    </div>`).join('')}</div>`;
+}
+
+function toggleAlterarPanel(id){
+  const p=document.getElementById(`alterar-${id}`);if(!p)return;
+  p.classList.toggle('visible');
+  if(window.gsap&&p.classList.contains('visible')){gsap.from(p,{opacity:0,y:-8,duration:0.25,ease:'power2.out'})}
+}
+
+async function cancelSentAgenda(id){
+  if(!confirm('Cancelar envio desta agenda?'))return;
+  const ag=appData.agendas.find(a=>a.id===id);if(!ag)return;
+  ag.status='approved';ag.sentAt=null;await saveCloud();renderAgendas();renderSentSchedules();showToast('Envio cancelado.');
+}
+
+async function reopenAvailability(id){
+  const ag=appData.agendas.find(a=>a.id===id);if(!ag)return;
+  ag.status='collecting';ag.sentAt=null;
+  const now=new Date();const dateStr=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  appData.notifications.unshift({id:now.getTime(),type:'avail-request',agendaId:ag.id,agendaTitle:ag.title,createdAt:dateStr,read:false,msg:`ADM reabriu disponibilidade para "${ag.title}". Atualize sua resposta.`});
+  await saveCloud();renderAgendas();renderSentSchedules();updateNotifBadge();showToast('📨 Disponibilidade reaberta!');
+}
+
+function copyScheduleText(id){const ag=appData.agendas.find(a=>a.id===id);if(!ag)return;navigator.clipboard.writeText(ag.whatsappText||buildWhatsappTextForAgenda(ag)).then(()=>showToast('Copiado!'))}
+function toggleSchedCard(prefix,id){
+  const body=document.getElementById(`${prefix}Body-${id}`);const toggle=document.getElementById(`${prefix}Toggle-${id}`);if(!body)return;
+  const open=body.classList.contains('visible');body.classList.toggle('visible',!open);if(toggle)toggle.classList.toggle('open',!open);
+  if(!open&&window.gsap)gsap.from(body,{opacity:0,y:-6,duration:0.22,ease:'power2.out'});
+}
+
+function buildWhatsappTextForAgenda(ag){
+  if(!ag)return'';let text=`🎵 *${ag.title}*\n✝️ Igreja Batista do Méier\n\n`;
+  (ag.sundays||[]).forEach((sun,si)=>{
+    text+=`🔹 *${sun.label} | ${sun.date}*\n`;
+    ['manha','noite'].forEach(s=>{
+      text+=s==='manha'?`☀️ *Manhã*\n`:`🌙 *Noite*\n`;
+      const service=ag.schedule?.[si]?.[s]||{};
+      Object.keys(INSTRUMENTS).forEach(instr=>{
+        if(!appData.musicians.some(m=>m.instrument===instr))return;
+        const mid=service[instr];const m=mid?appData.musicians.find(x=>x.id==mid):null;
+        const roles=m?[(m.roles?.leader?'👑':''),( m.roles?.vocal?'🎤':'')].filter(Boolean).join(''):'' ;
+        text+=`${INSTRUMENTS[instr].label}: ${m?m.name+' '+roles:'—'}\n`;
+      });text+='\n';
+    });
+  });return text;
+}
+
+// ── NOTIFICATIONS ──
+function renderNotifications(){
+  const c=document.getElementById('notifContainer');if(!c)return;
+  const notifs=appData.notifications||[];
+  if(!notifs.length){c.innerHTML=`<div class="empty-state"><span class="empty-state-icon">🔔</span><p>Nenhum alerta.</p></div>`;return}
+  const tIcon={'new-agenda':'📅','avail-request':'📨','revoke':'⚠️','chat':'💬','info':'ℹ️'};
+  c.innerHTML=`<div class="notif-list">${notifs.map((n,idx)=>`
+    <div class="notif-item ${n.read?'read':''} ${n.type==='avail-request'?'avail-req':n.type==='new-agenda'?'info':''}">
+      ${!n.read?'<div class="notif-unread-dot"></div>':''}
+      <div class="notif-item-header"><div class="notif-name">${tIcon[n.type]||'🔔'} ${n.type==='revoke'?n.musicianName||'Músico':n.agendaTitle||'Sistema'}</div><div class="notif-time">${n.createdAt||n.revokedAt||'—'}</div></div>
+      <div class="notif-detail">${n.msg||'—'}</div>
+      <div>${!n.read?`<button class="btn-outline-green" onclick="markNotifRead(${idx})">✓ Marcar lida</button>`:'<span style="font-size:11px;color:var(--text-dim);">✓ Lida</span>'}</div>
+    </div>`).join('')}</div>`;
+}
+async function markNotifRead(idx){if(appData.notifications[idx])appData.notifications[idx].read=true;await saveCloud();renderNotifications();updateNotifBadge()}
+async function markAllNotifRead(){(appData.notifications||[]).forEach(n=>n.read=true);await saveCloud();renderNotifications();updateNotifBadge()}
+function updateNotifBadge(){const badge=document.getElementById('notifBadge');if(!badge)return;const count=(appData?.notifications||[]).filter(n=>!n.read).length;badge.textContent=count;badge.classList.toggle('visible',count>0)}
+
+// ── AVISOS ──
+async function postAviso(){
+  const title=document.getElementById('newAvisoTitle').value.trim();const body=document.getElementById('newAvisoBody').value.trim();const pinned=document.getElementById('newAvisoPinned').checked;
+  if(!title||!body){showToast('Preencha título e mensagem');return}
+  const now=new Date();const dateStr=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  if(!Array.isArray(appData.avisos))appData.avisos=[];
+  if(pinned)appData.avisos.unshift({id:now.getTime(),title,body,pinned,createdAt:dateStr});
+  else appData.avisos.push({id:now.getTime(),title,body,pinned,createdAt:dateStr});
+  document.getElementById('newAvisoTitle').value='';document.getElementById('newAvisoBody').value='';document.getElementById('newAvisoPinned').checked=false;
+  document.getElementById('newAvisoModal').classList.remove('show');await saveCloud();renderAvisos();showToast('📢 Aviso publicado!');
+}
+function renderAvisos(){
+  const c=document.getElementById('avisosContainer');if(!c||!appData)return;
+  const list=appData.avisos||[];
+  if(!list.length){c.innerHTML=`<div class="empty-state"><span class="empty-state-icon">📢</span><p>Nenhum aviso publicado.</p></div>`;return}
+  c.innerHTML=list.map(a=>`<div class="aviso-card ${a.pinned?'pinned':''}">
+    <div class="aviso-card-header"><div class="aviso-card-title">${a.pinned?'📌 ':''} ${a.title}</div>
+    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;"><span class="aviso-card-time">${a.createdAt}</span>
+    <button class="btn-danger" style="padding:3px 8px;font-size:10px;" onclick="deleteAviso(${a.id})">✕</button></div></div>
+    <div class="aviso-card-body">${a.body}</div></div>`).join('');
+}
+async function deleteAviso(id){appData.avisos=appData.avisos.filter(a=>a.id!==id);await saveCloud();renderAvisos()}
+
+// ── CHAT GERAL ──
+function renderGeralChat(){
+  const c=document.getElementById('chatGeralMessages');if(!c||!appData)return;
+  const msgs=appData.chatGeral||[];
+  c.innerHTML=msgs.length?renderChatHTMLFromUser(msgs,null):`<div style="text-align:center;padding:24px;color:var(--text-dim);font-size:12px;">Nenhuma mensagem ainda.</div>`;
+  c.scrollTop=c.scrollHeight;
+}
+async function sendGeralMsg(){
+  const input=document.getElementById('chatGeralInput');const text=input.value.trim();if(!text)return;
+  const now=new Date();const dateStr=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  if(!Array.isArray(appData.chatGeral))appData.chatGeral=[];
+  appData.chatGeral.push({id:now.getTime(),author:currentUser.name,authorId:currentUser.musicianId||'adm',role:currentRole,text,createdAt:dateStr});
+  input.value='';await saveCloud();renderGeralChat();
+}
+
+// ── CHAT POR AGENDA ──
+function populateAgendaChatSelector(){
+  const sel=document.getElementById('agendaChatSelector');if(!sel||!appData)return;
+  sel.innerHTML='<option value="">— Selecione uma agenda —</option>'+(appData.agendas||[]).map(a=>`<option value="${a.id}">${a.title}</option>`).join('');
+}
+function loadAgendaChat(){
+  const id=document.getElementById('agendaChatSelector').value;currentAgendaChatId=id||null;
+  const wrap=document.getElementById('agendaChatWrap');if(!id){if(wrap)wrap.style.display='none';return}
+  if(wrap)wrap.style.display='flex';renderAgendaChat();
+}
+function renderAgendaChat(){
+  const c=document.getElementById('agendaChatMessages');if(!c||!currentAgendaChatId||!appData)return;
+  const msgs=(appData.agendaChats||{})[currentAgendaChatId]||[];
+  c.innerHTML=msgs.length?renderChatHTMLFromUser(msgs,null):`<div style="text-align:center;padding:24px;color:var(--text-dim);font-size:12px;">Nenhuma mensagem nesta agenda ainda.</div>`;
+  c.scrollTop=c.scrollHeight;
+}
+async function sendAgendaMsg(){
+  if(!currentAgendaChatId){showToast('Selecione uma agenda');return}
+  const input=document.getElementById('agendaChatInput');const text=input.value.trim();if(!text)return;
+  const now=new Date();const dateStr=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  if(!appData.agendaChats)appData.agendaChats={};if(!Array.isArray(appData.agendaChats[currentAgendaChatId]))appData.agendaChats[currentAgendaChatId]=[];
+  appData.agendaChats[currentAgendaChatId].push({id:now.getTime(),author:currentUser.name,authorId:currentUser.musicianId||'adm',role:currentRole,text,createdAt:dateStr});
+  const ag=appData.agendas.find(a=>a.id===currentAgendaChatId);
+  appData.notifications.push({id:now.getTime()+1,type:'chat',agendaId:currentAgendaChatId,agendaTitle:ag?.title||'Agenda',createdAt:dateStr,read:false,msg:`Nova mensagem de ${currentUser.name} no chat da agenda "${ag?.title||''}".`});
+  input.value='';await saveCloud();renderAgendaChat();updateNotifBadge();
+}
+
+function renderChatHTMLFromUser(msgs,m){
+  if(!msgs.length)return`<div style="text-align:center;padding:24px;color:var(--text-dim);font-size:12px;">Nenhuma mensagem.</div>`;
+  return msgs.map(msg=>{
+    const isMe=m?msg.authorId==m.id:(msg.role===currentRole&&msg.authorId===(currentUser?.musicianId||'adm'));
+    const isAdm=msg.role==='adm';
+    return `<div class="chat-msg ${isMe?'mine':''} ${isAdm?'adm-msg':''}">
+      <div class="chat-avatar ${isAdm?'adm':''}">${(msg.author||'?')[0].toUpperCase()}</div>
+      <div class="chat-bubble">${!isMe?`<div class="chat-name">${msg.author}${isAdm?' 🛡':''}</div>`:''}
+        <div class="chat-text">${msg.text}</div><div class="chat-time">${msg.createdAt||''}</div></div></div>`;
+  }).join('');
+}
+
+// ── COMM TABS ──
+function switchCommTab(name,btn){
+  ['avisos','geral','agenda-chat'].forEach(t=>{const el=document.getElementById(`commTab-${t}`);if(el)el.style.display='none'});
+  const target=document.getElementById(`commTab-${name}`);if(target)target.style.display='block';
+  document.querySelectorAll('#commSubTabs .member-tab').forEach(t=>t.classList.remove('active'));if(btn)btn.classList.add('active');
+  if(name==='geral')renderGeralChat();if(name==='agenda-chat'){populateAgendaChatSelector();if(currentAgendaChatId)renderAgendaChat();}if(name==='avisos')renderAvisos();
+}
+
+// ── ADM TABS ──
+function switchAdmTab(name,btn){
+  ['agendas','disponibilidade','escala','aprovadas','enviadas','alertas','comunicacao'].forEach(t=>{const el=document.getElementById('tab-'+t);if(el)el.style.display='none'});
+  const target=document.getElementById('tab-'+name);if(target)target.style.display='block';
+  document.querySelectorAll('#admTabs .tab').forEach(t=>t.classList.remove('active'));if(btn)btn.classList.add('active');
+  if(name==='agendas')renderAgendas();else if(name==='disponibilidade')renderMusicians();else if(name==='escala')renderSchedule();
+  else if(name==='aprovadas')renderApprovedSchedules();else if(name==='enviadas')renderSentSchedules();
+  else if(name==='alertas'){renderNotifications();markAllNotifRead()}else if(name==='comunicacao'){renderAvisos();renderGeralChat()}
+}
+function refreshAdmView(){
+  const active=document.querySelector('#admTabs .tab.active');if(!active)return;
+  const t=active.textContent.trim().toLowerCase();
+  if(t.includes('agenda'))renderAgendas();else if(t.includes('disp'))renderMusicians();else if(t.includes('escala'))renderSchedule();
+  else if(t.includes('aprov'))renderApprovedSchedules();else if(t.includes('envia'))renderSentSchedules();
+  else if(t.includes('alert')){renderNotifications();updateNotifBadge()}else if(t.includes('comun')){renderAvisos();renderGeralChat()}
+}
+
+// ── CALENDAR PICKER ──
+function openNewAgendaModal(){
+  calSelectedDates=[];calViewMonth=4;calViewYear=2026;
+  document.getElementById('newAgendaTitle').value='';document.getElementById('newAgendaDesc').value='';
+  document.getElementById('newAgendaModal').classList.add('show');renderCalPicker();
+}
+function renderCalPicker(){
+  calViewMonth=parseInt(document.getElementById('newAgendaMonth')?.value||4);
+  calViewYear=parseInt(document.getElementById('newAgendaYear')?.value||2026);
+  const c=document.getElementById('calPicker');if(!c)return;
+  const daysInMonth=new Date(calViewYear,calViewMonth,0).getDate();
+  const firstDay=new Date(calViewYear,calViewMonth-1,1).getDay();
+  let html=`<div class="cal-grid">`;
+  ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].forEach(d=>{html+=`<div class="cal-day-name">${d}</div>`});
+  for(let i=0;i<firstDay;i++)html+=`<div class="cal-day empty"></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const dow=new Date(calViewYear,calViewMonth-1,d).getDay();const isSun=dow===0;
+    const dateStr=`${String(d).padStart(2,'0')}/${String(calViewMonth).padStart(2,'0')}`;
+    const selected=calSelectedDates.some(x=>x.dayNum===d);
+    html+=`<div class="cal-day ${isSun?'sunday':''} ${selected?'selected':''}" onclick="${isSun?`toggleCalDate(${d},'${dateStr}')`:''}" style="${!isSun?'opacity:0.25;cursor:default;':''}">${d}</div>`;
+  }
+  html+=`</div>`;c.innerHTML=html;renderSelectedDatesList();
+}
+function toggleCalDate(day,label){
+  const idx=calSelectedDates.findIndex(x=>x.dayNum===day);
+  if(idx>=0)calSelectedDates.splice(idx,1);else calSelectedDates.push({dayNum:day,label});
+  renderCalPicker();
+}
+function renderSelectedDatesList(){
+  const c=document.getElementById('selectedDatesList');if(!c)return;
+  const sorted=calSelectedDates.slice().sort((a,b)=>a.dayNum-b.dayNum);
+  c.innerHTML=sorted.length?sorted.map(d=>`<span class="date-chip">${d.label}<span class="remove" onclick="toggleCalDate(${d.dayNum},'${d.label}')">×</span></span>`).join(''):`<span style="font-size:11px;color:var(--text-dim);">Clique nos domingos para selecionar</span>`;
+}
+
+// ── ADD MUSICIAN ──
+function toggleAddForm(){document.getElementById('addForm').classList.toggle('visible')}
+async function addMusician(){
+  const name=document.getElementById('newName').value.trim();const instr=document.getElementById('newInstr').value;
+  if(!name){showToast('Digite o nome');return}
+  appData.musicians.push({id:nextId++,name,instrument:instr,avail:{},roles:{}});
+  document.getElementById('newName').value='';populateMemberSelect();renderMusicians();await saveCloud();showToast('Músico adicionado');
+}
+
+// ── MEMBER PANEL ──
+function checkPendingNotifForMember(){
+  const notifs=(appData.notifications||[]).filter(n=>!n.read&&(n.type==='new-agenda'||n.type==='avail-request'));
+  if(notifs.length>0)showNotifOverlay(notifs[0]);
+}
+function showNotifOverlay(n){
+  document.getElementById('notifOverlayIcon').textContent=n.type==='new-agenda'?'📅':'📨';
+  document.getElementById('notifOverlayTitle').textContent=n.type==='new-agenda'?'Nova Agenda Criada!':'Disponibilidade Solicitada!';
+  document.getElementById('notifOverlaySub').textContent=n.msg||'O ADM solicitou sua disponibilidade.';
+  document.getElementById('notifOverlay').classList.add('show');
+}
+function closeNotifOverlay(){document.getElementById('notifOverlay').classList.remove('show')}
+function goToAvailability(){closeNotifOverlay();switchMemberTab('disponibilidade',null)}
+
+function getMemberActiveAgenda(){const list=appData.agendas||[];return list.find(a=>a.status==='sent')||list.find(a=>a.status==='collecting')||list.find(a=>a.status==='approved')||list[0]||null}
+
+function initMemberPendingAvail(){
+  const m=appData?.musicians?.find(x=>x.id==currentUser?.musicianId);if(!m)return;
+  const ag=getMemberActiveAgenda();if(!ag){memberPendingAvail={};return}
+  const sub=ag.submissions?.[m.id];memberPendingAvail={};
+  (ag.sundays||[]).forEach((_,i)=>{
+    memberPendingAvail[i]={m:sub?.submitted?!!(sub.days?.[i]?.m):!!(ag.avail?.[m.id]?.[i]?.m),n:sub?.submitted?!!(sub.days?.[i]?.n):!!(ag.avail?.[m.id]?.[i]?.n)};
+  });
+}
+
+function renderMemberPanel(){
+  const mid=currentUser?.musicianId;const m=appData?.musicians?.find(x=>x.id==mid);
+  const panel=document.getElementById('memberPanel');if(!panel)return;
+  if(!m){panel.innerHTML='<div class="empty-state"><span class="empty-state-icon">🎵</span><p>Músico não encontrado.</p></div>';return}
+  const instr=INSTRUMENTS[m.instrument]||{label:m.instrument,emoji:'🎸'};
+  const ag=getMemberActiveAgenda();const sub=ag?.submissions?.[m.id];const isSent=ag?.status==='sent';
+  let myAssigned=0;
+  if(isSent&&ag)(ag.sundays||[]).forEach((_,si)=>['manha','noite'].forEach(srv=>{try{if(ag.schedule?.[si]?.[srv]?.[m.instrument]==m.id)myAssigned++}catch(e){}}));
+  const isLeader=!!(m.roles?.leader);const isVocal=!!(m.roles?.vocal);
+
+  let html=`
+    <div class="member-hero">
+      <div class="member-hero-bg"><img src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?w=800&q=40&auto=format" alt="" onerror="this.parentElement.style.display='none'"></div>
+      <div class="member-hero-content">
+        <div class="member-avatar-big">${m.name[0].toUpperCase()}</div>
+        <div class="member-info">
+          <h2>${m.name}</h2>
+          <p>Igreja Batista do Méier${ag?` · ${ag.title}`:''}</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">
+            <span class="instr-badge">${instr.emoji} ${instr.label}</span>
+            ${isLeader?`<span class="role-badge-leader">👑 Líder de Louvor</span>`:''}
+            ${isVocal?`<span class="role-badge-vocal">🎤 Vocal</span>`:''}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="member-summary-bar">
+      <div class="stat-card"><div class="stat-val">${(ag?.sundays||[]).length}</div><div class="stat-label">Domingos</div></div>
+      <div class="stat-card"><div class="stat-val">${sub?.submitted?'✅':'—'}</div><div class="stat-label">Enviada</div></div>
+      <div class="stat-card"><div class="stat-val" style="color:var(--gold2)">${myAssigned}</div><div class="stat-label">Escalado</div></div>
+      <div class="stat-card"><div class="stat-val">${(appData.agendas||[]).length}</div><div class="stat-label">Agendas</div></div>
+    </div>
+    <div class="member-tabs" id="memberTabsEl">
+      <button class="member-tab active" onclick="switchMemberTab('disponibilidade',this)">📋 Disponibilidade</button>
+      <button class="member-tab" onclick="switchMemberTab('escala',this)">🎵 Minha Escala</button>
+      <button class="member-tab" onclick="switchMemberTab('avisos',this)">📢 Avisos</button>
+      <button class="member-tab" onclick="switchMemberTab('chat',this)">💬 Chat</button>
+    </div>
+    <div id="memberTabDisp">`;
+
+  if(!ag)html+=`<div class="banner red"><div class="banner-icon">ℹ️</div><div class="banner-text"><strong>Nenhuma agenda ativa</strong><span>Aguarde o ADM criar uma nova agenda.</span></div></div>`;
+  else if(isSent)html+=renderMemberAssignedView(m,ag);
+  else html+=renderMemberAvailabilityView(m,sub,ag);
+
+  html+=`</div>
+    <div id="memberTabEscala" style="display:none;">${isSent&&ag?renderMemberAssignedView(m,ag):`<div class="banner gold"><div class="banner-icon">⏳</div><div class="banner-text"><strong>Escala não publicada</strong><span>Aguarde o ADM publicar a escala.</span></div></div>`}</div>
+    <div id="memberTabAvisos" style="display:none;">${renderMemberAvisos()}</div>
+    <div id="memberTabChat" style="display:none;">${renderMemberChat(m)}</div>`;
+
+  panel.innerHTML=html;renderStats();
+  if(!isSent&&ag)renderMemberAvailabilitySelector(ag);
+  if(window.gsap){gsap.from('.stat-card',{opacity:0,y:16,stagger:0.06,duration:0.45,ease:'power2.out',delay:0.1})}
+}
+
+function switchMemberTab(name,btn){
+  const map={disponibilidade:'Disp',escala:'Escala',avisos:'Avisos',chat:'Chat'};
+  ['Disp','Escala','Avisos','Chat'].forEach(t=>{const el=document.getElementById('memberTab'+t);if(el)el.style.display='none'});
+  const target=document.getElementById('memberTab'+map[name]);if(target)target.style.display='block';
+  document.querySelectorAll('#memberTabsEl .member-tab').forEach(t=>t.classList.remove('active'));if(btn)btn.classList.add('active');
+}
+
+function renderMemberAvisos(){
+  const list=appData.avisos||[];
+  if(!list.length)return`<div class="empty-state"><span class="empty-state-icon">📢</span><p>Nenhum aviso do ADM.</p></div>`;
+  return list.map(a=>`<div class="aviso-card ${a.pinned?'pinned':''}"><div class="aviso-card-header"><div class="aviso-card-title">${a.pinned?'📌 ':''} ${a.title}</div><span class="aviso-card-time">${a.createdAt}</span></div><div class="aviso-card-body">${a.body}</div></div>`).join('');
+}
+
+function renderMemberChat(m){
+  const agendas=appData.agendas||[];const geralMsgs=renderChatHTMLFromUser(appData.chatGeral||[],m);
+  return `<div class="member-tabs" style="margin-bottom:16px;" id="memberChatSubTabs">
+      <button class="member-tab active" onclick="switchMemberChatTab('geral',this)">💬 Geral</button>
+      <button class="member-tab" onclick="switchMemberChatTab('agenda',this)">📅 Por Agenda</button>
+    </div>
+    <div id="memberChatGeral">
+      <div class="chat-wrap"><div class="chat-messages" id="mChatGeralMessages">${geralMsgs}</div>
+        <div class="chat-input-row"><input type="text" class="chat-input" id="mChatGeralInput" placeholder="Mensagem para a equipe…" onkeydown="if(event.key==='Enter')memberSendGeral()"><button class="chat-send-btn" onclick="memberSendGeral()">Enviar</button></div></div>
+    </div>
+    <div id="memberChatAgenda" style="display:none;">
+      <select onchange="memberLoadAgendaChat(this.value)" style="background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:9px 12px;border-radius:9px;outline:none;min-height:40px;width:100%;max-width:320px;margin-bottom:14px;">
+        <option value="">— Selecione uma agenda —</option>${agendas.map(a=>`<option value="${a.id}">${a.title}</option>`).join('')}
+      </select>
+      <div class="chat-wrap" id="mAgendaChatWrap" style="display:none;"><div class="chat-messages" id="mAgendaChatMessages"></div>
+        <div class="chat-input-row"><input type="text" class="chat-input" id="mAgendaChatInput" placeholder="Mensagem para esta agenda…" onkeydown="if(event.key==='Enter')memberSendAgenda()"><button class="chat-send-btn" onclick="memberSendAgenda()">Enviar</button></div></div>
+    </div>`;
+}
+
+function switchMemberChatTab(name,btn){
+  ['Geral','Agenda'].forEach(t=>{const el=document.getElementById('memberChat'+t);if(el)el.style.display='none'});
+  const target=document.getElementById('memberChat'+(name==='geral'?'Geral':'Agenda'));if(target)target.style.display='block';
+  document.querySelectorAll('#memberChatSubTabs .member-tab').forEach(t=>t.classList.remove('active'));if(btn)btn.classList.add('active');
+}
+
+let memberCurrentAgendaChat=null;
+function memberLoadAgendaChat(id){
+  memberCurrentAgendaChat=id||null;const wrap=document.getElementById('mAgendaChatWrap');if(!wrap)return;
+  if(!id){wrap.style.display='none';return}wrap.style.display='flex';
+  const msgs=(appData.agendaChats||{})[id]||[];const m=appData.musicians.find(x=>x.id==currentUser?.musicianId);
+  const c=document.getElementById('mAgendaChatMessages');if(c){c.innerHTML=renderChatHTMLFromUser(msgs,m);c.scrollTop=c.scrollHeight}
+}
+async function memberSendGeral(){
+  const input=document.getElementById('mChatGeralInput');const text=input.value.trim();if(!text)return;
+  const m=appData.musicians.find(x=>x.id==currentUser?.musicianId);
+  const now=new Date();const dateStr=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  if(!Array.isArray(appData.chatGeral))appData.chatGeral=[];
+  appData.chatGeral.push({id:now.getTime(),author:currentUser.name,authorId:m?.id,role:'membro',text,createdAt:dateStr});
+  input.value='';await saveCloud();const c=document.getElementById('mChatGeralMessages');if(c){c.innerHTML=renderChatHTMLFromUser(appData.chatGeral,m);c.scrollTop=c.scrollHeight}
+}
+async function memberSendAgenda(){
+  if(!memberCurrentAgendaChat){showToast('Selecione uma agenda');return}
+  const input=document.getElementById('mAgendaChatInput');const text=input.value.trim();if(!text)return;
+  const m=appData.musicians.find(x=>x.id==currentUser?.musicianId);
+  const now=new Date();const dateStr=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  if(!appData.agendaChats)appData.agendaChats={};if(!Array.isArray(appData.agendaChats[memberCurrentAgendaChat]))appData.agendaChats[memberCurrentAgendaChat]=[];
+  appData.agendaChats[memberCurrentAgendaChat].push({id:now.getTime(),author:currentUser.name,authorId:m?.id,role:'membro',text,createdAt:dateStr});
+  input.value='';await saveCloud();memberLoadAgendaChat(memberCurrentAgendaChat);
+}
+
+function renderMemberAvailabilityView(m,sub,ag){
+  const hasSub=sub?.submitted;
+  let html='';
+  if(hasSub)html+=`<div class="banner green"><div class="banner-icon">✅</div><div class="banner-text"><strong>Disponibilidade enviada!</strong><span>Enviado em ${sub.submittedAt} · Aguardando o ADM publicar a escala.</span></div></div>`;
+  else html+=`<div class="banner red"><div class="banner-icon">📋</div><div class="banner-text"><strong>Informe sua disponibilidade</strong><span>Marque os cultos que você pode participar e clique em Enviar.</span></div></div>`;
+  // Avail legend
+  html+=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;font-size:11px;">
+    <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:3px;background:var(--green);display:inline-block;box-shadow:0 0 6px rgba(46,204,113,0.5);"></span><span style="color:var(--text-dim);">Disponível</span></span>
+    <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:3px;background:var(--red2);display:inline-block;box-shadow:0 0 6px rgba(192,57,43,0.5);"></span><span style="color:var(--text-dim);">Indisponível</span></span>
+  </div>`;
+  html+=`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
+    <h2 class="section-title">Disponibilidade · ${ag.title}</h2>
+    ${hasSub?`<button class="btn-sm" onclick="initMemberPendingAvail();renderMemberAvailabilitySelector(getMemberActiveAgenda());showToast('Edite e envie novamente')">✏️ Editar</button>`:''}
+  </div>
+  <div class="avail-cards" id="availCardsContainer"></div>
+  <button class="btn-submit-avail" onclick="submitAvailability()">${hasSub?'🔄 Reatualizar':'📤 Enviar Disponibilidade'}</button>`;
+  return html;
+}
+
+function renderMemberAvailabilitySelector(ag){
+  const c=document.getElementById('availCardsContainer');if(!c||!ag)return;
+  if(!memberPendingAvail||!Object.keys(memberPendingAvail).length)initMemberPendingAvail();
+  c.innerHTML=(ag.sundays||[]).map((_,si)=>{
+    const mOn=!!(memberPendingAvail[si]?.m),nOn=!!(memberPendingAvail[si]?.n);
+    return `<div class="avail-card">
+      <div class="avail-card-header"><span class="avail-card-date">${ag.sundays[si]?.label||'Domingo'}</span><span class="avail-card-label">${ag.sundays[si]?.date||''}</span></div>
+      <div class="avail-card-body">
+        <button class="avail-slot-btn ${mOn?'on':''}" onclick="toggleMemberAvail(${si},'m')">☀️ Manhã ${mOn?'<span style=\"font-size:12px;\">✓ Disponível</span>':'<span style=\"font-size:12px;\">✗ Indisponível</span>'}</button>
+        <button class="avail-slot-btn ${nOn?'on':''}" onclick="toggleMemberAvail(${si},'n')">🌙 Noite ${nOn?'<span style=\"font-size:12px;\">✓ Disponível</span>':'<span style=\"font-size:12px;\">✗ Indisponível</span>'}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleMemberAvail(si,slot){
+  if(!memberPendingAvail[si])memberPendingAvail[si]={m:false,n:false};
+  memberPendingAvail[si][slot]=!memberPendingAvail[si][slot];
+  const ag=getMemberActiveAgenda();renderMemberAvailabilitySelector(ag);
+}
+
+async function submitAvailability(){
+  const m=appData?.musicians?.find(x=>x.id==currentUser?.musicianId);if(!m)return;
+  const ag=getMemberActiveAgenda();if(!ag){showToast('Nenhuma agenda ativa');return}
+  if(!ag.avail)ag.avail={};if(!ag.submissions)ag.submissions={};
+  (ag.sundays||[]).forEach((_,i)=>{if(!ag.avail[m.id])ag.avail[m.id]={};ag.avail[m.id][i]={m:!!(memberPendingAvail[i]?.m),n:!!(memberPendingAvail[i]?.n)}});
+  const now=new Date();const dateStr=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  ag.submissions[m.id]={submitted:true,submittedAt:dateStr,days:JSON.parse(JSON.stringify(memberPendingAvail))};
+  (appData.notifications||[]).forEach(n=>{if(n.type==='avail-request'||n.type==='new-agenda')n.read=true});
+  await saveCloud();renderMemberPanel();renderStats();showToast('✅ Disponibilidade enviada!');
+}
+
+function renderMemberAssignedView(m,ag){
+  let html=`<div class="banner gold"><div class="banner-icon">📤</div><div class="banner-text"><strong>Escala publicada!</strong><span>Enviada em ${ag.sentAt||''}</span></div></div>`;
+  html+=`<h2 class="section-title" style="margin-bottom:16px;">Meus Cultos Escalados</h2>`;let cards='';
+  (ag.sundays||[]).forEach((_,si)=>['manha','noite'].forEach(service=>{
+    let isAssigned=false;try{isAssigned=ag.schedule?.[si]?.[service]?.[m.instrument]==m.id}catch(e){}
+    if(isAssigned){cards+=`<div class="assigned-card">
+      <div class="assigned-card-header"><div class="assigned-date-label">${ag.sundays[si].label} · ${ag.sundays[si].date}</div>
+      <span class="assigned-service ${service}">${service==='manha'?'☀️ Manhã':'🌙 Noite'}</span></div>
+      <div class="assigned-card-body"><div class="assigned-instr">${INSTRUMENTS[m.instrument]?.emoji||''} ${INSTRUMENTS[m.instrument]?.label||m.instrument}</div>
+      <button class="btn-danger" onclick="revokeAssignment('${ag.id}',${si},'${service}')">Revogar Presença</button></div></div>`}
+  }));
+  if(!cards)cards=`<div class="no-assignment"><div class="no-assignment-icon">🎵</div><p>Você não foi escalado nesta agenda.</p></div>`;
+  return html+cards;
+}
+
+async function revokeAssignment(agendaId,sundayIdx,service){
+  const m=appData.musicians.find(x=>x.id==currentUser.musicianId);if(!m)return;
+  const ag=appData.agendas.find(a=>a.id===agendaId);if(!ag)return;
+  const sunday=ag.sundays?.[sundayIdx];
+  if(!confirm(`Revogar presença no ${sunday?.label} (${sunday?.date}) – ${service==='manha'?'Manhã':'Noite'}?\nO ADM será notificado.`))return;
+  const now=new Date();const dateStr=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  appData.notifications.unshift({id:now.getTime(),type:'revoke',musicianId:m.id,musicianName:m.name,instrument:m.instrument,agendaId,agendaTitle:ag.title,sundayLabel:sunday?.label,sundayDate:sunday?.date,service,revokedAt:dateStr,read:false,msg:`${m.name} revogou presença em ${sunday?.label} – ${service==='manha'?'Manhã':'Noite'} — ${ag.title}`});
+  await saveCloud();renderMemberPanel();showToast('⚠️ Presença revogada. ADM notificado.');
+}
+
+// ── UTILS ──
+function populateMemberSelect(){
+  const sel=document.getElementById('memberSelect');if(!sel||!appData)return;
+  sel.innerHTML='<option value="">— Selecione seu nome —</option>';
+  [...appData.musicians].sort((a,b)=>a.name.localeCompare(b.name)).forEach(m=>{
+    sel.innerHTML+=`<option value="${m.id}">${m.name} (${INSTRUMENTS[m.instrument]?.emoji||''} ${INSTRUMENTS[m.instrument]?.label||m.instrument}${m.roles?.leader?' 👑':''}${m.roles?.vocal?' 🎤':''})</option>`;
+  });
+}
+let toastTimer=null;
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  if(toastTimer)clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+// ── HEADER SCROLL ──
+window.addEventListener('scroll',()=>{document.getElementById('mainHeader').classList.toggle('scrolled',window.scrollY>10)});
+
+// ── PARALLAX ──
+(function(){
+  const o1=document.getElementById('orb1'),o2=document.getElementById('orb2'),o3=document.getElementById('orb3');
+  let t=false;
+  window.addEventListener('scroll',()=>{if(!t){requestAnimationFrame(()=>{const y=window.scrollY;o1.style.transform=`translateY(${y*.25}px)`;o2.style.transform=`translateY(${y*-.15}px)`;o3.style.transform=`translateY(${y*.1}px) translateX(${y*.05}px)`;t=false});t=true}});
+})();
+
+window.addEventListener('DOMContentLoaded',init);
 </script>
 </body>
 </html>
