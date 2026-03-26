@@ -450,7 +450,7 @@ async function loadCloud() {
 
 function emptyAppData() {
   return {
-    musicians: JSON.parse(JSON.stringify(DEFAULT_MUSICIANS)),
+    musicians: [],  // COMEÇA VAZIO! ADM adiciona os músicos manualmente
     agendas: [],
     notifications: [],
     revocations: {},
