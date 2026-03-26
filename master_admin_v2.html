@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Master Admin — Escala Musical</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05050d;--bg2:#08081a;--surface:rgba(255,255,255,0.035);--surface2:rgba(255,255,255,0.06);
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);
+  --text:#eef2ff;--text-dim:#5a6a8a;--text-mid:#8a9abb;
+  --gold:#d4a853;--gold2:#f0c870;--gold-glow:rgba(212,168,83,0.2);
+  --red:#c0392b;--red2:#e74c3c;
+  --green:#27ae60;--green2:#2ecc71;
+  --blue:#2980b9;--blue2:#3498db;
+  --purple:#8e44ad;--purple2:#9b59b6;
+  --amber:#e67e22;--amber2:#f39c12;
+  --sidebar-w:240px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:rgba(212,168,83,0.3);border-radius:2px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+
+/* ════ AUTH SCREEN ════ */
+#authScreen{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center;overflow:auto}
+.auth-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.auth-orb{position:absolute;border-radius:50%;filter:blur(100px)}
+.auth-orb-1{width:500px;height:500px;top:-150px;left:-150px;background:radial-gradient(circle,rgba(212,168,83,0.12) 0%,transparent 70%)}
+.auth-orb-2{width:400px;height:400px;bottom:-100px;right:-100px;background:radial-gradient(circle,rgba(139,68,173,0.1) 0%,transparent 70%)}
+.auth-card{position:relative;background:rgba(10,10,24,0.9);border:1px solid var(--border2);border-radius:24px;padding:44px 40px;width:100%;max-width:420px;box-shadow:0 40px 100px rgba(0,0,0,0.8)}
+.auth-card-line{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--gold2),transparent);border-radius:2px}
+.auth-logo{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:0.22em;margin-bottom:32px;display:flex;align-items:center;gap:8px}
+.auth-logo-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold)}
+.auth-title{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;line-height:1.1;margin-bottom:6px;background:linear-gradient(135deg,#fff,var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.auth-sub{font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:28px}
+.auth-divider{display:flex;align-items:center;gap:12px;margin:20px 0;font-size:11px;color:var(--text-dim)}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.auth-field{margin-bottom:14px}
+.auth-field label{display:block;font-size:11px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px}
+.auth-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;padding:13px 16px;border-radius:10px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;min-height:48px}
+.auth-input:focus{border-color:rgba(212,168,83,0.5);box-shadow:0 0 0 3px rgba(212,168,83,0.08)}
+.auth-input::placeholder{color:var(--text-dim)}
+.btn-google{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:rgba(255,255,255,0.05);border:1px solid var(--border2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:13px;border-radius:10px;cursor:pointer;transition:all 0.2s;min-height:48px}
+.btn-google:hover{background:rgba(255,255,255,0.09);border-color:rgba(255,255,255,0.2)}
+.google-icon{width:18px;height:18px;flex-shrink:0}
+.btn-auth{width:100%;background:linear-gradient(135deg,var(--gold) 0%,#b8893c 100%);border:none;color:#000;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;padding:15px;border-radius:10px;cursor:pointer;transition:all 0.2s;box-shadow:0 6px 24px var(--gold-glow);min-height:52px;letter-spacing:0.03em}
+.btn-auth:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(212,168,83,0.4)}
+.btn-auth:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.auth-switch{font-size:12px;color:var(--text-dim);text-align:center;margin-top:18px}
+.auth-switch a{color:var(--gold2);cursor:pointer;text-decoration:none}
+.auth-switch a:hover{text-decoration:underline}
+.auth-error{background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.3);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--red2);margin-bottom:14px;display:none}
+.auth-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(212,168,83,0.1);border:1px solid rgba(212,168,83,0.25);padding:4px 10px;border-radius:20px;font-size:10px;color:var(--gold2);font-weight:600;margin-bottom:20px;text-transform:uppercase;letter-spacing:0.1em}
+
+/* ════ APP LAYOUT ════ */
+#appLayout{display:none;height:100vh;flex-direction:row}
+
+/* ── SIDEBAR ── */
+.sidebar{width:var(--sidebar-w);background:rgba(6,6,18,0.97);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow:hidden}
+.sidebar-header{padding:22px 20px 16px;border-bottom:1px solid var(--border)}
+.sidebar-brand{font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:var(--gold);text-transform:uppercase;letter-spacing:0.18em;margin-bottom:2px}
+.sidebar-tagline{font-size:10px;color:var(--text-dim)}
+.sidebar-user{padding:14px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.sidebar-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#8e44ad);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#000;flex-shrink:0}
+.sidebar-user-info{min-width:0;flex:1}
+.sidebar-user-name{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar-user-role{font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:0.08em}
+.sidebar-nav{flex:1;overflow-y:auto;padding:12px 10px}
+.nav-section{font-size:9px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.15em;padding:8px 10px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 10px;border-radius:9px;cursor:pointer;transition:all 0.15s;font-size:12px;font-weight:500;color:var(--text-dim);border:1px solid transparent;margin-bottom:2px}
+.nav-item:hover{background:var(--surface);color:var(--text)}
+.nav-item.active{background:rgba(212,168,83,0.1);border-color:rgba(212,168,83,0.2);color:var(--gold)}
+.nav-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;padding:1px 5px;border-radius:10px;min-width:16px;text-align:center;font-weight:800}
+.sidebar-footer{padding:12px 10px;border-top:1px solid var(--border)}
+.btn-logout-sidebar{width:100%;display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;background:none;border:1px solid var(--border);color:var(--text-dim);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;transition:all 0.15s}
+.btn-logout-sidebar:hover{border-color:var(--red);color:var(--red2)}
+
+/* ── MAIN CONTENT ── */
+.main-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:56px;border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 28px;gap:16px;flex-shrink:0;background:rgba(6,6,18,0.6);backdrop-filter:blur(20px)}
+.topbar-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--text)}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.sync-pill{display:flex;align-items:center;gap:5px;font-size:11px;padding:4px 10px;border-radius:20px;background:var(--surface);border:1px solid var(--border);color:var(--text-dim)}
+.sync-dot-s{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 5px var(--green)}
+.content-area{flex:1;overflow-y:auto;padding:28px}
+
+/* ── PANELS ── */
+.panel{display:none;animation:fadeUp 0.3s ease}
+.panel.active{display:block}
+
+/* ── KPI GRID ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-bottom:28px}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px 22px;position:relative;overflow:hidden;transition:transform 0.2s,border-color 0.2s}
+.kpi-card:hover{transform:translateY(-2px);border-color:var(--border2)}
+.kpi-card-accent{position:absolute;top:0;left:0;right:0;height:2px}
+.kpi-card-accent.gold{background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.kpi-card-accent.green{background:linear-gradient(90deg,var(--green),var(--green2))}
+.kpi-card-accent.blue{background:linear-gradient(90deg,var(--blue),var(--blue2))}
+.kpi-card-accent.purple{background:linear-gradient(90deg,var(--purple),var(--purple2))}
+.kpi-card-accent.red{background:linear-gradient(90deg,var(--red),var(--red2))}
+.kpi-card-accent.amber{background:linear-gradient(90deg,var(--amber),var(--amber2))}
+.kpi-label{font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:10px}
+.kpi-val{font-family:'Syne',sans-serif;font-size:36px;font-weight:800;line-height:1;color:var(--text);margin-bottom:4px}
+.kpi-sub{font-size:11px;color:var(--text-dim);line-height:1.4}
+.kpi-trend{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-top:6px}
+.kpi-trend.up{background:rgba(46,204,113,0.1);color:var(--green2)}
+.kpi-trend.down{background:rgba(192,57,43,0.1);color:var(--red2)}
+.kpi-trend.neutral{background:rgba(255,255,255,0.06);color:var(--text-dim)}
+
+/* ── SECTION ── */
+.section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:12px}
+.section-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--text)}
+.section-sub{font-size:11px;color:var(--text-dim);margin-top:2px}
+
+/* ── TABLE ── */
+.data-table{width:100%;border-collapse:collapse}
+.data-table thead tr{border-bottom:1px solid var(--border)}
+.data-table th{font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;padding:10px 14px;text-align:left}
+.data-table td{padding:13px 14px;font-size:12px;color:var(--text-mid);border-bottom:1px solid var(--border);vertical-align:middle}
+.data-table tbody tr:hover{background:var(--surface)}
+.data-table tbody tr:last-child td{border-bottom:none}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:0.05em}
+.badge-gold{background:rgba(212,168,83,0.12);border:1px solid rgba(212,168,83,0.28);color:var(--gold2)}
+.badge-green{background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.28);color:var(--green2)}
+.badge-blue{background:rgba(52,152,219,0.1);border:1px solid rgba(52,152,219,0.28);color:var(--blue2)}
+.badge-red{background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.28);color:var(--red2)}
+.badge-purple{background:rgba(142,68,173,0.1);border:1px solid rgba(142,68,173,0.28);color:var(--purple2)}
+.badge-amber{background:rgba(230,126,34,0.1);border:1px solid rgba(230,126,34,0.28);color:var(--amber2)}
+.badge-gray{background:rgba(255,255,255,0.06);border:1px solid var(--border);color:var(--text-dim)}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;transition:all 0.15s;border:none;white-space:nowrap;min-height:36px}
+.btn-gold-sm{background:linear-gradient(135deg,var(--gold),#b8893c);color:#000;box-shadow:0 3px 12px rgba(212,168,83,0.25)}
+.btn-gold-sm:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(212,168,83,0.35)}
+.btn-outline{background:var(--surface2);border:1px solid var(--border2)!important;color:var(--text-mid)}
+.btn-outline:hover{background:rgba(255,255,255,0.1);color:var(--text)}
+.btn-red-sm{background:linear-gradient(135deg,var(--red),#8b1a14);color:#fff}
+.btn-red-sm:hover{box-shadow:0 4px 14px rgba(192,57,43,0.4)}
+.btn-green-sm{background:linear-gradient(135deg,var(--green),#1e8449);color:#fff}
+.btn-green-sm:hover{box-shadow:0 4px 14px rgba(39,174,96,0.4)}
+.btn-sm-icon{width:30px;height:30px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:7px;cursor:pointer;font-size:14px;background:var(--surface2);border:1px solid var(--border);color:var(--text-dim);transition:all 0.15s}
+.btn-sm-icon:hover{background:rgba(255,255,255,0.1);color:var(--text)}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px}
+.card-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.card-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+
+/* ── ACTIVITY FEED ── */
+.activity-feed{display:flex;flex-direction:column;gap:0}
+.activity-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.activity-item:last-child{border-bottom:none}
+.activity-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.activity-icon.gold{background:rgba(212,168,83,0.12)}
+.activity-icon.green{background:rgba(39,174,96,0.1)}
+.activity-icon.blue{background:rgba(52,152,219,0.1)}
+.activity-icon.red{background:rgba(192,57,43,0.1)}
+.activity-icon.purple{background:rgba(142,68,173,0.1)}
+.activity-body{flex:1;min-width:0}
+.activity-text{font-size:12px;color:var(--text-mid);line-height:1.5}
+.activity-text strong{color:var(--text);font-weight:600}
+.activity-time{font-size:10px;color:var(--text-dim);margin-top:2px}
+
+/* ── TEAM CARDS ── */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.team-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;transition:all 0.2s;position:relative;overflow:hidden}
+.team-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.team-card:hover{transform:translateY(-2px);border-color:rgba(212,168,83,0.2)}
+.team-card-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.team-avatar{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:#000;flex-shrink:0}
+.team-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:var(--text)}
+.team-email{font-size:11px;color:var(--text-dim);margin-top:1px}
+.team-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+.team-meta-item{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:8px;padding:8px 10px}
+.team-meta-val{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--gold2)}
+.team-meta-label{font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-top:2px}
+.team-actions{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+
+/* ── USER LIST ── */
+.user-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.user-row:last-child{border-bottom:none}
+.user-row-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#fff;flex-shrink:0}
+.user-row-info{flex:1;min-width:0}
+.user-row-name{font-size:13px;color:var(--text);font-weight:500}
+.user-row-email{font-size:11px;color:var(--text-dim)}
+.user-row-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+
+/* ── SUPPORT TICKETS ── */
+.ticket-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;transition:border-color 0.2s}
+.ticket-item:hover{border-color:var(--border2)}
+.ticket-item.ticket-open{border-left:3px solid var(--gold)}
+.ticket-item.ticket-resolved{border-left:3px solid var(--green);opacity:.7}
+.ticket-header{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
+.ticket-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--text)}
+.ticket-meta{font-size:11px;color:var(--text-dim);margin-bottom:8px}
+.ticket-body{font-size:12px;color:var(--text-mid);line-height:1.6;margin-bottom:10px}
+.ticket-reply-form{display:none;margin-top:10px}
+.ticket-reply-form textarea{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;padding:10px 12px;border-radius:9px;outline:none;min-height:70px;resize:vertical;margin-bottom:8px}
+.ticket-reply-form textarea:focus{border-color:rgba(212,168,83,0.4)}
+
+/* ── CHARTS ── */
+.chart-wrap{height:160px;display:flex;align-items:flex-end;gap:4px;padding:10px 0 0}
+.chart-bar-col{display:flex;flex-direction:column;align-items:center;flex:1;gap:4px}
+.chart-bar{width:100%;border-radius:4px 4px 0 0;transition:height 0.6s cubic-bezier(.22,1,.36,1),background 0.2s;cursor:pointer;min-height:3px}
+.chart-bar:hover{filter:brightness(1.3)}
+.chart-label{font-size:9px;color:var(--text-dim);text-align:center;white-space:nowrap}
+.chart-val{font-size:9px;color:var(--text-mid);font-weight:600}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:800;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:rgba(10,10,24,0.98);border:1px solid var(--border2);border-radius:20px;padding:30px;width:100%;max-width:480px;position:relative}
+.modal-top{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);border-radius:2px}
+.modal-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--text);margin-bottom:6px}
+.modal-sub{font-size:12px;color:var(--text-dim);margin-bottom:22px}
+.modal-field{margin-bottom:14px}
+.modal-field label{display:block;font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px}
+.modal-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:11px 14px;border-radius:9px;outline:none;transition:border-color 0.2s;min-height:44px}
+.modal-input:focus{border-color:rgba(212,168,83,0.4)}
+.modal-input::placeholder{color:var(--text-dim)}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:20px}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(12,12,24,0.97);border:1px solid var(--border2);border-radius:12px;padding:10px 20px;font-size:13px;color:var(--text);z-index:9999;pointer-events:none;opacity:0;transition:all 0.28s cubic-bezier(.22,1,.36,1);white-space:nowrap;max-width:90vw;box-shadow:0 12px 36px rgba(0,0,0,0.5)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:48px 20px;color:var(--text-dim)}
+.empty-icon{font-size:40px;opacity:.3;margin-bottom:12px}
+.empty-text{font-size:13px}
+
+/* ── FORM FIELDS ── */
+.field-group{margin-bottom:14px}
+.field-group label{display:block;font-size:10px;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px}
+.field-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:11px 14px;border-radius:9px;outline:none;transition:border-color 0.2s;min-height:44px}
+.field-input:focus{border-color:rgba(212,168,83,0.4)}
+.field-input::placeholder{color:var(--text-dim)}
+select.field-input{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a6a8a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+.divider{height:1px;background:var(--border);margin:20px 0}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .sidebar{position:fixed;left:-100%;z-index:400;height:100%;transition:left 0.3s}
+  .sidebar.open{left:0}
+  .card-grid-2,.card-grid-3{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- ════ AUTH ════ -->
+<div id="authScreen">
+  <div class="auth-bg">
+    <div class="auth-orb auth-orb-1"></div>
+    <div class="auth-orb auth-orb-2"></div>
+  </div>
+  <div class="auth-card">
+    <div class="auth-card-line"></div>
+    <div class="auth-logo"><div class="auth-logo-dot"></div>Escala Musical</div>
+    <div id="authLoginView">
+      <div class="auth-badge">🛡 Master Admin</div>
+      <div class="auth-title">Painel de<br>Controle</div>
+      <div class="auth-sub">Acesso exclusivo para administradores master. Gerencie times, usuários e veja KPIs da plataforma.</div>
+      <div class="auth-error" id="authError"></div>
+      <button class="btn-google" onclick="loginGoogle()">
+        <svg class="google-icon" viewBox="0 0 48 48"><path fill="#4285F4" d="M44.5 20H24v8.5h11.8C34.7 33.9 29.9 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.5 0 20-7.6 20-19.5 0-1.3-.1-2.7-.5-5.5z"/><path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16 19.2 13 24 13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 5.1 29.6 3 24 3c-7.7 0-14.4 4.4-17.7 11.7z"/><path fill="#FBBC05" d="M24 45c5.7 0 10.5-1.9 14.4-5.1l-6.7-5.5C29.6 36.1 27 37 24 37c-5.8 0-10.7-3.9-12.5-9.3l-7 5.4C7.8 40.7 15.3 45 24 45z"/><path fill="#EA4335" d="M44.5 20H24v8.5h11.8c-.8 2.8-2.7 5.1-5.2 6.7l6.7 5.5C41.1 36.9 45 31 45 24c0-1.3-.1-2.7-.5-4z"/></svg>
+        Entrar com Google
+      </button>
+      <div class="auth-divider">ou</div>
+      <div class="auth-field">
+        <label>Email</label>
+        <input type="email" class="auth-input" id="loginEmail" placeholder="master@ibmeier.com" onkeydown="if(event.key==='Enter')doEmailLogin()">
+      </div>
+      <div class="auth-field">
+        <label>Senha</label>
+        <input type="password" class="auth-input" id="loginPass" placeholder="Senha master" onkeydown="if(event.key==='Enter')doEmailLogin()">
+      </div>
+      <button class="btn-auth" onclick="doEmailLogin()" id="btnLogin">Acessar Painel →</button>
+      <div class="auth-switch">Não tem conta? <a onclick="showRegisterView()">Criar conta master</a></div>
+    </div>
+    <div id="authRegisterView" style="display:none;">
+      <div class="auth-badge">✨ Criar Conta</div>
+      <div class="auth-title">Novo<br>Master Admin</div>
+      <div class="auth-sub">Crie sua conta de administrador master para gerenciar times e usuários.</div>
+      <div class="auth-error" id="regError"></div>
+      <button class="btn-google" onclick="loginGoogle()">
+        <svg class="google-icon" viewBox="0 0 48 48"><path fill="#4285F4" d="M44.5 20H24v8.5h11.8C34.7 33.9 29.9 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.5 0 20-7.6 20-19.5 0-1.3-.1-2.7-.5-5.5z"/><path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16 19.2 13 24 13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 5.1 29.6 3 24 3c-7.7 0-14.4 4.4-17.7 11.7z"/><path fill="#FBBC05" d="M24 45c5.7 0 10.5-1.9 14.4-5.1l-6.7-5.5C29.6 36.1 27 37 24 37c-5.8 0-10.7-3.9-12.5-9.3l-7 5.4C7.8 40.7 15.3 45 24 45z"/><path fill="#EA4335" d="M44.5 20H24v8.5h11.8c-.8 2.8-2.7 5.1-5.2 6.7l6.7 5.5C41.1 36.9 45 31 45 24c0-1.3-.1-2.7-.5-4z"/></svg>
+        Cadastrar com Google
+      </button>
+      <div class="auth-divider">ou</div>
+      <div class="auth-field">
+        <label>Nome completo</label>
+        <input type="text" class="auth-input" id="regName" placeholder="Seu nome">
+      </div>
+      <div class="auth-field">
+        <label>Email</label>
+        <input type="email" class="auth-input" id="regEmail" placeholder="seu@email.com">
+      </div>
+      <div class="auth-field">
+        <label>Senha (mín. 6 caracteres)</label>
+        <input type="password" class="auth-input" id="regPass" placeholder="Crie uma senha">
+      </div>
+      <button class="btn-auth" onclick="doRegister()" id="btnReg">Criar Conta →</button>
+      <div class="auth-switch">Já tem conta? <a onclick="showLoginView()">Entrar</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ APP ════ -->
+<div id="appLayout">
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">⚡ Master Admin</div>
+      <div class="sidebar-tagline">Escala Musical · Plataforma</div>
+    </div>
+    <div class="sidebar-user">
+      <div class="sidebar-avatar" id="sidebarAvatar">M</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sidebarName">Master</div>
+        <div class="sidebar-user-role">Master Admin</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">Principal</div>
+      <div class="nav-item active" onclick="switchPanel('dashboard',this)"><span class="nav-icon">📊</span>Dashboard</div>
+      <div class="nav-item" onclick="switchPanel('activity',this)"><span class="nav-icon">⚡</span>Atividade</div>
+      <div class="nav-section">Gestão</div>
+      <div class="nav-item" onclick="switchPanel('teams',this)"><span class="nav-icon">🏛</span>Times</div>
+      <div class="nav-item" onclick="switchPanel('admins',this)"><span class="nav-icon">🛡</span>ADMs por Time</div>
+      <div class="nav-item" onclick="switchPanel('users',this)"><span class="nav-icon">👥</span>Usuários</div>
+      <div class="nav-section">Suporte</div>
+      <div class="nav-item" onclick="switchPanel('tickets',this)"><span class="nav-icon">🎫</span>Suporte <span class="nav-badge" id="ticketBadge" style="display:none">0</span></div>
+      <div class="nav-section">Sistema</div>
+      <div class="nav-item" onclick="switchPanel('passwords',this)"><span class="nav-icon">🔑</span>Senhas / Acessos</div>
+      <div class="nav-item" onclick="switchPanel('settings',this)"><span class="nav-icon">⚙️</span>Configurações</div>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout-sidebar" onclick="doLogout()">🚪 Sair do painel</button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <div class="topbar">
+      <div class="topbar-title" id="topbarTitle">Dashboard</div>
+      <div class="topbar-right">
+        <div class="sync-pill"><div class="sync-dot-s"></div>Ao vivo</div>
+        <button class="btn btn-outline" onclick="refreshAll()" style="padding:6px 12px;font-size:11px;">↻ Atualizar</button>
+      </div>
+    </div>
+    <div class="content-area">
+
+      <!-- ── DASHBOARD ── -->
+      <div class="panel active" id="panel-dashboard">
+        <div class="kpi-grid" id="kpiGrid"></div>
+        <div class="card-grid-2" style="margin-bottom:14px;">
+          <div class="card">
+            <div class="section-hdr"><div><div class="section-title">📈 Logins por Semana</div><div class="section-sub">Últimas 8 semanas</div></div></div>
+            <div class="chart-wrap" id="chartLogins"></div>
+          </div>
+          <div class="card">
+            <div class="section-hdr"><div><div class="section-title">🎵 Agendas por Mês</div><div class="section-sub">Criadas em 2026</div></div></div>
+            <div class="chart-wrap" id="chartAgendas"></div>
+          </div>
+        </div>
+        <div class="card-grid-2">
+          <div class="card">
+            <div class="section-hdr"><div class="section-title">⚡ Atividade Recente</div></div>
+            <div class="activity-feed" id="activityFeedDash"></div>
+          </div>
+          <div class="card">
+            <div class="section-hdr"><div class="section-title">🎫 Tickets Abertos</div><button class="btn btn-outline" onclick="switchPanel('tickets',null)" style="padding:5px 10px;font-size:11px;">Ver todos</button></div>
+            <div id="ticketsMiniList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ATIVIDADE ── -->
+      <div class="panel" id="panel-activity">
+        <div class="section-hdr" style="margin-bottom:20px;">
+          <div><div class="section-title">⚡ Log de Atividade</div><div class="section-sub">Todos os eventos da plataforma em tempo real</div></div>
+          <button class="btn btn-red-sm" onclick="clearActivity()">Limpar log</button>
+        </div>
+        <div class="card">
+          <div class="activity-feed" id="activityFeedFull"></div>
+        </div>
+      </div>
+
+      <!-- ── TIMES ── -->
+      <div class="panel" id="panel-teams">
+        <div class="section-hdr" style="margin-bottom:20px;">
+          <div><div class="section-title">🏛 Times Cadastrados</div><div class="section-sub">Cada time tem seu banco Firebase e seus ADMs</div></div>
+          <button class="btn btn-gold-sm" onclick="showModal('modalNewTeam')">+ Novo Time</button>
+        </div>
+        <div class="team-grid" id="teamsGrid"></div>
+      </div>
+
+      <!-- ── ADMs POR TIME ── -->
+      <div class="panel" id="panel-admins">
+        <div class="section-hdr" style="margin-bottom:20px;">
+          <div><div class="section-title">🛡 ADMs por Time</div><div class="section-sub">Vários ADMs podem gerenciar o mesmo time</div></div>
+          <button class="btn btn-gold-sm" onclick="showModal('modalNewAdm')">+ Adicionar ADM</button>
+        </div>
+        <div class="card">
+          <div class="field-group" style="margin-bottom:18px;">
+            <label>Filtrar por time</label>
+            <select class="field-input" id="admTeamFilter" onchange="renderAdmins()" style="max-width:300px;">
+              <option value="">Todos os times</option>
+            </select>
+          </div>
+          <table class="data-table" id="adminsTable">
+            <thead><tr><th>Nome</th><th>Email</th><th>Time</th><th>Tipo Login</th><th>Criado em</th><th>Status</th><th></th></tr></thead>
+            <tbody id="adminsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ── USUÁRIOS ── -->
+      <div class="panel" id="panel-users">
+        <div class="section-hdr" style="margin-bottom:20px;">
+          <div><div class="section-title">👥 Todos os Usuários</div><div class="section-sub">Músicos e ADMs cadastrados na plataforma</div></div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-gold-sm" onclick="showModal('modalNewUser')">+ Novo Usuário</button>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:14px;">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px;">
+            <input type="text" class="field-input" id="userSearch" placeholder="🔍 Buscar por nome ou email…" oninput="renderUsers()" style="max-width:300px;margin:0">
+            <select class="field-input" id="userTeamFilter" onchange="renderUsers()" style="max-width:200px;margin:0">
+              <option value="">Todos os times</option>
+            </select>
+            <select class="field-input" id="userRoleFilter" onchange="renderUsers()" style="max-width:160px;margin:0">
+              <option value="">Todos os perfis</option>
+              <option value="musico">Músico</option>
+              <option value="adm">ADM</option>
+              <option value="master">Master</option>
+            </select>
+          </div>
+          <div id="usersList"></div>
+        </div>
+      </div>
+
+      <!-- ── SUPORTE ── -->
+      <div class="panel" id="panel-tickets">
+        <div class="section-hdr" style="margin-bottom:20px;">
+          <div><div class="section-title">🎫 Suporte</div><div class="section-sub">Mensagens enviadas pelos ADMs e músicos</div></div>
+          <div style="display:flex;gap:8px;">
+            <select class="field-input" id="ticketFilter" onchange="renderTickets()" style="max-width:160px;margin:0;font-size:12px;">
+              <option value="all">Todos</option>
+              <option value="open">Abertos</option>
+              <option value="resolved">Resolvidos</option>
+            </select>
+          </div>
+        </div>
+        <div id="ticketsList"></div>
+      </div>
+
+      <!-- ── SENHAS ── -->
+      <div class="panel" id="panel-passwords">
+        <div class="section-hdr" style="margin-bottom:20px;">
+          <div><div class="section-title">🔑 Senhas e Acessos</div><div class="section-sub">Credenciais geradas e configurações de acesso por time</div></div>
+          <button class="btn btn-gold-sm" onclick="showModal('modalGenPass')">+ Gerar Senha</button>
+        </div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="section-title" style="font-size:13px;margin-bottom:14px;">🏛 Firebase por Time</div>
+          <table class="data-table">
+            <thead><tr><th>Time</th><th>Firebase URL</th><th>ADM Password</th><th>Músicos</th><th>Agendas</th><th></th></tr></thead>
+            <tbody id="passTeamsBody"></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="section-title" style="font-size:13px;margin-bottom:14px;">🔑 Senhas Geradas</div>
+          <div id="passList"></div>
+        </div>
+      </div>
+
+      <!-- ── CONFIGURAÇÕES ── -->
+      <div class="panel" id="panel-settings">
+        <div class="section-title" style="margin-bottom:20px;">⚙️ Configurações</div>
+        <div class="card-grid-2">
+          <div class="card">
+            <div class="section-title" style="font-size:14px;margin-bottom:16px;">🌐 Firebase Global</div>
+            <div class="field-group">
+              <label>URL do Banco Master</label>
+              <input type="text" class="field-input" id="settingsFirebase" placeholder="https://…firebaseio.com">
+            </div>
+            <div class="field-group">
+              <label>Caminho dos dados</label>
+              <input type="text" class="field-input" id="settingsPath" value="/master.json">
+            </div>
+            <button class="btn btn-gold-sm" onclick="saveSettings()" style="margin-top:6px;">Salvar</button>
+          </div>
+          <div class="card">
+            <div class="section-title" style="font-size:14px;margin-bottom:16px;">📬 Suporte — Contato</div>
+            <div class="field-group">
+              <label>Seu email (exibido no formulário)</label>
+              <input type="email" class="field-input" id="settingsSupportEmail" placeholder="seu@email.com">
+            </div>
+            <div class="field-group">
+              <label>WhatsApp (para suporte urgente)</label>
+              <input type="text" class="field-input" id="settingsSupportWa" placeholder="5521999999999">
+            </div>
+            <button class="btn btn-gold-sm" onclick="saveSettings()" style="margin-top:6px;">Salvar</button>
+          </div>
+          <div class="card">
+            <div class="section-title" style="font-size:14px;margin-bottom:16px;">🔐 Segurança</div>
+            <div class="field-group">
+              <label>Nova senha master</label>
+              <input type="password" class="field-input" id="settingsNewPass" placeholder="Nova senha">
+            </div>
+            <div class="field-group">
+              <label>Confirmar senha</label>
+              <input type="password" class="field-input" id="settingsConfPass" placeholder="Confirme">
+            </div>
+            <button class="btn btn-red-sm" onclick="changePassword()" style="margin-top:6px;">Alterar Senha</button>
+          </div>
+          <div class="card">
+            <div class="section-title" style="font-size:14px;margin-bottom:16px;">ℹ️ Sobre a Plataforma</div>
+            <div style="font-size:12px;color:var(--text-dim);line-height:1.8;">
+              <div>Versão: <strong style="color:var(--text);">v9.0 Master</strong></div>
+              <div>Firebase: <span id="settingsFirebaseStatus" style="color:var(--green2);">Conectado</span></div>
+              <div>Modo: <strong style="color:var(--gold2);">Multi-team</strong></div>
+              <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">Plataforma de gestão de escalas musicais com suporte a múltiplos times, ADMs e músicos.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ════ MODALS ════ -->
+<!-- New Team -->
+<div class="modal-overlay" id="modalNewTeam">
+  <div class="modal">
+    <div class="modal-top"></div>
+    <div class="modal-title">🏛 Novo Time</div>
+    <div class="modal-sub">Crie um novo time com seu banco de dados Firebase independente.</div>
+    <div class="modal-field"><label>Nome do Time</label><input type="text" class="modal-input" id="newTeamName" placeholder="ex: Igreja Batista do Méier"></div>
+    <div class="modal-field"><label>Cidade / Localização</label><input type="text" class="modal-input" id="newTeamCity" placeholder="ex: Rio de Janeiro, RJ"></div>
+    <div class="modal-field"><label>Firebase URL</label><input type="text" class="modal-input" id="newTeamFirebase" placeholder="https://seu-projeto.firebaseio.com"></div>
+    <div class="modal-field"><label>Senha ADM do Time</label><input type="password" class="modal-input" id="newTeamPass" placeholder="Senha para ADMs do time"></div>
+    <div class="modal-field"><label>Descrição (opcional)</label><input type="text" class="modal-input" id="newTeamDesc" placeholder="Informações adicionais"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="hideModal('modalNewTeam')">Cancelar</button>
+      <button class="btn btn-gold-sm" onclick="createTeam()">Criar Time</button>
+    </div>
+  </div>
+</div>
+
+<!-- New ADM -->
+<div class="modal-overlay" id="modalNewAdm">
+  <div class="modal">
+    <div class="modal-top"></div>
+    <div class="modal-title">🛡 Adicionar ADM</div>
+    <div class="modal-sub">Adicione um administrador a um time existente.</div>
+    <div class="modal-field"><label>Nome</label><input type="text" class="modal-input" id="newAdmName" placeholder="Nome completo"></div>
+    <div class="modal-field"><label>Email</label><input type="email" class="modal-input" id="newAdmEmail" placeholder="adm@email.com"></div>
+    <div class="modal-field"><label>Time</label>
+      <select class="modal-input" id="newAdmTeam" style="appearance:none;-webkit-appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'10\' height=\'6\'%3E%3Cpath d=\'M0 0l5 6 5-6z\' fill=\'%235a6a8a\'/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;">
+        <option value="">— Selecione —</option>
+      </select>
+    </div>
+    <div class="modal-field"><label>Tipo de Acesso</label>
+      <select class="modal-input" id="newAdmType" style="appearance:none;-webkit-appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'10\' height=\'6\'%3E%3Cpath d=\'M0 0l5 6 5-6z\' fill=\'%235a6a8a\'/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;">
+        <option value="senha">Senha fixa</option>
+        <option value="google">Google</option>
+      </select>
+    </div>
+    <div class="modal-field" id="newAdmPassField"><label>Senha</label><input type="password" class="modal-input" id="newAdmPass" placeholder="Senha para este ADM"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="hideModal('modalNewAdm')">Cancelar</button>
+      <button class="btn btn-gold-sm" onclick="createAdm()">Adicionar</button>
+    </div>
+  </div>
+</div>
+
+<!-- New User -->
+<div class="modal-overlay" id="modalNewUser">
+  <div class="modal">
+    <div class="modal-top"></div>
+    <div class="modal-title">👤 Novo Usuário</div>
+    <div class="modal-sub">Cadastre um músico ou ADM na plataforma.</div>
+    <div class="modal-field"><label>Nome</label><input type="text" class="modal-input" id="newUserName" placeholder="Nome completo"></div>
+    <div class="modal-field"><label>Email</label><input type="email" class="modal-input" id="newUserEmail" placeholder="usuario@email.com"></div>
+    <div class="modal-field"><label>Perfil</label>
+      <select class="modal-input" id="newUserRole" style="appearance:none;-webkit-appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'10\' height=\'6\'%3E%3Cpath d=\'M0 0l5 6 5-6z\' fill=\'%235a6a8a\'/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;">
+        <option value="musico">🎸 Músico</option>
+        <option value="adm">🛡 ADM</option>
+      </select>
+    </div>
+    <div class="modal-field"><label>Time</label>
+      <select class="modal-input" id="newUserTeam" style="appearance:none;-webkit-appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'10\' height=\'6\'%3E%3Cpath d=\'M0 0l5 6 5-6z\' fill=\'%235a6a8a\'/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;">
+        <option value="">— Selecione —</option>
+      </select>
+    </div>
+    <div class="modal-field"><label>Tipo de Login</label>
+      <select class="modal-input" id="newUserLoginType" style="appearance:none;-webkit-appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'10\' height=\'6\'%3E%3Cpath d=\'M0 0l5 6 5-6z\' fill=\'%235a6a8a\'/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;" onchange="toggleUserPassField()">
+        <option value="google">Google</option>
+        <option value="senha">Senha</option>
+      </select>
+    </div>
+    <div class="modal-field" id="newUserPassField" style="display:none;"><label>Senha</label><input type="password" class="modal-input" id="newUserPass" placeholder="Senha inicial"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="hideModal('modalNewUser')">Cancelar</button>
+      <button class="btn btn-gold-sm" onclick="createUser()">Cadastrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Gen Password -->
+<div class="modal-overlay" id="modalGenPass">
+  <div class="modal">
+    <div class="modal-top"></div>
+    <div class="modal-title">🔑 Gerar Senha</div>
+    <div class="modal-sub">Crie uma senha segura para um usuário ou time.</div>
+    <div class="modal-field"><label>Para quem</label><input type="text" class="modal-input" id="genPassFor" placeholder="Nome ou email"></div>
+    <div class="modal-field"><label>Tipo</label>
+      <select class="modal-input" id="genPassType" style="appearance:none;-webkit-appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'10\' height=\'6\'%3E%3Cpath d=\'M0 0l5 6 5-6z\' fill=\'%235a6a8a\'/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;">
+        <option value="adm">ADM do Time</option>
+        <option value="musico">Músico</option>
+        <option value="master">Master Admin</option>
+      </select>
+    </div>
+    <div class="modal-field"><label>Comprimento</label>
+      <select class="modal-input" id="genPassLen" style="appearance:none;-webkit-appearance:none;background-image:url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'10\' height=\'6\'%3E%3Cpath d=\'M0 0l5 6 5-6z\' fill=\'%235a6a8a\'/%3E%3C/svg%3E');background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;">
+        <option value="8">8 caracteres</option>
+        <option value="12" selected>12 caracteres</option>
+        <option value="16">16 caracteres</option>
+      </select>
+    </div>
+    <div id="genPassResult" style="display:none;margin-top:14px;">
+      <div style="font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;">Senha gerada</div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div id="genPassValue" style="font-family:'DM Mono',monospace;font-size:16px;color:var(--gold2);background:rgba(212,168,83,0.08);border:1px solid rgba(212,168,83,0.2);border-radius:8px;padding:10px 14px;flex:1;letter-spacing:0.1em;"></div>
+        <button class="btn btn-outline" onclick="copyGenPass()">Copiar</button>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="hideModal('modalGenPass')">Fechar</button>
+      <button class="btn btn-gold-sm" onclick="generatePassword()">Gerar</button>
+      <button class="btn btn-green-sm" id="btnSavePass" style="display:none" onclick="saveGeneratedPassword()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Team Access Modal -->
+<div class="modal-overlay" id="modalTeamAccess">
+  <div class="modal" style="max-width:540px;">
+    <div class="modal-top"></div>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px;">
+      <div>
+        <div class="modal-title" id="teamAccessName">—</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:2px;" id="teamAccessCity">—</div>
+      </div>
+      <span id="teamAccessStatus" style="font-size:11px;padding:4px 10px;border-radius:20px;background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.25);color:var(--green);white-space:nowrap;margin-top:4px;">—</span>
+    </div>
+
+    <!-- Stats row -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0;">
+      <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
+        <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--blue2);" id="teamAccessAdmCount">0</div>
+        <div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-top:3px;">ADMs</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
+        <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--green);" id="teamAccessMemberCount">0</div>
+        <div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-top:3px;">Músicos</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
+        <div style="font-family:'Syne',sans-serif;font-size:11px;font-weight:600;color:var(--text-mid);" id="teamAccessCreated">—</div>
+        <div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-top:3px;">Criado em</div>
+      </div>
+    </div>
+
+    <!-- Firebase + Senha -->
+    <div style="background:rgba(212,168,83,0.05);border:1px solid rgba(212,168,83,0.15);border-radius:10px;padding:12px 14px;margin-bottom:14px;">
+      <div style="font-size:9px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;">🔑 Credenciais de Acesso</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <span style="font-size:10px;color:var(--text-dim);width:76px;flex-shrink:0;">Firebase URL</span>
+        <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-mid);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" id="teamAccessFbUrl">—</span>
+        <button class="btn-sm-icon" onclick="copyText(document.getElementById('teamAccessFbUrl').textContent,'URL copiada!')" style="flex-shrink:0;">📋</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:10px;color:var(--text-dim);width:76px;flex-shrink:0;">Senha ADM</span>
+        <span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--gold2);background:rgba(212,168,83,0.08);border:1px solid rgba(212,168,83,0.2);border-radius:6px;padding:4px 10px;letter-spacing:0.08em;" id="teamAccessPass">—</span>
+        <button class="btn-sm-icon" onclick="copyText(document.getElementById('teamAccessPass').textContent,'Senha copiada!')" style="flex-shrink:0;">📋</button>
+      </div>
+    </div>
+
+    <!-- ADMs -->
+    <div style="margin-bottom:14px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <div style="font-size:11px;font-weight:700;color:var(--text-mid);text-transform:uppercase;letter-spacing:0.1em;">🛡 ADMs do Time</div>
+        <button class="btn btn-outline" onclick="quickAddAdmForTeam()" style="font-size:10px;padding:4px 10px;min-height:28px;">+ Adicionar ADM</button>
+      </div>
+      <div id="teamAccessAdmList" style="max-height:130px;overflow-y:auto;"></div>
+    </div>
+
+    <!-- Members -->
+    <div style="margin-bottom:6px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <div style="font-size:11px;font-weight:700;color:var(--text-mid);text-transform:uppercase;letter-spacing:0.1em;">🎸 Músicos do Time</div>
+        <button class="btn btn-outline" onclick="quickAddUserForTeam()" style="font-size:10px;padding:4px 10px;min-height:28px;">+ Adicionar Músico</button>
+      </div>
+      <div id="teamAccessMemberList" style="max-height:120px;overflow-y:auto;"></div>
+    </div>
+
+    <div style="background:rgba(52,152,219,0.06);border:1px solid rgba(52,152,219,0.18);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--text-dim);line-height:1.6;margin:14px 0 0;">
+      ℹ️ <strong style="color:var(--blue2);">Fluxo recomendado:</strong> 1) Adicione ADMs → 2) ADMs criam os músicos e distribuem funções → 3) Clique em <strong style="color:var(--gold2);">Abrir Painel</strong> para acessar como ADM deste time.
+    </div>
+
+    <div class="modal-actions" style="margin-top:18px;">
+      <button class="btn btn-outline" onclick="hideModal('modalTeamAccess')">Fechar</button>
+      <button class="btn btn-green-sm" onclick="quickAddAdmForTeam()">🛡 Novo ADM</button>
+      <button class="btn btn-gold-sm" onclick="launchTeamPanel()" style="gap:6px;">🚀 Abrir Painel do Time</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════════════════
+// CONFIGURAÇÃO — cole sua Firebase URL do banco master
+const MASTER_FIREBASE = 'https://ibm-53e5f-default-rtdb.firebaseio.com';
+const MASTER_PATH = '/master_admin.json';
+// Master admin credentials (pode alterar nas configurações)
+const MASTER_EMAIL = 'master@ibmeier.com';
+const MASTER_PASSWORD_DEFAULT = 'master@2026';
+// ══════════════════════════════════════════════════════════
+
+let masterDB = null;   // dados em memória
+let currentMaster = null;
+let syncInterval = null;
+
+// ══ LOCAL STORAGE ══
+function ls(k,d=null){try{const v=localStorage.getItem(k);return v!=null?JSON.parse(v):d}catch{return d}}
+function lsW(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
+
+// ══ FIREBASE ══
+async function fbRead(){
+  const r=await fetch(MASTER_FIREBASE+MASTER_PATH);
+  if(!r.ok)throw new Error('read '+r.status);
+  return await r.json();
+}
+async function fbWrite(data){
+  const r=await fetch(MASTER_FIREBASE+MASTER_PATH,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  if(!r.ok)throw new Error('write '+r.status);
+  return await r.json();
+}
+async function fbPatch(path,data){
+  const r=await fetch(MASTER_FIREBASE+path,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  if(!r.ok)throw new Error('patch '+r.status);
+  return await r.json();
+}
+
+// ══ EMPTY DB ══
+function emptyMasterDB(){
+  return {
+    masterAccounts:[
+      {id:'master1',email:MASTER_EMAIL,name:'Master Admin',passwordHash:btoa(MASTER_PASSWORD_DEFAULT),createdAt:now(),loginType:'email',lastLogin:null}
+    ],
+    teams:[
+      {id:'team_ibm',name:'Igreja Batista do Méier',city:'Rio de Janeiro, RJ',firebaseUrl:'https://ibm-53e5f-default-rtdb.firebaseio.com',admPassword:'ibmeier2026',description:'Time fundador',createdAt:now(),musicianCount:0,agendaCount:0,status:'active',members:[]}
+    ],
+    admins:[
+      {id:'adm1',name:'Administrador IBMéier',email:'adm@ibmeier.com',teamId:'team_ibm',loginType:'senha',createdAt:now(),lastLogin:null,status:'active'}
+    ],
+    users:[],
+    tickets:[
+      {id:'tkt_001',from:'Rodrigo Serejo',email:'rodrigo@ibmeier.com',teamId:'team_ibm',subject:'Não consigo acessar minha conta',message:'Boa tarde! Minha senha parou de funcionar após a última atualização do sistema. Preciso de ajuda para recuperar o acesso.',createdAt:now(),status:'open',reply:null,repliedAt:null}
+    ],
+    activity:[
+      {id:'a1',type:'login',user:'Administrador',team:'IBMéier',msg:'ADM realizou login',at:now(),icon:'🔑',color:'gold'},
+      {id:'a2',type:'agenda',user:'Administrador',team:'IBMéier',msg:'Nova agenda criada: Escala de Abril 2026',at:now(),icon:'📅',color:'blue'},
+      {id:'a3',type:'user',user:'Rodrigo Serejo',team:'IBMéier',msg:'Músico enviou disponibilidade',at:now(),icon:'✅',color:'green'},
+    ],
+    passwords:[],
+    settings:{supportEmail:'master@ibmeier.com',supportWa:'5521999999999'},
+    loginStats:{
+      weekly:[12,8,15,22,18,30,25,28],
+      agendaByMonth:[3,2,4,5,3,6,4,7,2,5,3,4]
+    }
+  };
+}
+
+function now(){return new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}
+
+// ══ AUTH ══
+async function initAuth(){
+  const session = ls('master_session');
+  if(session?.email){
+    const db = await loadMasterDB();
+    if(db){
+      const acc = masterDB.masterAccounts?.find(a=>a.email===session.email);
+      if(acc){ currentMaster=acc; enterApp(); return; }
+    }
+  }
+  document.getElementById('authScreen').style.display='flex';
+}
+
+async function loadMasterDB(){
+  try{
+    const data = await fbRead();
+    if(!data){ masterDB=emptyMasterDB(); await fbWrite(masterDB); }
+    else{ masterDB=data; ensureDefaults(); }
+    return true;
+  }catch(e){
+    // Fallback to localStorage if Firebase not configured
+    const local = ls('masterDB_local');
+    masterDB = local || emptyMasterDB();
+    if(!local) lsW('masterDB_local',masterDB);
+    return true;
+  }
+}
+
+function ensureDefaults(){
+  if(!masterDB.masterAccounts) masterDB.masterAccounts=[{id:'master1',email:MASTER_EMAIL,name:'Master Admin',passwordHash:btoa(MASTER_PASSWORD_DEFAULT),createdAt:now(),loginType:'email',lastLogin:null}];
+  if(!masterDB.teams) masterDB.teams=[];
+  if(!masterDB.admins) masterDB.admins=[];
+  if(!masterDB.users) masterDB.users=[];
+  if(!masterDB.tickets) masterDB.tickets=[];
+  if(!masterDB.activity) masterDB.activity=[];
+  if(!masterDB.passwords) masterDB.passwords=[];
+  if(!masterDB.settings) masterDB.settings={supportEmail:'',supportWa:''};
+  if(!masterDB.loginStats) masterDB.loginStats={weekly:[5,8,12,18,14,22,19,24],agendaByMonth:[1,2,3,5,3,6,4,7,2,5,3,4]};
+}
+
+async function saveDB(){
+  try{ await fbWrite(masterDB); }
+  catch{ lsW('masterDB_local',masterDB); }
+}
+
+async function doEmailLogin(){
+  const email=document.getElementById('loginEmail').value.trim();
+  const pass=document.getElementById('loginPass').value;
+  const err=document.getElementById('authError');
+  err.style.display='none';
+  if(!email||!pass){showAuthError('Preencha email e senha');return}
+  const btn=document.getElementById('btnLogin');btn.disabled=true;btn.textContent='Verificando…';
+  await loadMasterDB();
+  const acc=masterDB.masterAccounts?.find(a=>a.email===email && a.passwordHash===btoa(pass));
+  if(!acc){showAuthError('Email ou senha inválidos.');btn.disabled=false;btn.textContent='Acessar Painel →';return}
+  acc.lastLogin=now();
+  logActivity('🔑','gold','login',acc.name,'Plataforma',`Master ${acc.name} realizou login`);
+  await saveDB();
+  currentMaster=acc;
+  lsW('master_session',{email:acc.email,id:acc.id});
+  btn.disabled=false;btn.textContent='Acessar Painel →';
+  enterApp();
+}
+
+async function doRegister(){
+  const name=document.getElementById('regName').value.trim();
+  const email=document.getElementById('regEmail').value.trim();
+  const pass=document.getElementById('regPass').value;
+  if(!name||!email||!pass){showRegError('Preencha todos os campos');return}
+  if(pass.length<6){showRegError('Senha deve ter no mínimo 6 caracteres');return}
+  await loadMasterDB();
+  if(masterDB.masterAccounts?.find(a=>a.email===email)){showRegError('Este email já está cadastrado');return}
+  const acc={id:'master_'+Date.now(),email,name,passwordHash:btoa(pass),createdAt:now(),loginType:'email',lastLogin:null};
+  masterDB.masterAccounts.push(acc);
+  logActivity('✨','purple','register',name,'Plataforma',`Nova conta master criada: ${name}`);
+  await saveDB();
+  currentMaster=acc;
+  lsW('master_session',{email,id:acc.id});
+  enterApp();
+}
+
+async function loginGoogle(){
+  // Simula login Google — em produção integrar Firebase Auth
+  const simulatedEmail = prompt('Login com Google\n\nDigite seu email Google (simulação):');
+  if(!simulatedEmail) return;
+  const simulatedName = simulatedEmail.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+  await loadMasterDB();
+  let acc = masterDB.masterAccounts?.find(a=>a.email===simulatedEmail);
+  if(!acc){
+    acc={id:'master_'+Date.now(),email:simulatedEmail,name:simulatedName,passwordHash:'',createdAt:now(),loginType:'google',lastLogin:null};
+    if(!masterDB.masterAccounts) masterDB.masterAccounts=[];
+    masterDB.masterAccounts.push(acc);
+  }
+  acc.lastLogin=now();
+  logActivity('🔑','gold','login',simulatedName,'Plataforma',`Login com Google: ${simulatedName}`);
+  await saveDB();
+  currentMaster=acc;
+  lsW('master_session',{email:simulatedEmail,id:acc.id});
+  enterApp();
+}
+
+function showAuthError(msg){const e=document.getElementById('authError');e.textContent=msg;e.style.display='block'}
+function showRegError(msg){const e=document.getElementById('regError');e.textContent=msg;e.style.display='block'}
+function showLoginView(){document.getElementById('authLoginView').style.display='block';document.getElementById('authRegisterView').style.display='none'}
+function showRegisterView(){document.getElementById('authLoginView').style.display='none';document.getElementById('authRegisterView').style.display='block'}
+
+function doLogout(){
+  lsW('master_session',null);
+  currentMaster=null;
+  if(syncInterval){clearInterval(syncInterval);syncInterval=null}
+  document.getElementById('appLayout').style.display='none';
+  document.getElementById('authScreen').style.display='flex';
+  showLoginView();
+}
+
+// ══ APP ══
+function enterApp(){
+  document.getElementById('authScreen').style.display='none';
+  document.getElementById('appLayout').style.display='flex';
+  document.getElementById('sidebarName').textContent=currentMaster.name;
+  document.getElementById('sidebarAvatar').textContent=currentMaster.name[0].toUpperCase();
+  // Populate settings
+  document.getElementById('settingsFirebase').value=MASTER_FIREBASE;
+  document.getElementById('settingsSupportEmail').value=masterDB.settings?.supportEmail||'';
+  document.getElementById('settingsSupportWa').value=masterDB.settings?.supportWa||'';
+  renderAll();
+  syncInterval=setInterval(async()=>{await loadMasterDB();renderAll();},60000);
+}
+
+function renderAll(){
+  renderKPIs();
+  renderCharts();
+  renderActivity(false);
+  renderTeams();
+  renderAdmins();
+  renderUsers();
+  renderTickets();
+  renderPasswords();
+  updateTicketBadge();
+  populateTeamDropdowns();
+}
+
+// ══ NAVIGATION ══
+function switchPanel(name,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(el)el.classList.add('active');
+  else document.querySelectorAll('.nav-item').forEach(n=>{if(n.textContent.trim().toLowerCase().includes(name.toLowerCase().replace(/-/g,' ')))n.classList.add('active')});
+  const titles={dashboard:'Dashboard',activity:'Log de Atividade',teams:'Times',admins:'ADMs por Time',users:'Usuários',tickets:'Suporte',passwords:'Senhas e Acessos',settings:'Configurações'};
+  document.getElementById('topbarTitle').textContent=titles[name]||name;
+}
+
+// ══ KPIs ══
+function renderKPIs(){
+  const teams=masterDB.teams?.length||0;
+  const admins=masterDB.admins?.length||0;
+  const users=(masterDB.users?.length||0)+admins;
+  const tickets=masterDB.tickets?.length||0;
+  const openTickets=masterDB.tickets?.filter(t=>t.status==='open').length||0;
+  const totalMusicians=masterDB.teams?.reduce((s,t)=>s+(t.musicianCount||0),0)||0;
+  const totalAgendas=masterDB.teams?.reduce((s,t)=>s+(t.agendaCount||0),0)||0;
+  const logins=(masterDB.loginStats?.weekly||[]).reduce((a,b)=>a+b,0);
+  document.getElementById('kpiGrid').innerHTML=`
+    <div class="kpi-card"><div class="kpi-card-accent gold"></div><div class="kpi-label">Times Ativos</div><div class="kpi-val">${teams}</div><div class="kpi-sub">Times cadastrados na plataforma</div><span class="kpi-trend up">↑ Crescendo</span></div>
+    <div class="kpi-card"><div class="kpi-card-accent blue"></div><div class="kpi-label">ADMs Totais</div><div class="kpi-val">${admins}</div><div class="kpi-sub">Administradores em todos os times</div><span class="kpi-trend neutral">— Estável</span></div>
+    <div class="kpi-card"><div class="kpi-card-accent green"></div><div class="kpi-label">Músicos</div><div class="kpi-val">${totalMusicians}</div><div class="kpi-sub">Usuários cadastrados nos times</div><span class="kpi-trend up">↑ +3 esta semana</span></div>
+    <div class="kpi-card"><div class="kpi-card-accent purple"></div><div class="kpi-label">Agendas</div><div class="kpi-val">${totalAgendas}</div><div class="kpi-sub">Escalas criadas na plataforma</div><span class="kpi-trend up">↑ Ativas</span></div>
+    <div class="kpi-card"><div class="kpi-card-accent amber"></div><div class="kpi-label">Logins (8 sem.)</div><div class="kpi-val">${logins}</div><div class="kpi-sub">Total de acessos recentes</div><span class="kpi-trend up">↑ Engajado</span></div>
+    <div class="kpi-card"><div class="kpi-card-accent red"></div><div class="kpi-label">Tickets Abertos</div><div class="kpi-val">${openTickets}</div><div class="kpi-sub">Pedidos de suporte pendentes</div><span class="kpi-trend ${openTickets>0?'down':'neutral'}">${openTickets>0?'⚠ Pendente':'✓ Tudo ok'}</span></div>
+  `;
+}
+
+// ══ CHARTS ══
+function renderCharts(){
+  const weekly=masterDB.loginStats?.weekly||[12,8,15,22,18,30,25,28];
+  const agendas=masterDB.loginStats?.agendaByMonth||[1,2,3,5,3,6,4,7,2,5,3,4];
+  const days=['S1','S2','S3','S4','S5','S6','S7','S8'];
+  const months=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const maxW=Math.max(...weekly)||1;
+  const maxA=Math.max(...agendas)||1;
+  const colors=['#d4a853','#f0c870','#c0392b','#2ecc71','#3498db','#8e44ad','#e67e22','#27ae60'];
+  document.getElementById('chartLogins').innerHTML=weekly.map((v,i)=>`
+    <div class="chart-bar-col">
+      <div class="chart-val">${v}</div>
+      <div class="chart-bar" style="height:${Math.round((v/maxW)*130)}px;background:${colors[i%colors.length]}22;border:1px solid ${colors[i%colors.length]}55;" title="${days[i]}: ${v} logins"></div>
+      <div class="chart-label">${days[i]}</div>
+    </div>`).join('');
+  const aColors=['#3498db','#2ecc71','#e67e22','#d4a853','#8e44ad','#c0392b','#27ae60','#f0c870','#3498db','#2ecc71','#e67e22','#d4a853'];
+  document.getElementById('chartAgendas').innerHTML=agendas.map((v,i)=>`
+    <div class="chart-bar-col">
+      <div class="chart-val">${v}</div>
+      <div class="chart-bar" style="height:${Math.round((v/maxA)*130)}px;background:${aColors[i]}22;border:1px solid ${aColors[i]}55;" title="${months[i]}: ${v}"></div>
+      <div class="chart-label">${months[i]}</div>
+    </div>`).join('');
+}
+
+// ══ ACTIVITY ══
+function logActivity(icon,color,type,user,team,msg){
+  if(!masterDB.activity)masterDB.activity=[];
+  masterDB.activity.unshift({id:'a'+Date.now(),type,user,team,msg,at:now(),icon,color});
+  if(masterDB.activity.length>200)masterDB.activity=masterDB.activity.slice(0,200);
+}
+
+function renderActivity(full=false){
+  const list=masterDB.activity||[];
+  const limited=full?list:list.slice(0,6);
+  const colorMap={gold:'gold',green:'green',blue:'blue',red:'red',purple:'purple'};
+  const html=limited.length===0?`<div class="empty"><div class="empty-icon">⚡</div><div class="empty-text">Nenhuma atividade registrada.</div></div>`:
+    limited.map(a=>`<div class="activity-item">
+      <div class="activity-icon ${colorMap[a.color]||'blue'}">${a.icon||'📌'}</div>
+      <div class="activity-body">
+        <div class="activity-text"><strong>${a.user||''}</strong>${a.team?' · '+a.team:''} — ${a.msg||''}</div>
+        <div class="activity-time">${a.at||''}</div>
+      </div>
+    </div>`).join('');
+  document.getElementById('activityFeedDash').innerHTML=html;
+  document.getElementById('activityFeedFull').innerHTML=full?
+    (list.length===0?`<div class="empty"><div class="empty-icon">⚡</div><div class="empty-text">Nenhuma atividade.</div></div>`:
+    list.map(a=>`<div class="activity-item">
+      <div class="activity-icon ${colorMap[a.color]||'blue'}">${a.icon||'📌'}</div>
+      <div class="activity-body">
+        <div class="activity-text"><strong>${a.user||''}</strong>${a.team?' · '+a.team:''} — ${a.msg||''}</div>
+        <div class="activity-time">${a.at||''}</div>
+      </div>
+    </div>`).join(''))
+    :document.getElementById('activityFeedFull').innerHTML;
+}
+
+function clearActivity(){if(!confirm('Limpar log de atividade?'))return;masterDB.activity=[];saveDB();renderActivity(true);renderActivity(false);showToast('Log limpo')}
+
+// ══ TEAMS ══
+function renderTeams(){
+  const teams=masterDB.teams||[];
+  const colors=['linear-gradient(135deg,#d4a853,#f0c870)','linear-gradient(135deg,#3498db,#2980b9)','linear-gradient(135deg,#8e44ad,#9b59b6)','linear-gradient(135deg,#27ae60,#2ecc71)','linear-gradient(135deg,#c0392b,#e74c3c)','linear-gradient(135deg,#e67e22,#f39c12)'];
+  if(!teams.length){document.getElementById('teamsGrid').innerHTML='<div class="empty"><div class="empty-icon">🏛</div><div class="empty-text">Nenhum time cadastrado.<br>Clique em "+ Novo Time".</div></div>';return}
+  document.getElementById('teamsGrid').innerHTML=teams.map((t,i)=>{
+    // Live counts from arrays (não do campo estático)
+    const admCount = (masterDB.admins||[]).filter(a=>a.teamId===t.id).length;
+    const musicianCount = (masterDB.users||[]).filter(u=>u.teamId===t.id).length;
+    // Sync musicianCount field
+    t.musicianCount = musicianCount;
+    const isEmpty = admCount===0 && musicianCount===0;
+    const noMusicians = admCount>0 && musicianCount===0;
+    return `
+    <div class="team-card">
+      <div class="team-card-header">
+        <div class="team-avatar" style="background:${colors[i%colors.length]}">${t.name[0]}</div>
+        <div>
+          <div class="team-name">${t.name}</div>
+          <div class="team-email">${t.city||'—'}</div>
+        </div>
+        <span class="badge ${t.status==='active'?'badge-green':'badge-gray'}" style="margin-left:auto;">${t.status==='active'?'Ativo':'Inativo'}</span>
+      </div>
+      <div class="team-meta">
+        <div class="team-meta-item"><div class="team-meta-val">${musicianCount}</div><div class="team-meta-label">Músicos</div></div>
+        <div class="team-meta-item"><div class="team-meta-val">${admCount}</div><div class="team-meta-label">ADMs</div></div>
+        <div class="team-meta-item"><div class="team-meta-val">${t.agendaCount||0}</div><div class="team-meta-label">Agendas</div></div>
+        <div class="team-meta-item"><div class="team-meta-val" style="font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.createdAt||'—'}</div><div class="team-meta-label">Criado</div></div>
+      </div>
+      ${t.firebaseUrl?`<div style="margin-top:10px;font-size:10px;color:var(--text-dim);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:7px;padding:6px 10px;font-family:'DM Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.firebaseUrl}</div>`:''}
+      ${isEmpty ? `<div style="margin-top:10px;background:rgba(230,126,34,0.08);border:1px solid rgba(230,126,34,0.22);border-radius:7px;padding:7px 10px;font-size:11px;color:var(--amber2);">⚠️ Sem integrantes — configure ADMs e distribua as funções.</div>` : noMusicians ? `<div style="margin-top:10px;background:rgba(52,152,219,0.06);border:1px solid rgba(52,152,219,0.18);border-radius:7px;padding:7px 10px;font-size:11px;color:var(--blue2);">ℹ️ ADM configurado · Aguardando cadastro de músicos.</div>` : ''}
+      <div class="team-actions">
+        <button class="btn btn-gold-sm" onclick="openTeamAccess('${t.id}')" style="flex:1;">🚀 Acessar Painel</button>
+        <button class="btn btn-outline" onclick="copyText('${t.admPassword||''}','Senha ADM copiada!')" title="Copiar senha ADM">🔑</button>
+        <button class="btn btn-red-sm" onclick="deleteTeam('${t.id}')" title="Excluir time">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function createTeam(){
+  const name=document.getElementById('newTeamName').value.trim();
+  const city=document.getElementById('newTeamCity').value.trim();
+  const fbUrl=document.getElementById('newTeamFirebase').value.trim();
+  const pass=document.getElementById('newTeamPass').value.trim();
+  if(!name||!fbUrl||!pass){showToast('⚠️ Preencha nome, Firebase URL e senha');return}
+  // Novo time: sem nenhum integrante — ADM deve criar acessos e distribuir funções
+  const t={id:'team_'+Date.now(),name,city,firebaseUrl:fbUrl,admPassword:pass,description:document.getElementById('newTeamDesc').value.trim(),createdAt:now(),musicianCount:0,agendaCount:0,status:'active',members:[]};
+  masterDB.teams.push(t);
+  logActivity('🏛','gold','team',currentMaster.name,'Plataforma',`Novo time criado: "${name}" — aguardando cadastro de membros`);
+  await saveDB();hideModal('modalNewTeam');renderTeams();populateTeamDropdowns();showToast('✅ Time criado! Adicione os ADMs e distribua as funções.');
+  ['newTeamName','newTeamCity','newTeamFirebase','newTeamPass','newTeamDesc'].forEach(id=>document.getElementById(id).value='');
+}
+
+async function deleteTeam(id){if(!confirm('Excluir este time? Esta ação não pode ser desfeita.'))return;masterDB.teams=masterDB.teams.filter(t=>t.id!==id);masterDB.admins=masterDB.admins.filter(a=>a.teamId!==id);await saveDB();renderTeams();renderAdmins();populateTeamDropdowns();showToast('Time excluído.')}
+
+// ══ ADMINS ══
+function renderAdmins(){
+  const filter=document.getElementById('admTeamFilter')?.value||'';
+  const list=(masterDB.admins||[]).filter(a=>!filter||a.teamId===filter);
+  const tbody=document.getElementById('adminsBody');if(!tbody)return;
+  if(!list.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:28px;color:var(--text-dim);">Nenhum ADM encontrado.</td></tr>';return}
+  tbody.innerHTML=list.map(a=>{
+    const team=masterDB.teams?.find(t=>t.id===a.teamId);
+    return `<tr>
+      <td><strong style="color:var(--text);">${a.name}</strong></td>
+      <td style="font-family:'DM Mono',monospace;font-size:11px;">${a.email||'—'}</td>
+      <td>${team?`<span class="badge badge-gold">${team.name}</span>`:'<span class="badge badge-gray">—</span>'}</td>
+      <td><span class="badge ${a.loginType==='google'?'badge-blue':'badge-purple'}">${a.loginType==='google'?'🔵 Google':'🔑 Senha'}</span></td>
+      <td style="font-size:11px;color:var(--text-dim);">${a.createdAt||'—'}</td>
+      <td><span class="badge ${a.status==='active'?'badge-green':'badge-red'}">${a.status==='active'?'Ativo':'Inativo'}</span></td>
+      <td><button class="btn-sm-icon" onclick="removeAdm('${a.id}')" title="Remover">🗑</button></td>
+    </tr>`;
+  }).join('');
+}
+
+async function createAdm(){
+  const name=document.getElementById('newAdmName').value.trim();
+  const email=document.getElementById('newAdmEmail').value.trim();
+  const teamId=document.getElementById('newAdmTeam').value;
+  const loginType=document.getElementById('newAdmType').value;
+  const pass=document.getElementById('newAdmPass').value;
+  if(!name||!teamId){showToast('⚠️ Preencha nome e selecione o time');return}
+  const a={id:'adm_'+Date.now(),name,email,teamId,loginType,passwordHash:pass?btoa(pass):'',createdAt:now(),lastLogin:null,status:'active'};
+  masterDB.admins.push(a);
+  logActivity('🛡','blue','adm',currentMaster.name,'Plataforma',`ADM "${name}" adicionado ao time`);
+  await saveDB();hideModal('modalNewAdm');renderAdmins();showToast('✅ ADM adicionado!');
+}
+
+async function removeAdm(id){if(!confirm('Remover este ADM?'))return;masterDB.admins=masterDB.admins.filter(a=>a.id!==id);await saveDB();renderAdmins();showToast('ADM removido.')}
+
+// ══ USERS ══
+function renderUsers(){
+  const search=(document.getElementById('userSearch')?.value||'').toLowerCase();
+  const teamFilter=document.getElementById('userTeamFilter')?.value||'';
+  const roleFilter=document.getElementById('userRoleFilter')?.value||'';
+  // Merge admins + users
+  const allAdmins=(masterDB.admins||[]).map(a=>({...a,role:'adm'}));
+  const allUsers=(masterDB.users||[]);
+  const allMasters=(masterDB.masterAccounts||[]).map(m=>({...m,role:'master',teamId:'—'}));
+  let list=[...allMasters,...allAdmins,...allUsers];
+  if(search) list=list.filter(u=>(u.name||'').toLowerCase().includes(search)||(u.email||'').toLowerCase().includes(search));
+  if(teamFilter) list=list.filter(u=>u.teamId===teamFilter);
+  if(roleFilter) list=list.filter(u=>(u.role||'musico')===roleFilter);
+  const el=document.getElementById('usersList');if(!el)return;
+  if(!list.length){el.innerHTML='<div class="empty"><div class="empty-icon">👥</div><div class="empty-text">Nenhum usuário encontrado.</div></div>';return}
+  const avatarColors=['linear-gradient(135deg,#d4a853,#f0c870)','linear-gradient(135deg,#3498db,#2980b9)','linear-gradient(135deg,#8e44ad,#9b59b6)','linear-gradient(135deg,#27ae60,#2ecc71)','linear-gradient(135deg,#c0392b,#e74c3c)'];
+  el.innerHTML=list.map((u,i)=>{
+    const team=masterDB.teams?.find(t=>t.id===u.teamId);
+    const roleBadge={master:'badge-gold',adm:'badge-blue',musico:'badge-green'}[u.role||'musico']||'badge-gray';
+    const roleLabel={master:'🛡 Master',adm:'⚙️ ADM',musico:'🎸 Músico'}[u.role||'musico']||'Músico';
+    return `<div class="user-row">
+      <div class="user-row-avatar" style="background:${avatarColors[i%avatarColors.length]}">${(u.name||'?')[0].toUpperCase()}</div>
+      <div class="user-row-info">
+        <div class="user-row-name">${u.name||'—'}</div>
+        <div class="user-row-email">${u.email||'—'}</div>
+      </div>
+      <div class="user-row-right">
+        ${team?`<span class="badge badge-gold" style="font-size:10px;">${team.name}</span>`:''}
+        <span class="badge ${roleBadge}">${roleLabel}</span>
+        <span class="badge ${u.loginType==='google'?'badge-blue':'badge-purple'}" style="font-size:9px;">${u.loginType==='google'?'Google':'Senha'}</span>
+        ${u.role!=='master'?`<button class="btn-sm-icon" onclick="removeUser('${u.id}','${u.role}')" title="Remover">🗑</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function createUser(){
+  const name=document.getElementById('newUserName').value.trim();
+  const email=document.getElementById('newUserEmail').value.trim();
+  const role=document.getElementById('newUserRole').value;
+  const teamId=document.getElementById('newUserTeam').value;
+  const loginType=document.getElementById('newUserLoginType').value;
+  const pass=document.getElementById('newUserPass').value;
+  if(!name){showToast('⚠️ Digite o nome');return}
+  if(role==='adm'){
+    const a={id:'adm_'+Date.now(),name,email,teamId,loginType,passwordHash:pass?btoa(pass):'',createdAt:now(),lastLogin:null,status:'active'};
+    masterDB.admins.push(a);
+  } else {
+    const u={id:'user_'+Date.now(),name,email,teamId,role:'musico',loginType,passwordHash:pass?btoa(pass):'',createdAt:now(),lastLogin:null,status:'active'};
+    masterDB.users.push(u);
+  }
+  logActivity('👤','green','user',currentMaster.name,'Plataforma',`Novo usuário cadastrado: "${name}" (${role})`);
+  await saveDB();hideModal('modalNewUser');renderUsers();renderAdmins();showToast('✅ Usuário cadastrado!');
+}
+
+async function removeUser(id,role){
+  if(!confirm('Remover este usuário?'))return;
+  if(role==='adm') masterDB.admins=masterDB.admins.filter(a=>a.id!==id);
+  else masterDB.users=masterDB.users.filter(u=>u.id!==id);
+  await saveDB();renderUsers();renderAdmins();showToast('Usuário removido.')
+}
+
+function toggleUserPassField(){const t=document.getElementById('newUserLoginType').value;document.getElementById('newUserPassField').style.display=t==='senha'?'block':'none'}
+
+// ══ TICKETS ══
+function renderTickets(){
+  const filter=document.getElementById('ticketFilter')?.value||'all';
+  let list=masterDB.tickets||[];
+  if(filter==='open') list=list.filter(t=>t.status==='open');
+  if(filter==='resolved') list=list.filter(t=>t.status==='resolved');
+  const el=document.getElementById('ticketsList');if(!el)return;
+  // Mini list for dashboard
+  const mini=document.getElementById('ticketsMiniList');
+  const openTickets=masterDB.tickets?.filter(t=>t.status==='open')||[];
+  if(mini) mini.innerHTML=openTickets.length===0?`<div class="empty" style="padding:24px;"><div class="empty-icon">✅</div><div class="empty-text">Nenhum ticket aberto</div></div>`:
+    openTickets.slice(0,3).map(t=>`<div class="ticket-item ticket-open" style="margin-bottom:8px;">
+      <div class="ticket-header"><div class="ticket-title">${t.subject}</div><span class="badge badge-amber">Aberto</span></div>
+      <div class="ticket-meta">De: <strong>${t.from}</strong> · ${t.createdAt}</div>
+    </div>`).join('');
+  if(!list.length){el.innerHTML='<div class="empty"><div class="empty-icon">🎫</div><div class="empty-text">Nenhum ticket encontrado.</div></div>';return}
+  el.innerHTML=list.map(t=>`
+    <div class="ticket-item ${t.status==='open'?'ticket-open':'ticket-resolved'}" id="tkt-${t.id}">
+      <div class="ticket-header">
+        <div>
+          <div class="ticket-title">${t.subject}</div>
+          <div class="ticket-meta">De: <strong>${t.from}</strong>${t.email?' · '+t.email:''} · ${t.createdAt}</div>
+        </div>
+        <span class="badge ${t.status==='open'?'badge-amber':'badge-green'}">${t.status==='open'?'⏳ Aberto':'✅ Resolvido'}</span>
+      </div>
+      <div class="ticket-body">${t.message}</div>
+      ${t.reply?`<div style="background:rgba(39,174,96,0.06);border:1px solid rgba(39,174,96,0.18);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--text-mid);"><strong style="color:var(--green2);">↩ Sua resposta</strong> · ${t.repliedAt||''}<br>${t.reply}</div>`:''}
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+        ${t.status==='open'?`<button class="btn btn-green-sm" onclick="toggleReplyForm('${t.id}')">↩ Responder</button><button class="btn btn-outline" onclick="resolveTicket('${t.id}')">✓ Resolver</button>`:''}
+        <button class="btn btn-red-sm" onclick="deleteTicket('${t.id}')">🗑</button>
+      </div>
+      <div class="ticket-reply-form" id="reply-${t.id}">
+        <textarea placeholder="Digite sua resposta…" id="replyText-${t.id}"></textarea>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-green-sm" onclick="sendReply('${t.id}')">Enviar Resposta</button>
+          <button class="btn btn-outline" onclick="toggleReplyForm('${t.id}')">Cancelar</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleReplyForm(id){const f=document.getElementById('reply-'+id);if(f)f.style.display=f.style.display==='block'?'none':'block'}
+
+async function sendReply(id){
+  const text=document.getElementById('replyText-'+id)?.value.trim();
+  if(!text){showToast('Digite a resposta');return}
+  const t=masterDB.tickets?.find(x=>x.id===id);if(!t)return;
+  t.reply=text;t.repliedAt=now();t.status='resolved';
+  logActivity('↩','green','reply',currentMaster.name,'Suporte',`Respondeu ticket: "${t.subject}"`);
+  await saveDB();renderTickets();updateTicketBadge();showToast('✅ Resposta enviada!');
+}
+
+async function resolveTicket(id){
+  const t=masterDB.tickets?.find(x=>x.id===id);if(!t)return;
+  t.status='resolved';await saveDB();renderTickets();updateTicketBadge();showToast('Ticket marcado como resolvido.');
+}
+
+async function deleteTicket(id){if(!confirm('Excluir ticket?'))return;masterDB.tickets=masterDB.tickets.filter(t=>t.id!==id);await saveDB();renderTickets();updateTicketBadge();showToast('Ticket excluído.')}
+
+function updateTicketBadge(){
+  const count=(masterDB.tickets||[]).filter(t=>t.status==='open').length;
+  const b=document.getElementById('ticketBadge');
+  if(b){b.textContent=count;b.style.display=count>0?'inline':'none';}
+}
+
+// ══ PASSWORDS ══
+function renderPasswords(){
+  // Teams table
+  const tbody=document.getElementById('passTeamsBody');if(tbody){
+    const teams=masterDB.teams||[];
+    if(!teams.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-dim);">Nenhum time cadastrado</td></tr>';}
+    else tbody.innerHTML=teams.map(t=>`<tr>
+      <td><strong style="color:var(--text);">${t.name}</strong></td>
+      <td><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim);">${t.firebaseUrl||'—'}</span></td>
+      <td>
+        <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--gold2);">••••••••</span>
+        <button class="btn-sm-icon" onclick="copyText('${t.admPassword||''}','Senha copiada!')" title="Copiar" style="margin-left:6px;">📋</button>
+      </td>
+      <td>${t.musicianCount||0}</td>
+      <td>${t.agendaCount||0}</td>
+      <td><button class="btn btn-outline" style="font-size:11px;padding:5px 10px;" onclick="copyText('${t.admPassword||''}','Senha ADM copiada!')">🔑 Copiar Senha</button></td>
+    </tr>`).join('');
+  }
+  // Generated passwords
+  const el=document.getElementById('passList');if(!el)return;
+  const list=masterDB.passwords||[];
+  if(!list.length){el.innerHTML='<div class="empty" style="padding:24px;"><div class="empty-icon">🔑</div><div class="empty-text">Nenhuma senha gerada.</div></div>';return}
+  el.innerHTML=list.map((p,i)=>`<div class="user-row">
+    <div class="activity-icon gold">🔑</div>
+    <div class="user-row-info">
+      <div class="user-row-name">${p.forUser||'—'}</div>
+      <div class="user-row-email">${p.type||''} · Gerada em ${p.createdAt||'—'}</div>
+    </div>
+    <div class="user-row-right">
+      <span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--gold2);">${p.password||'—'}</span>
+      <button class="btn-sm-icon" onclick="copyText('${p.password}','Senha copiada!')" title="Copiar">📋</button>
+      <button class="btn-sm-icon" onclick="deletePassword(${i})" title="Excluir">🗑</button>
+    </div>
+  </div>`).join('');
+}
+
+function generatePassword(){
+  const len=parseInt(document.getElementById('genPassLen').value)||12;
+  const chars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%';
+  let pass='';for(let i=0;i<len;i++)pass+=chars[Math.floor(Math.random()*chars.length)];
+  document.getElementById('genPassValue').textContent=pass;
+  document.getElementById('genPassResult').style.display='block';
+  document.getElementById('btnSavePass').style.display='inline-flex';
+}
+
+function copyGenPass(){const p=document.getElementById('genPassValue').textContent;navigator.clipboard.writeText(p).then(()=>showToast('Senha copiada!'))}
+
+async function saveGeneratedPassword(){
+  const pass=document.getElementById('genPassValue').textContent;
+  const forUser=document.getElementById('genPassFor').value.trim()||'—';
+  const type=document.getElementById('genPassType').value;
+  masterDB.passwords.unshift({password:pass,forUser,type,createdAt:now()});
+  await saveDB();hideModal('modalGenPass');renderPasswords();showToast('Senha salva!');
+  document.getElementById('genPassResult').style.display='none';
+  document.getElementById('btnSavePass').style.display='none';
+  document.getElementById('genPassFor').value='';
+}
+
+async function deletePassword(i){masterDB.passwords.splice(i,1);await saveDB();renderPasswords();showToast('Removida.')}
+
+// ══ SETTINGS ══
+async function saveSettings(){
+  masterDB.settings={
+    supportEmail:document.getElementById('settingsSupportEmail').value,
+    supportWa:document.getElementById('settingsSupportWa').value
+  };
+  await saveDB();showToast('✅ Configurações salvas!');
+}
+
+async function changePassword(){
+  const np=document.getElementById('settingsNewPass').value;
+  const cp=document.getElementById('settingsConfPass').value;
+  if(!np||np.length<6){showToast('Senha deve ter mín. 6 caracteres');return}
+  if(np!==cp){showToast('Senhas não coincidem');return}
+  const acc=masterDB.masterAccounts?.find(a=>a.id===currentMaster.id);
+  if(acc){acc.passwordHash=btoa(np);}
+  await saveDB();showToast('✅ Senha alterada com sucesso!');
+  document.getElementById('settingsNewPass').value='';document.getElementById('settingsConfPass').value='';
+}
+
+// ══ HELPERS ══
+function populateTeamDropdowns(){
+  const teams=masterDB.teams||[];
+  const opts=`<option value="">Todos os times</option>`+teams.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+  ['admTeamFilter','userTeamFilter'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=opts});
+  const selOpts=`<option value="">— Selecione —</option>`+teams.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+  ['newAdmTeam','newUserTeam'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=selOpts});
+}
+
+function showModal(id){document.getElementById(id).classList.add('show')}
+function hideModal(id){document.getElementById(id).classList.remove('show')}
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show')}));
+
+function copyText(text,msg='Copiado!'){if(!text)return;navigator.clipboard.writeText(text).then(()=>showToast(msg))}
+
+function refreshAll(){loadMasterDB().then(()=>{renderAll();showToast('Dados atualizados')})}
+
+let toastT=null;
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  if(toastT)clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ══ TEAM ACCESS (Acessar Painel do Time) ══
+function openTeamAccess(teamId){
+  const t = masterDB.teams?.find(x=>x.id===teamId);
+  if(!t) return;
+  const admins = (masterDB.admins||[]).filter(a=>a.teamId===teamId);
+  const members = (masterDB.users||[]).filter(u=>u.teamId===teamId);
+  // Render modal content
+  document.getElementById('teamAccessName').textContent = t.name;
+  document.getElementById('teamAccessCity').textContent = t.city||'—';
+  document.getElementById('teamAccessFbUrl').textContent = t.firebaseUrl||'—';
+  document.getElementById('teamAccessPass').textContent = t.admPassword||'—';
+  document.getElementById('teamAccessStatus').textContent = t.status==='active'?'✅ Ativo':'⏸ Inativo';
+  document.getElementById('teamAccessAdmCount').textContent = admins.length;
+  document.getElementById('teamAccessMemberCount').textContent = members.length;
+  document.getElementById('teamAccessCreated').textContent = t.createdAt||'—';
+  // ADM list
+  document.getElementById('teamAccessAdmList').innerHTML = admins.length===0
+    ? '<div style="font-size:12px;color:var(--text-dim);padding:10px 0;">Nenhum ADM cadastrado ainda. <a style="color:var(--gold2);cursor:pointer;" onclick="hideModal(\'modalTeamAccess\');showModal(\'modalNewAdm\')">+ Adicionar ADM</a></div>'
+    : admins.map(a=>`<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);">
+        <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">${(a.name||'?')[0].toUpperCase()}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:12px;color:var(--text);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${a.name}</div>
+          <div style="font-size:10px;color:var(--text-dim);">${a.email||'—'} · <span style="color:${a.loginType==='google'?'var(--blue2)':'var(--purple2);'}">${a.loginType==='google'?'Google':'Senha'}</span></div>
+        </div>
+        <span style="font-size:9px;padding:2px 7px;border-radius:10px;background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.25);color:var(--green);">${a.status==='active'?'Ativo':'Inativo'}</span>
+      </div>`).join('');
+  // Member list (musicians)
+  document.getElementById('teamAccessMemberList').innerHTML = members.length===0
+    ? '<div style="font-size:12px;color:var(--text-dim);padding:10px 0;">Nenhum músico cadastrado. O ADM deve criar os acessos e distribuir as funções.</div>'
+    : members.map(u=>`<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);">
+        <div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--green),#1e8449);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;">${(u.name||'?')[0].toUpperCase()}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:12px;color:var(--text);font-weight:500;">${u.name}</div>
+          <div style="font-size:10px;color:var(--text-dim);">${u.email||'—'}</div>
+        </div>
+      </div>`).join('');
+  // Store current team for quick actions
+  document.getElementById('modalTeamAccess').dataset.teamId = teamId;
+  showModal('modalTeamAccess');
+  logActivity('👁','blue','view',currentMaster.name,t.name,`Acessou painel do time "${t.name}"`);
+}
+
+function launchTeamPanel(){
+  const teamId = document.getElementById('modalTeamAccess').dataset.teamId;
+  const t = masterDB.teams?.find(x=>x.id===teamId);
+  if(!t){showToast('Painel não configurado');return;}
+  // Pass team credentials via sessionStorage so the escala app can auto-login
+  try{
+    sessionStorage.setItem('teamLogin',JSON.stringify({
+      teamId: t.id,
+      teamName: t.name,
+      firebaseUrl: t.firebaseUrl,
+      admPassword: t.admPassword,
+      launchedByMaster: true,
+      masterEmail: currentMaster.email
+    }));
+  }catch(e){}
+  // Open the escala panel — use same origin or configured URL
+  const panelUrl = t.panelUrl || 'ibmeier_escala_v8.html';
+  const win = window.open(panelUrl,'_blank');
+  if(!win){
+    showToast('⚠️ Popup bloqueado. Habilite popups e tente novamente.');
+    return;
+  }
+  logActivity('🚀','gold','launch',currentMaster.name,t.name,`Abriu painel do time "${t.name}" via master`);
+  showToast(`🚀 Painel de "${t.name}" aberto!`);
+}
+
+function quickAddAdmForTeam(){
+  const teamId = document.getElementById('modalTeamAccess').dataset.teamId;
+  hideModal('modalTeamAccess');
+  // Pre-select team in the adm modal
+  setTimeout(()=>{
+    showModal('modalNewAdm');
+    const sel = document.getElementById('newAdmTeam');
+    if(sel) sel.value = teamId;
+  },150);
+}
+
+function quickAddUserForTeam(){
+  const teamId = document.getElementById('modalTeamAccess').dataset.teamId;
+  hideModal('modalTeamAccess');
+  setTimeout(()=>{
+    showModal('modalNewUser');
+    const sel = document.getElementById('newUserTeam');
+    if(sel) sel.value = teamId;
+  },150);
+}
+
+// ══ INIT ══
+initAuth();
+</script>
+</body>
+</html>
