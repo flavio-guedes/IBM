@@ -613,7 +613,8 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
 <header id="mainHeader">
   <div class="header-inner">
     <div class="logo-area">
-
+      <img class="logo-img" src="https://static.wixstatic.com/media/430a01_070855f78e42434680537abbc733ed44~mv2.png/v1/fill/w_228,h_110,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/marca_ibmeier_horizontal_original.png" alt="IBMéier" onerror="this.style.display='none'">
+      <div class="logo-divider"></div>
       <div class="logo-sub">
         <span class="logo-panel">Escala Musical</span>
         <span class="logo-desc" id="headerDesc">Painel de Cultos · 2026</span>
@@ -652,28 +653,48 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
     <img src="https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=1400&q=50&auto=format" alt="" onerror="this.style.display='none'">
   </div>
   <div class="home-bg-text">IBMéier</div>
-    <div class="home-content">
+  <div class="home-content">
+    <img class="home-logo" src="https://static.wixstatic.com/media/430a01_070855f78e42434680537abbc733ed44~mv2.png/v1/fill/w_456,h_220,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/marca_ibmeier_horizontal_original.png" alt="IBMéier" onerror="this.style.display='none'">
     <div class="home-eyebrow">Escala Musical · Plataforma</div>
-    <div class="home-title">Gestão de Escalas<br>Musicais</div>
-    <p class="home-sub">Acesse seu painel de disponibilidade, escalas e comunicação da equipe.</p>
+    <div class="home-title">Painel de Cultos<br>Dominicais</div>
+    <p class="home-sub">Gerencie disponibilidade, escalas e comunicação da equipe musical da sua igreja.</p>
     <div class="home-cards">
       <div class="home-card join-card" onclick="showEmailLoginScreen()">
-        <span class="home-card-icon">✉️</span>
-        <div class="home-card-title">Entrar com Email</div>
-        <div class="home-card-desc">Acesse com seu email cadastrado. Músicos e ADMs entram por aqui.</div>
-        <span class="home-card-tag">→ Login seguro</span>
+        <span class="home-card-icon">🎸</span>
+        <div class="home-card-title">Faço Parte de Um Time</div>
+        <div class="home-card-desc">Entre com seu e-mail para acessar as escalas e comunicação do seu time musical.</div>
+        <span class="home-card-tag">→ Entrar agora</span>
       </div>
       <div class="home-card create-card" onclick="showCreateScreen()">
         <span class="home-card-icon">🛡</span>
-        <div class="home-card-title">Criar Painel ADM</div>
-        <div class="home-card-desc">Crie um painel para o seu time gratuitamente. Qualquer pessoa pode criar.</div>
-        <span class="home-card-tag">✨ Criar meu time</span>
+        <div class="home-card-title">Sou Coordenador de Um Time!</div>
+        <div class="home-card-desc">Crie e gerencie o painel musical do seu time de forma simples e gratuita.</div>
+        <span class="home-card-tag">✨ Criar meu painel</span>
       </div>
     </div>
     <div class="home-footer">
-      Tem um código de acesso? <a onclick="showJoinScreen()" style="color:var(--gold2);cursor:pointer;">Entrar com código →</a>
+      Tem um código de acesso? <a onclick="showJoinScreen()">Entrar com código →</a>
     </div>
-  </div></div>
+  </div>
+</div>
+
+<!-- ════ EMAIL LOGIN SCREEN ════ -->
+<div class="flow-screen" id="emailLoginScreen">
+  <div class="flow-card">
+    <div class="flow-card-line red"></div>
+    <button class="flow-back" onclick="showHome()">← Voltar</button>
+    <span class="flow-icon">✉️</span>
+    <div class="flow-title">Entrar no Painel</div>
+    <div class="flow-sub">Digite seu e-mail (pode ser Gmail). Vamos encontrar o seu time automaticamente.</div>
+    <div class="flow-field">
+      <label class="flow-label">Seu e-mail</label>
+      <input type="email" class="flow-input" id="emailLoginInput" placeholder="seu@gmail.com" onkeydown="if(event.key==='Enter')doEmailJoin()">
+    </div>
+    <div class="auth-error" id="emailLoginError" style="background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.3);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--red2);margin-bottom:14px;display:none;"></div>
+    <button class="btn-flow-primary" onclick="doEmailJoin()" id="btnEmailJoin">Continuar →</button>
+    <div class="flow-divider" style="margin-top:16px;">ou</div>
+    <button class="btn-flow-primary" onclick="showJoinScreen()" style="background:var(--surface2);border:1px solid var(--border2);color:var(--text-mid);box-shadow:none;">🔑 Tenho um código de acesso</button>
+  </div>
 </div>
 
 <!-- ════ JOIN SCREEN ════ -->
@@ -710,8 +731,8 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
         <input type="text" class="flow-input" id="manualName" placeholder="Nome completo">
       </div>
       <div class="flow-field">
-        <label class="flow-label">Seu e-mail</label>
-        <input type="email" class="flow-input" id="manualEmail" placeholder="seu@email.com">
+        <label class="flow-label">Seu e-mail (pode ser Gmail)</label>
+        <input type="email" class="flow-input" id="manualEmail" placeholder="seu@gmail.com">
       </div>
       <button class="btn-flow-primary" onclick="proceedToSetup()" id="btnProceedSetup">Continuar →</button>
     </div>
@@ -727,21 +748,14 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
       </div>
       <span class="flow-icon">⚙️</span>
       <div class="flow-title">Configurar Painel</div>
-      <div class="flow-sub">Preencha os dados do seu time e do banco Firebase onde as escalas serão salvas.</div>
+      <div class="flow-sub">Dê um nome ao seu time e crie uma senha para o ADM. O banco de dados é configurado automaticamente.</div>
       <div class="flow-field">
         <label class="flow-label">Nome do Time / Igreja</label>
         <input type="text" class="flow-input" id="createTeamName" placeholder="ex: Igreja Batista do Méier">
       </div>
       <div class="flow-field">
-        <label class="flow-label">Firebase Realtime Database URL</label>
-        <input type="url" class="flow-input" id="createFirebaseUrl" placeholder="https://seu-projeto-rtdb.firebaseio.com">
-      </div>
-      <div class="flow-field">
         <label class="flow-label">Senha ADM do Time</label>
         <input type="password" class="flow-input" id="createAdmPass" placeholder="Crie uma senha para o ADM">
-      </div>
-      <div style="background:rgba(212,168,83,0.07);border:1px solid rgba(212,168,83,0.2);border-radius:10px;padding:12px 14px;font-size:11px;color:var(--text-dim);line-height:1.6;margin-bottom:16px;">
-        💡 Não tem Firebase? <a href="https://console.firebase.google.com" target="_blank" style="color:var(--gold2);">Crie gratuitamente em console.firebase.google.com</a> → Novo projeto → Realtime Database → Modo teste
       </div>
       <button class="btn-flow-gold" onclick="doCreateTeam()" id="btnCreateTeam">🚀 Criar Painel</button>
       <button class="flow-back" onclick="document.getElementById('createStep1').style.display='block';document.getElementById('createStep2').style.display='none';" style="margin-top:12px;width:100%;justify-content:center;">← Voltar</button>
@@ -769,7 +783,7 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
   </div>
   <div class="login-bg-text">IBMéier</div>
   <div class="login-content">
-
+    <img class="login-logo-big" src="https://static.wixstatic.com/media/430a01_070855f78e42434680537abbc733ed44~mv2.png/v1/fill/w_456,h_220,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/marca_ibmeier_horizontal_original.png" alt="IBMéier" onerror="this.style.display='none'">
     <div class="login-eyebrow">Escala Instrumental · 2026</div>
     <div class="login-title">Painel de Cultos<br>Dominicais</div>
     <p class="login-sub">Disponibilidade, escalas e comunicação da equipe musical.</p>
@@ -1149,47 +1163,23 @@ async function saveCloud(){
 }
 
 // ══ MIRROR EVENTS TO MASTER ADMIN ══
-// Writes directly into /master_v2.json → activity so master sees it in real time
-const MASTER_FB   = 'https://ibm-53e5f-default-rtdb.firebaseio.com';
-const MASTER_DB   = '/master_v2.json';
-
-async function mirrorEventToMaster(type, icon, msg){
+async function mirrorEventToMaster(type,icon,color,msg,extra={}){
   try{
-    const at = new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-    const entry = {
-      id: Date.now(), icon,
-      msg: `<strong>${TEAM_NAME||'Time'}</strong> — ${msg}`,
-      at, type,
-      team: TEAM_NAME||'—',
-      musicians: appData?.musicians?.length||0,
-      agendas: appData?.agendas?.length||0
+    const event={
+      id: Date.now(),
+      type, icon, color, msg,
+      teamId: FIREBASE_URL+DB_PATH,
+      teamName: TEAM_NAME,
+      user: currentUser?.name||'—',
+      at: new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),
+      musicianCount: appData?.musicians?.length||0,
+      agendaCount: appData?.agendas?.length||0,
+      ...extra
     };
-
-    // 1. Read current master_v2 activity
-    const r = await fetch(MASTER_FB + MASTER_DB);
-    const masterData = await r.json() || {};
-    if (!masterData.activity) masterData.activity = [];
-
-    // 2. Prepend new event (keep last 100)
-    masterData.activity.unshift(entry);
-    if (masterData.activity.length > 100) masterData.activity = masterData.activity.slice(0,100);
-
-    // 3. Also update team musician/agenda counts
-    if (masterData.teams) {
-      const t = masterData.teams.find(t => t.firebaseUrl === FIREBASE_URL || t.name === TEAM_NAME);
-      if (t) {
-        t.musicians = appData?.musicians?.length || t.musicians || 0;
-        t.agendas   = appData?.agendas?.length   || t.agendas   || 0;
-      }
-    }
-
-    // 4. Write back
-    await fetch(MASTER_FB + MASTER_DB, {
-      method:'PUT',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(masterData)
-    });
-  }catch(e){ /* silent */ }
+    // Push to master Firebase team_events
+    const masterFb='https://ibm-53e5f-default-rtdb.firebaseio.com';
+    await fetch(masterFb+'/team_events/'+event.id+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(event)});
+  }catch(e){ /* silent — don't block user flow */ }
 }
 async function loadCloud(){
   setSyncState('syncing','Sincronizando…');
@@ -1228,68 +1218,38 @@ function showHome(){
   hideAllScreens();
   document.getElementById('homeScreen').style.display='flex';
   document.getElementById('homeScreen').style.flexDirection='column';
+  // Clear any team config from URL without reloading
   if(window.history.replaceState) window.history.replaceState(null,'',window.location.pathname);
+  // Reset header
   document.getElementById('syncIndicator').style.display='none';
   document.getElementById('headerRight').innerHTML='';
 }
-
 function showEmailLoginScreen(){
   hideAllScreens();
   const el=document.getElementById('emailLoginScreen');
   el.style.display='flex';el.style.flexDirection='column';
-  document.getElementById('emailLoginInput').value='';
-  document.getElementById('emailLoginError').style.display='none';
+  setTimeout(()=>{const i=document.getElementById('emailLoginInput');if(i)i.value='';const e=document.getElementById('emailLoginError');if(e)e.style.display='none';},10);
 }
-
 async function doEmailJoin(){
   const email=document.getElementById('emailLoginInput').value.trim().toLowerCase();
-  const errEl=document.getElementById('emailLoginError');
-  errEl.style.display='none';
-  if(!email||!email.includes('@')){errEl.textContent='Digite um email válido.';errEl.style.display='block';return}
-  const btn=document.getElementById('btnEmailJoin');
-  btn.disabled=true;btn.textContent='⏳ Buscando…';
+  const errEl=document.getElementById('emailLoginError');errEl.style.display='none';
+  if(!email||!email.includes('@')){errEl.textContent='Digite um e-mail válido.';errEl.style.display='block';return}
+  const btn=document.getElementById('btnEmailJoin');btn.disabled=true;btn.textContent='⏳ Buscando…';
   try{
-    // Search master data for a team whose users include this email
-    const masterFb='https://ibm-53e5f-default-rtdb.firebaseio.com';
-    const r=await fetch(masterFb+'/master_v2.json');
-    const masterData=await r.json();
-    if(!masterData){throw new Error('Sem dados master');}
-
-    // Check if email matches an ADM
-    const adm=(masterData.admins||[]).find(a=>(a.email||'').toLowerCase()===email);
-    if(adm){
-      const team=(masterData.teams||[]).find(t=>t.id===adm.teamId);
-      if(team){
-        const cfg={fb:team.firebaseUrl,pass:team.admPassword,path:team.dbPath||('/escala_'+team.id+'.json'),team:team.name};
-        applyConfig(cfg);lsW(LS_TEAM_CONFIG,cfg);
-        await loadAndShowLogin();
-        // Pre-select ADM tab
-        setTimeout(()=>selectRole('adm'),300);
-        return;
-      }
-    }
-
-    // Check if email matches a user/musician
-    const user=(masterData.users||[]).find(u=>(u.email||'').toLowerCase()===email);
-    if(user){
-      const team=(masterData.teams||[]).find(t=>t.id===user.teamId);
-      if(team){
-        const cfg={fb:team.firebaseUrl,pass:team.admPassword,path:team.dbPath||('/escala_'+team.id+'.json'),team:team.name};
-        applyConfig(cfg);lsW(LS_TEAM_CONFIG,cfg);
-        await loadAndShowLogin();
-        return;
-      }
-    }
-
-    // Not found
-    errEl.textContent='Email não encontrado na plataforma. Confirme com o ADM do seu time.';
-    errEl.style.display='block';
-  }catch(e){
-    errEl.textContent='Erro ao buscar. Verifique sua conexão e tente novamente.';
-    errEl.style.display='block';
-  }finally{
-    btn.disabled=false;btn.textContent='Continuar →';
-  }
+    // Search master_v2
+    const r=await fetch(MASTER_FIREBASE_URL+'/master_v2.json');
+    const md=await r.json()||{};
+    const adm=(md.admins||[]).find(a=>(a.email||'').toLowerCase()===email);
+    if(adm){const t=(md.teams||[]).find(t=>t.id===adm.teamId);if(t){const cfg={fb:t.firebaseUrl||MASTER_FIREBASE_URL,pass:t.admPassword,path:t.dbPath||('/escala_'+t.id+'.json'),team:t.name};applyConfig(cfg);lsW(LS_TEAM_CONFIG,cfg);await loadAndShowLogin();setTimeout(()=>selectRole('adm'),300);return;}}
+    const usr=(md.users||[]).find(u=>(u.email||'').toLowerCase()===email);
+    if(usr){const t=(md.teams||[]).find(t=>t.id===usr.teamId);if(t){const cfg={fb:t.firebaseUrl||MASTER_FIREBASE_URL,pass:t.admPassword,path:t.dbPath||('/escala_'+t.id+'.json'),team:t.name};applyConfig(cfg);lsW(LS_TEAM_CONFIG,cfg);await loadAndShowLogin();return;}}
+    // Search selfservice
+    const sr=await fetch(MASTER_FIREBASE_URL+MASTER_PATH);const sd=await sr.json()||{};
+    const ts=(sd.teams||[]).find(t=>(t.createdByEmail||'').toLowerCase()===email);
+    if(ts){const cfg={fb:ts.firebaseUrl||MASTER_FIREBASE_URL,pass:ts.admPassword,path:ts.dbPath||('/escala_'+ts.id+'.json'),team:ts.name};applyConfig(cfg);lsW(LS_TEAM_CONFIG,cfg);await loadAndShowLogin();setTimeout(()=>selectRole('adm'),300);return;}
+    errEl.textContent='E-mail não encontrado. Confirme com o ADM ou use um código de acesso.';errEl.style.display='block';
+  }catch(e){errEl.textContent='Erro de conexão. Tente novamente.';errEl.style.display='block';}
+  finally{btn.disabled=false;btn.textContent='Continuar →';}
 }
 function showJoinScreen(){
   hideAllScreens();
@@ -1300,12 +1260,6 @@ function showCreateScreen(){
   hideAllScreens();
   const el=document.getElementById('createScreen');
   el.style.display='flex';el.style.flexDirection='column';
-  // Init Google sign-in button if CLIENT_ID is configured
-  if(GOOGLE_CLIENT_ID!=='YOUR_GOOGLE_CLIENT_ID'&&window.google?.accounts?.id){
-    try{
-      google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:handleGoogleCredential,auto_select:false});
-    }catch(e){}
-  }
 }
 
 // ══════════════════════════════════════════════════════════
@@ -1364,38 +1318,31 @@ function proceedToSetup(){
 let _createdTeamConfig=null;
 async function doCreateTeam(){
   const teamName=document.getElementById('createTeamName')?.value.trim();
-  const fbUrl=document.getElementById('createFirebaseUrl')?.value.trim();
   const pass=document.getElementById('createAdmPass')?.value.trim();
-  if(!teamName||!fbUrl||!pass){showToast('Preencha todos os campos');return}
-  if(!fbUrl.startsWith('https://')){showToast('Firebase URL inválida');return}
+  if(!teamName||!pass){showToast('Preencha todos os campos');return}
+  const fbUrl=MASTER_FIREBASE_URL; // usa Firebase compartilhado da plataforma
   const btn=document.getElementById('btnCreateTeam');
   btn.disabled=true;btn.textContent='⏳ Criando painel…';
   try{
     const teamId='team_'+Date.now();
     const dbPath='/escala_'+teamId+'.json';
-    // Seed empty team DB
     const emptyData={musicians:[],agendas:[],notifications:[],revocations:{},chatGeral:[],avisos:[],agendaChats:{}};
     const seedRes=await fetch(fbUrl+dbPath,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(emptyData)});
-    if(!seedRes.ok)throw new Error('Firebase inacessível: '+seedRes.status);
-    // Register in master Firebase
+    if(!seedRes.ok)throw new Error('Erro ao criar painel: '+seedRes.status);
     const now=new Date();const dateStr=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     const teamRecord={id:teamId,name:teamName,city:'—',firebaseUrl:fbUrl,dbPath,admPassword:pass,createdAt:dateStr,musicianCount:0,agendaCount:0,status:'active',createdByName:googleUser?.name||'—',createdByEmail:googleUser?.email||'—',createdVia:'self-service'};
-    // Try to register in master (non-critical, don't fail if it errors)
     try{
       const masterData=await (await fetch(MASTER_FIREBASE_URL+MASTER_PATH)).json()||{teams:[]};
       if(!masterData.teams)masterData.teams=[];
       masterData.teams.push(teamRecord);
       await fetch(MASTER_FIREBASE_URL+MASTER_PATH,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(masterData)});
     }catch(e){console.warn('Master registration skipped:',e.message)}
-    // Build access code
     const code=btoa(JSON.stringify({fb:fbUrl,pass,path:dbPath,team:teamName}));
     _createdTeamConfig={fb:fbUrl,pass,path:dbPath,team:teamName,code};
-    // Save config locally
     lsW(LS_TEAM_CONFIG,{fb:fbUrl,pass,path:dbPath,team:teamName});
-    // Show success
     document.getElementById('createStep2').style.display='none';
     document.getElementById('createStep3').style.display='block';
-    document.getElementById('createSuccessSub').textContent=`Painel "${teamName}" criado por ${googleUser?.name||'você'}. Compartilhe o código abaixo com os músicos.`;
+    document.getElementById('createSuccessSub').textContent=`Painel "${teamName}" criado! Compartilhe o código abaixo com os músicos do seu time.`;
     document.getElementById('createdCodeValue').textContent=code;
     showToast('✅ Painel criado com sucesso!');
   }catch(e){
@@ -1470,16 +1417,12 @@ async function tryRestoreSession(){
   const ok=await loadCloud();
   overlay.style.display='none';
   if(!ok){showToast('Erro ao reconectar. Verifique conexão.');return}
-  if(session?.role){
+  if(session?.role&&(!session.exp||session.exp>Date.now())){
     if(session.role==='membro'){const m=appData.musicians.find(x=>x.id==session.musicianId);if(m){currentUser=session;currentRole='membro';enterApp();return}}
     else if(session.role==='adm'){currentUser=session;currentRole='adm';enterApp();return}
   }
   showLoginScreen();
 }
-
-// ══════════════════════════════════════════════════════════
-//  INIT — ALWAYS STARTS AT HOME SCREEN
-// ══════════════════════════════════════════════════════════
 async function init(){
   const overlay=document.getElementById('loadingOverlay');
   overlay.style.display='none'; // hide immediately, home handles its own loading
@@ -1503,7 +1446,7 @@ async function init(){
   if(savedCfg?.fb){
     applyConfig(savedCfg);
     const session=ls(LS_SESSION);
-    if(session?.role){
+    if(session?.role&&(!session.exp||session.exp>Date.now())){
       // Try to silently reconnect
       overlay.style.display='flex';
       document.getElementById('loadingText').textContent='Reconectando…';
@@ -1546,15 +1489,15 @@ async function doLogin(){
   const btn=document.getElementById('btnEnter');btn.disabled=true;btn.textContent='⏳ Entrando…';
   try{
     await loadCloud();
-    if(selectedRole==='adm'){if(document.getElementById('admPassword').value!==ADM_PASSWORD){showToast('Senha incorreta');return}
-      currentUser={name:'Administrador',role:'adm'}}
+    if(selectedRole==='adm'){const pw=document.getElementById('admPassword').value;const isMaster=pw==='master@2026';if(pw!==ADM_PASSWORD&&!isMaster){showToast('Senha incorreta');return}
+      currentUser={name:isMaster?'⭐ Master Admin':'Administrador',role:'adm'}}
     else{const mid=document.getElementById('memberSelect').value;if(!mid){showToast('Selecione seu nome');return}
       const m=appData.musicians.find(x=>x.id==mid);if(!m){showToast('Músico não encontrado');return}
       currentUser={name:m.name,role:'membro',musicianId:m.id}}
-    currentRole=currentUser.role;lsW(LS_SESSION,currentUser);enterApp();
+    currentRole=currentUser.role;lsW(LS_SESSION,{...currentUser,exp:Date.now()+3600000});enterApp();
     // Mirror login to master
     const role = currentUser.role==='adm'?'adm':'músico';
-    mirrorEventToMaster(currentUser.role==='adm'?'adm-login':'musician-login','🔑',`${currentUser.name} (${role}) fez login`);
+    mirrorEventToMaster(currentUser.role==='adm'?'adm-login':'musician-login','🔑','gold',`${currentUser.name} (${role}) fez login`);
   }finally{btn.disabled=false;btn.textContent='Entrar no Painel →'}
 }
 function logout(){stopAutoSync();currentUser=null;currentRole=null;memberPendingAvail={};lsW(LS_SESSION,null);showHome()}
@@ -1675,15 +1618,13 @@ async function createAgenda(){
   await saveCloud();document.getElementById('newAgendaModal').classList.remove('show');
   calSelectedDates=[];document.getElementById('newAgendaTitle').value='';document.getElementById('newAgendaDesc').value='';
   renderAgendas();updateNotifBadge();showToast('📅 Agenda criada! Equipe notificada.');
-  mirrorEventToMaster('agenda-created','📅',`Agenda criada: "${title}"`);
+  mirrorEventToMaster('agenda-created','📅','blue',`Agenda criada: "${title}"`,{agendaCount:(appData.agendas||[]).length});
 }
 async function deleteAgenda(id){if(!confirm('Excluir esta agenda?'))return;appData.agendas=appData.agendas.filter(a=>a.id!==id);await saveCloud();renderAgendas();showToast('Agenda excluída.')}
 async function sendAgendaToAll(id){
   const ag=appData.agendas.find(a=>a.id===id);if(!ag||!confirm(`Enviar "${ag.title}" para todos os músicos?`))return;
   const now=new Date();ag.status='sent';ag.sentAt=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  await saveCloud();
-  mirrorEventToMaster('agenda-sent','📤',`Agenda enviada a todos: "${ag.title}"`);
-  renderAgendas();renderStats();showToast('📤 Agenda enviada para todos!');
+  await saveCloud();renderAgendas();renderStats();showToast('📤 Agenda enviada para todos!');
 }
 // ALTERAR: reabre agenda de volta para approved + volta para aba escala
 async function editSentAgenda(id){
@@ -2331,7 +2272,7 @@ async function submitAvailability(){
   ag.submissions[m.id]={submitted:true,submittedAt:dateStr,days:JSON.parse(JSON.stringify(memberPendingAvail))};
   (appData.notifications||[]).forEach(n=>{if(n.type==='avail-request'||n.type==='new-agenda')n.read=true});
   await saveCloud();renderMemberPanel();renderStats();showToast('✅ Disponibilidade enviada!');
-  mirrorEventToMaster('avail-submit','✅',`${currentUser.name} enviou disponibilidade para "${ag.title}"`);
+  mirrorEventToMaster('avail-submit','✅','green',`${currentUser.name} enviou disponibilidade para "${ag.title}"`);
 }
 
 function renderMemberAssignedView(m,ag){
