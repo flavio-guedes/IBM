@@ -390,11 +390,10 @@ select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmln
 <div class="overlay" id="modalTeam">
   <div class="modal">
     <div class="modal-title">🏛 Novo Time</div>
-    <div class="modal-sub">Cada time tem seu próprio Firebase e ADMs.</div>
+    <div class="modal-sub">Crie um novo time. O Firebase é compartilhado e configurado automaticamente.</div>
     <div class="field"><label>Nome do Time</label><input id="tName" placeholder="Igreja Batista do Méier"></div>
     <div class="field"><label>Cidade</label><input id="tCity" placeholder="Rio de Janeiro, RJ"></div>
-    <div class="field"><label>Firebase URL</label><input id="tFb" placeholder="https://seu-projeto.firebaseio.com"></div>
-    <div class="field"><label>Senha ADM</label><input id="tPass" type="password" placeholder="Senha para os ADMs"></div>
+    <div class="field"><label>Senha ADM do Time</label><input id="tPass" type="password" placeholder="Senha para os ADMs deste time"></div>
     <div class="field"><label>Descrição (opcional)</label><input id="tDesc" placeholder=""></div>
     <div class="modal-actions">
       <button class="btn btn-outline" onclick="closeModal('modalTeam')">Cancelar</button>
@@ -465,8 +464,9 @@ select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmln
 
 <script>
 // ─── CONFIG ───────────────────────────────────────────────
-const FB = 'https://ibm-53e5f-default-rtdb.firebaseio.com';
-const DB = '/master_v2.json';
+const FB          = 'https://ibm-53e5f-default-rtdb.firebaseio.com';
+const DB          = '/master_v2.json';
+const ESCALA_URL  = 'https://flavio-guedes.github.io/IBM/escala.html'; // URL fixa do painel
 // ─────────────────────────────────────────────────────────
 
 let data = null;
@@ -621,6 +621,12 @@ async function clearAct() {
 // ─── TEAMS ────
 const avatarColors = ['#d4a853','#3b82f6','#8b5cf6','#22c55e','#ef4444','#f59e0b'];
 
+function teamLink(t) {
+  // Gera o link de acesso ao time — código base64 com fb + pass + path + nome
+  const cfg = { fb: t.firebaseUrl||FB, pass: t.admPassword, path: t.dbPath||('/escala_'+t.id+'.json'), team: t.name };
+  return ESCALA_URL + '#team=' + btoa(JSON.stringify(cfg));
+}
+
 function renderTeams() {
   const teams = data.teams;
   if (!teams.length) { document.getElementById('teamsGrid').innerHTML = '<div class="empty"><div class="empty-icon">🏛</div><div style="font-size:12px;">Nenhum time. Clique em + Novo Time.</div></div>'; return; }
@@ -639,25 +645,41 @@ function renderTeams() {
         <div class="team-stat"><div class="team-stat-val">${data.admins.filter(a=>a.teamId===t.id).length}</div><div class="team-stat-lbl">ADMs</div></div>
         <div class="team-stat"><div class="team-stat-val">${t.agendas||0}</div><div class="team-stat-lbl">Agendas</div></div>
       </div>
-      ${t.firebaseUrl ? `<div class="team-url">${t.firebaseUrl}</div>` : ''}
       <div class="team-btns">
-        <button class="btn btn-outline" onclick="copy('${t.admPassword||''}','Senha ADM copiada!')">🔑 Senha ADM</button>
-        <button class="btn btn-outline" onclick="copy('${t.firebaseUrl||''}','URL copiada!')">🔗 URL</button>
+        <button class="btn btn-gold" onclick="window.open(teamLink(data.teams.find(x=>x.id==='${t.id}')), '_blank')">🏛 Acessar Painel</button>
+        <button class="btn btn-outline" onclick="copyTeamLink('${t.id}')">🔗 Gerar Link</button>
+        <button class="btn btn-outline" onclick="copy('${t.admPassword||''}','Senha ADM copiada!')">🔑 Senha</button>
         <button class="btn btn-red" onclick="delTeam('${t.id}')">🗑</button>
       </div>
     </div>`).join('');
 }
 
+function copyTeamLink(teamId) {
+  const t = data.teams.find(x => x.id === teamId);
+  if (!t) return;
+  const link = teamLink(t);
+  navigator.clipboard.writeText(link).then(() => toast('🔗 Link do time copiado! Cole no WhatsApp.'));
+}
+
 async function createTeam() {
   const name = document.getElementById('tName').value.trim();
-  const fb   = document.getElementById('tFb').value.trim();
   const pass = document.getElementById('tPass').value.trim();
-  if (!name || !fb || !pass) { toast('⚠ Preencha nome, Firebase URL e senha'); return; }
-  const t = {id:'team_'+Date.now(), name, city:document.getElementById('tCity').value.trim(), firebaseUrl:fb, admPassword:pass, desc:document.getElementById('tDesc').value.trim(), createdAt:ts(), musicians:0, agendas:0, status:'active'};
+  if (!name || !pass) { toast('⚠ Preencha nome e senha ADM'); return; }
+  const teamId = 'team_' + Date.now();
+  const dbPath = '/escala_' + teamId + '.json';
+  const t = {
+    id: teamId, name,
+    city: document.getElementById('tCity').value.trim(),
+    firebaseUrl: FB,   // sempre o mesmo Firebase
+    dbPath,
+    admPassword: pass,
+    desc: document.getElementById('tDesc').value.trim(),
+    createdAt: ts(), musicians:0, agendas:0, status:'active'
+  };
   data.teams.push(t);
   log('🏛', `Novo time criado: <strong>${name}</strong>`);
   await save(); closeModal('modalTeam'); renderTeams(); populateDropdowns();
-  ['tName','tCity','tFb','tPass','tDesc'].forEach(id => document.getElementById(id).value='');
+  ['tName','tCity','tPass','tDesc'].forEach(id => document.getElementById(id).value='');
   toast('✅ Time criado!');
 }
 
