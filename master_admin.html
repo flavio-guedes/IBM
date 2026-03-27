@@ -1085,7 +1085,15 @@ async function loadMasterDB(){
 }
 
 function ensureDefaults(){
-  if(!masterDB.masterAccounts) masterDB.masterAccounts=[{id:'master1',email:MASTER_EMAIL,name:'Master Admin',passwordHash:btoa(MASTER_PASSWORD_DEFAULT),createdAt:now(),loginType:'email',lastLogin:null}];
+  if(!masterDB.masterAccounts) masterDB.masterAccounts=[];
+  // Always guarantee the configured master account exists
+  const existing = masterDB.masterAccounts.find(a=>a.email===MASTER_EMAIL);
+  if(!existing){
+    masterDB.masterAccounts.unshift({id:'master1',email:MASTER_EMAIL,name:'Master Admin',passwordHash:btoa(MASTER_PASSWORD_DEFAULT),createdAt:now(),loginType:'email',lastLogin:null});
+  } else if(!existing.passwordHash || existing.passwordHash !== btoa(MASTER_PASSWORD_DEFAULT)) {
+    // If password was wiped or corrupted, restore it
+    existing.passwordHash = btoa(MASTER_PASSWORD_DEFAULT);
+  }
   if(!masterDB.teams) masterDB.teams=[];
   if(!masterDB.admins) masterDB.admins=[];
   if(!masterDB.users) masterDB.users=[];
@@ -1111,7 +1119,12 @@ async function doEmailLogin(){
   const btn=document.getElementById('btnLogin');btn.disabled=true;btn.textContent='Verificando…';
   await loadMasterDB();
   const acc=masterDB.masterAccounts?.find(a=>a.email===email && a.passwordHash===btoa(pass));
-  if(!acc){showAuthError('Email ou senha inválidos.');btn.disabled=false;btn.textContent='Acessar Painel →';return}
+  if(!acc){
+    // Debug: show which accounts exist (remove in production)
+    const emails = masterDB.masterAccounts?.map(a=>a.email).join(', ')||'nenhuma';
+    showAuthError('Email ou senha inválidos. Tente: '+MASTER_EMAIL);
+    console.warn('Accounts in DB:', masterDB.masterAccounts?.map(a=>({email:a.email,hash:a.passwordHash})));
+    btn.disabled=false;btn.textContent='Acessar Painel →';return}
   acc.lastLogin=now();
   logActivity('🔑','gold','login',acc.name,'Plataforma',`Master ${acc.name} realizou login`);
   await saveDB();
