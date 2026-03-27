@@ -1060,19 +1060,9 @@ async function applyResetCode(){
 
 // ══ AUTH ══
 async function initAuth(){
-  // Init Google GSI after page load
-  if(window.google?.accounts?.id) initGoogleAuth();
-  else window.addEventListener('load',()=>{ setTimeout(initGoogleAuth,500); });
-
-  const session = ls('master_session');
-  if(session?.email){
-    const db = await loadMasterDB();
-    if(db){
-      const acc = masterDB.masterAccounts?.find(a=>a.email===session.email);
-      if(acc){ currentMaster=acc; enterApp(); return; }
-    }
-  }
-  document.getElementById('authScreen').style.display='flex';
+  try { await loadMasterDB(); } catch(e) { masterDB = emptyMasterDB(); }
+  currentMaster = masterDB.masterAccounts?.[0] || {id:'master1',name:'Master Admin',email:'master@ibmeier.com'};
+  enterApp();
 }
 
 async function loadMasterDB(){
