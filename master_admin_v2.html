@@ -1361,7 +1361,7 @@ function buildTeamPanelURL(t){
   // Encode credentials into URL hash (never sent to server)
   const payload=btoa(JSON.stringify({fb:t.firebaseUrl,pass:t.admPassword||'',path:dbPath,team:t.name}));
   // Points to the escala v8 file deployed alongside master_admin
-  return `ibmeier_escala_v8.html#team=${payload}`;
+  return `escala.html#team=${payload}`;
 }
 
 function openTeamPanel(){
