@@ -316,6 +316,11 @@ select.field-input{appearance:none;-webkit-appearance:none;background-image:url(
         <a onclick="showForgotView()" style="display:block;margin-bottom:6px;">🔑 Esqueci minha senha</a>
         Não tem conta? <a onclick="showRegisterView()">Criar conta master</a>
       </div>
+      <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);text-align:center;">
+        <button onclick="resetMasterAccess()" style="background:none;border:none;color:var(--text-dim);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;padding:4px 8px;border-radius:6px;transition:color 0.2s;" onmouseover="this.style.color='#e74c3c'" onmouseout="this.style.color='var(--text-dim)'">
+          🔄 Redefinir acesso (esqueci a senha)
+        </button>
+      </div>
     </div>
 
     <!-- VIEW: REGISTER -->
@@ -1792,6 +1797,19 @@ function showToast(msg){
 }
 
 // ══ INIT ══
+function resetMasterAccess(){
+  if(!confirm('Redefinir acesso?\n\nIsso vai apagar os dados de login salvos e restaurar:\n\nEmail: master@ibmeier.com\nSenha: master@2026\n\nClique OK para continuar.')) return;
+  // Clear localStorage
+  localStorage.clear();
+  // Clear Firebase master data
+  const btn = event.target;
+  btn.textContent = '⏳ Redefinindo…';
+  btn.disabled = true;
+  fetch(MASTER_FIREBASE + MASTER_PATH, {method:'DELETE'})
+    .catch(()=>{}) // ignore errors — localStorage already cleared
+    .finally(()=>{ location.reload(); });
+}
+
 initAuth();
 </script>
 </body>
