@@ -590,6 +590,8 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
     <p class="login-sub">Disponibilidade, escalas e comunicação da equipe musical.</p>
     <div class="login-card">
       <div class="login-card-top-line"></div>
+      <!-- Team badge — shown when launched from Master Admin -->
+      <div id="loginTeamLabel" style="display:none;margin-bottom:14px;background:rgba(212,168,83,0.1);border:1px solid rgba(212,168,83,0.28);border-radius:10px;padding:8px 14px;font-size:12px;color:var(--gold2);font-weight:600;text-align:center;">🏛 —</div>
       <div class="login-card-title">Acesso ao Painel</div>
       <div class="login-card-sub">Selecione seu perfil para continuar</div>
       <div class="login-role-tabs">
@@ -881,11 +883,27 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
 
 <script>
 // ══════════════════════════════════════════════════════════
-const FIREBASE_URL = 'https://ibm-53e5f-default-rtdb.firebaseio.com';
-const ADM_PASSWORD  = 'ibmeier2026';
-const LS_SESSION    = 'ibm_session_v8';
+// DYNAMIC CONFIG — injected by Master Admin via URL hash
+// Format: ibmeier_escala_v8.html#team=<base64({fb,pass,path,team})>
+// Falls back to hardcoded values if no hash present
+(function applyURLConfig(){
+  try{
+    const hash=window.location.hash;
+    if(hash&&hash.startsWith('#team=')){
+      const payload=JSON.parse(atob(hash.slice(6)));
+      if(payload.fb)  window._DYN_FIREBASE=payload.fb;
+      if(payload.pass)window._DYN_PASS=payload.pass;
+      if(payload.path)window._DYN_PATH=payload.path;
+      if(payload.team)window._DYN_TEAM=payload.team;
+    }
+  }catch(e){console.warn('URL config parse failed',e)}
+})();
+const FIREBASE_URL = window._DYN_FIREBASE || 'https://ibm-53e5f-default-rtdb.firebaseio.com';
+const ADM_PASSWORD  = window._DYN_PASS     || 'ibmeier2026';
+const DB_PATH       = window._DYN_PATH     || '/escalav8.json';
+const TEAM_NAME     = window._DYN_TEAM     || 'Igreja Batista do Méier';
+const LS_SESSION    = 'ibm_session_v8_'+btoa(FIREBASE_URL+DB_PATH).slice(0,12);
 const SYNC_INTERVAL = 30000;
-const DB_PATH       = '/escalav8.json';
 // ══════════════════════════════════════════════════════════
 
 const MONTHS_PT = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
@@ -935,8 +953,9 @@ function ls(k,d=null){try{const v=localStorage.getItem(k);return v!=null?JSON.pa
 function lsW(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch{}}
 
 function emptyAppData(){
+  // Always starts with EMPTY musicians — ADM creates all members and assigns roles
   return {
-    musicians:JSON.parse(JSON.stringify(DEFAULT_MUSICIANS)),
+    musicians:[],
     agendas:[],notifications:[],revocations:{},
     chatGeral:[],avisos:[],agendaChats:{}
   };
@@ -959,7 +978,8 @@ async function loadCloud(){
     if(!data){appData=emptyAppData();await fbWrite(appData)}
     else{
       appData=data;
-      if(!appData.musicians||!Array.isArray(appData.musicians))appData.musicians=JSON.parse(JSON.stringify(DEFAULT_MUSICIANS));
+      // Never inject default musicians — if empty, it stays empty
+      if(!appData.musicians||!Array.isArray(appData.musicians))appData.musicians=[];
       appData.musicians.forEach(m=>{if(!m.roles)m.roles={}});
       if(!Array.isArray(appData.agendas))appData.agendas=[];
       if(!Array.isArray(appData.notifications))appData.notifications=[];
@@ -995,6 +1015,12 @@ function showLoginScreen(){
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('appScreen').style.display='none';
   document.getElementById('configError').style.display='none';
+  // Show team name on login screen if launched from Master Admin
+  const teamLabel=document.getElementById('loginTeamLabel');
+  if(teamLabel&&window._DYN_TEAM){
+    teamLabel.textContent='🏛 '+window._DYN_TEAM;
+    teamLabel.style.display='block';
+  }
   const hr=document.getElementById('headerRight');
   hr.innerHTML=`<div class="sync-indicator synced" id="syncIndicator"><div class="sync-dot"></div><span class="sync-text" id="syncText">Conectado</span></div><button class="btn-login" onclick="showLoginScreen()">Entrar</button>`;
 }
@@ -1024,7 +1050,7 @@ function enterApp(){
   const isAdm=currentRole==='adm';
   const badge=isAdm?'<span class="adm-badge">🛡 ADM</span>':'';
   document.getElementById('appTitle').innerHTML=(isAdm?'Painel ADM':`Olá, ${currentUser.name}!`)+badge;
-  document.getElementById('appSubtitle').textContent=isAdm?'Gerencie agendas, escala e comunicação':'Suas escalas · Igreja Batista do Méier';
+  document.getElementById('appSubtitle').textContent=isAdm?`Gerencie agendas, escala e comunicação · ${TEAM_NAME}`:`Suas escalas · ${TEAM_NAME}`;
   document.getElementById('headerRight').innerHTML=`
     <div class="sync-indicator synced" id="syncIndicator"><div class="sync-dot"></div><span class="sync-text" id="syncText">Sincronizado</span></div>
     <div class="user-chip"><div class="user-avatar">${currentUser.name[0].toUpperCase()}</div><span class="user-name">${currentUser.name}${isAdm?' 🛡':''}</span></div>
