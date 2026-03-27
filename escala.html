@@ -86,6 +86,73 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
 .step-num{width:20px;height:20px;border-radius:50%;background:rgba(192,57,43,0.2);border:1px solid rgba(192,57,43,0.4);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:9px;font-weight:800;color:var(--red2);flex-shrink:0;margin-top:1px}
 .config-code{font-family:'DM Mono','Courier New',monospace;font-size:11px;background:rgba(212,168,83,0.08);border:1px solid rgba(212,168,83,0.2);border-radius:8px;padding:12px;color:var(--gold2);line-height:1.8;margin-top:6px;word-break:break-all}
 
+/* ── HOME SCREEN ── */
+#homeScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;position:relative;padding:24px}
+.home-bg-photo{position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none}
+.home-bg-photo img{width:100%;height:100%;object-fit:cover;opacity:0.06;filter:grayscale(60%)}
+.home-bg-text{position:absolute;font-family:'Syne',sans-serif;font-size:clamp(60px,18vw,220px);font-weight:800;color:rgba(255,255,255,0.012);pointer-events:none;user-select:none;letter-spacing:-0.04em;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;z-index:0}
+.home-content{position:relative;z-index:1;width:100%;max-width:780px;margin:0 auto}
+.home-logo{width:150px;height:auto;margin:0 auto 24px;display:block;filter:drop-shadow(0 6px 35px rgba(192,57,43,0.4)) brightness(1.1);animation:logoFloat 4s ease-in-out infinite}
+.home-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--red2);margin-bottom:12px}
+.home-title{font-family:'Syne',sans-serif;font-size:clamp(26px,5vw,52px);font-weight:800;line-height:1.0;background:linear-gradient(140deg,#fff 0%,var(--gold2) 55%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;letter-spacing:-0.03em}
+.home-sub{color:var(--text-dim);font-size:14px;line-height:1.7;max-width:420px;margin:0 auto 40px}
+.home-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.home-card{background:rgba(12,12,24,0.82);backdrop-filter:blur(36px);-webkit-backdrop-filter:blur(36px);border:1px solid var(--border2);border-radius:22px;padding:28px 24px;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden;text-align:left}
+.home-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;transition:opacity 0.3s}
+.home-card.join-card::before{background:linear-gradient(90deg,transparent,var(--red),var(--gold),transparent)}
+.home-card.create-card::before{background:linear-gradient(90deg,transparent,var(--gold),var(--gold2),transparent)}
+.home-card:hover{transform:translateY(-4px);box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.home-card.join-card:hover{border-color:rgba(192,57,43,0.4)}
+.home-card.create-card:hover{border-color:rgba(212,168,83,0.4)}
+.home-card-icon{font-size:32px;margin-bottom:14px;display:block}
+.home-card-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--text);margin-bottom:6px}
+.home-card-desc{font-size:12px;color:var(--text-dim);line-height:1.6;margin-bottom:16px}
+.home-card-tag{display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase}
+.home-card.join-card .home-card-tag{background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.3);color:var(--red2)}
+.home-card.create-card .home-card-tag{background:rgba(212,168,83,0.1);border:1px solid rgba(212,168,83,0.3);color:var(--gold2)}
+.home-footer{font-size:11px;color:var(--text-dim);margin-top:8px}
+.home-footer a{color:var(--gold2);cursor:pointer;text-decoration:none}
+.home-footer a:hover{text-decoration:underline}
+
+/* ── FLOW SCREENS (join / create) ── */
+.flow-screen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;position:relative;padding:24px}
+.flow-card{background:rgba(12,12,24,0.88);backdrop-filter:blur(36px);-webkit-backdrop-filter:blur(36px);border:1px solid var(--border2);border-radius:22px;padding:36px;max-width:460px;width:100%;margin:0 auto;position:relative;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,0.7);text-align:left}
+.flow-card-line{position:absolute;top:0;left:0;right:0;height:2px}
+.flow-card-line.red{background:linear-gradient(90deg,transparent,var(--red),var(--gold),transparent)}
+.flow-card-line.gold{background:linear-gradient(90deg,transparent,var(--gold),var(--gold2),transparent)}
+.flow-back{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-dim);cursor:pointer;margin-bottom:20px;transition:color 0.2s;border:none;background:none;padding:0;font-family:'DM Sans',sans-serif}
+.flow-back:hover{color:var(--text)}
+.flow-icon{font-size:28px;margin-bottom:12px;display:block}
+.flow-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--text);margin-bottom:4px}
+.flow-sub{font-size:12px;color:var(--text-dim);margin-bottom:22px;line-height:1.6}
+.flow-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;padding:13px 16px;border-radius:10px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;min-height:48px;margin-bottom:12px}
+.flow-input:focus{border-color:rgba(212,168,83,0.5);box-shadow:0 0 0 3px rgba(212,168,83,0.08)}
+.flow-input::placeholder{color:var(--text-dim)}
+.flow-input.monospace{font-family:'DM Mono','Courier New',monospace;font-size:11px;letter-spacing:0.04em}
+.flow-label{font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:6px;display:block}
+.flow-field{margin-bottom:14px}
+.btn-google-sign{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;background:rgba(255,255,255,0.06);border:1px solid var(--border2);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;padding:14px;border-radius:10px;cursor:pointer;transition:all 0.25s;min-height:52px;margin-bottom:14px}
+.btn-google-sign:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);transform:translateY(-1px)}
+.btn-google-sign svg{flex-shrink:0}
+.google-user-badge{display:flex;align-items:center;gap:12px;background:rgba(46,204,113,0.07);border:1px solid rgba(46,204,113,0.22);border-radius:12px;padding:12px 14px;margin-bottom:18px;animation:fadeUp 0.3s ease}
+.google-user-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#4285f4,#34a853);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;color:white;flex-shrink:0}
+.google-user-name{font-size:13px;color:var(--text);font-weight:600}
+.google-user-email{font-size:11px;color:var(--text-dim)}
+.btn-flow-primary{width:100%;background:linear-gradient(135deg,var(--red) 0%,#8b1a14 100%);border:none;color:white;padding:15px;border-radius:10px;cursor:pointer;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.05em;transition:all 0.25s;box-shadow:0 8px 28px rgba(192,57,43,0.35);min-height:52px;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px}
+.btn-flow-primary:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(192,57,43,0.55)}
+.btn-flow-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.btn-flow-gold{width:100%;background:linear-gradient(135deg,var(--gold) 0%,#b8893c 100%);border:none;color:#000;padding:15px;border-radius:10px;cursor:pointer;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;letter-spacing:0.05em;transition:all 0.25s;box-shadow:0 8px 28px rgba(212,168,83,0.35);min-height:52px;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px}
+.btn-flow-gold:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(212,168,83,0.5)}
+.btn-flow-gold:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.flow-divider{display:flex;align-items:center;gap:12px;margin:14px 0;font-size:11px;color:var(--text-dim)}
+.flow-divider::before,.flow-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.code-box{background:rgba(212,168,83,0.06);border:1px solid rgba(212,168,83,0.2);border-radius:12px;padding:16px;margin-bottom:18px;cursor:pointer;transition:background 0.2s}
+.code-box:hover{background:rgba(212,168,83,0.1)}
+.code-box-label{font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px}
+.code-box-value{font-family:'DM Mono','Courier New',monospace;font-size:10px;color:var(--gold2);word-break:break-all;line-height:1.6}
+.code-box-hint{font-size:10px;color:var(--text-dim);margin-top:6px;text-align:center}
+.flow-success-icon{font-size:44px;text-align:center;margin-bottom:12px;display:block}
+
 /* ── LOGIN ── */
 #loginScreen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:88vh;text-align:center;position:relative}
 .login-bg-photo{position:absolute;inset:0;overflow:hidden;z-index:0}
@@ -504,8 +571,11 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
   .sync-indicator span.sync-text{display:none}
   .stats-bar{grid-template-columns:1fr 1fr}
   .form-group{min-width:100%}
+  .home-cards{grid-template-columns:1fr}
+  .flow-card{padding:24px 18px}
 }
 </style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -577,7 +647,129 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
   </div>
 </div>
 
-<!-- LOGIN -->
+<!-- ════ HOME SCREEN ════ -->
+<div id="homeScreen" style="display:none;">
+  <div class="home-bg-photo">
+    <img src="https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=1400&q=50&auto=format" alt="" onerror="this.style.display='none'">
+  </div>
+  <div class="home-bg-text">IBMéier</div>
+  <div class="home-content">
+    <img class="home-logo" src="https://static.wixstatic.com/media/430a01_070855f78e42434680537abbc733ed44~mv2.png/v1/fill/w_456,h_220,al_c,q_90,usm_0.66_1.00_0.01,enc_avif,quality_auto/marca_ibmeier_horizontal_original.png" alt="IBMéier" onerror="this.style.display='none'">
+    <div class="home-eyebrow">Escala Musical · Plataforma</div>
+    <div class="home-title">Painel de Cultos<br>Dominicais</div>
+    <p class="home-sub">Gerencie disponibilidade, escalas e comunicação da equipe musical da sua igreja.</p>
+    <div class="home-cards">
+      <div class="home-card join-card" onclick="showJoinScreen()">
+        <span class="home-card-icon">🎸</span>
+        <div class="home-card-title">Entrar em um Painel</div>
+        <div class="home-card-desc">Acesse um painel existente usando o código compartilhado pelo ADM do seu time.</div>
+        <span class="home-card-tag">🔑 Tenho um código</span>
+      </div>
+      <div class="home-card create-card" onclick="showCreateScreen()">
+        <span class="home-card-icon">🛡</span>
+        <div class="home-card-title">Criar Painel ADM</div>
+        <div class="home-card-desc">Crie um novo painel para seu time. Faça login com sua conta Google para começar.</div>
+        <span class="home-card-tag">✨ Sou ADM</span>
+      </div>
+    </div>
+    <div class="home-footer">
+      Já acessou antes neste dispositivo? <a onclick="tryRestoreSession()">Restaurar sessão →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ════ JOIN SCREEN ════ -->
+<div class="flow-screen" id="joinScreen">
+  <div class="flow-card">
+    <div class="flow-card-line red"></div>
+    <button class="flow-back" onclick="showHome()">← Voltar</button>
+    <span class="flow-icon">🔑</span>
+    <div class="flow-title">Entrar em um Painel</div>
+    <div class="flow-sub">Cole o código de acesso enviado pelo ADM do seu time. Funciona em qualquer dispositivo.</div>
+    <div class="flow-field">
+      <label class="flow-label">Código de Acesso</label>
+      <textarea class="flow-input monospace" id="joinCodeInput" placeholder="Cole o código aqui…" rows="3" style="resize:none;"></textarea>
+    </div>
+    <button class="btn-flow-primary" onclick="doJoinWithCode()" id="btnJoinCode">🚀 Conectar ao Painel</button>
+    <div class="flow-divider" style="margin-top:16px;">precisa do código?</div>
+    <div style="font-size:11px;color:var(--text-dim);text-align:center;line-height:1.6;">Peça ao ADM do seu time. Ele encontra o código em <strong style="color:var(--gold2);">Master Admin → Times → Acessar Painel → Copiar Link</strong></div>
+  </div>
+</div>
+
+<!-- ════ CREATE SCREEN ════ -->
+<div class="flow-screen" id="createScreen">
+  <div class="flow-card">
+    <div class="flow-card-line gold"></div>
+    <button class="flow-back" onclick="showHome()">← Voltar</button>
+
+    <!-- STEP 1: Google Login -->
+    <div id="createStep1">
+      <span class="flow-icon">🛡</span>
+      <div class="flow-title">Criar Painel ADM</div>
+      <div class="flow-sub">Faça login com sua conta Google para identificar seu painel e depois configure o banco de dados.</div>
+      <button class="btn-google-sign" onclick="triggerGoogleLogin()">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#4285F4" d="M44.5 20H24v8.5h11.8C34.7 33.9 29.9 37 24 37c-7.2 0-13-5.8-13-13s5.8-13 13-13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21c10.5 0 20-7.6 20-19.5 0-1.3-.1-2.7-.5-5.5z"/><path fill="#34A853" d="M6.3 14.7l7 5.1C15.1 16 19.2 13 24 13c3.1 0 5.9 1.1 8.1 2.9l6.4-6.4C34.6 5.1 29.6 3 24 3c-7.7 0-14.4 4.4-17.7 11.7z"/><path fill="#FBBC05" d="M24 45c5.7 0 10.5-1.9 14.4-5.1l-6.7-5.5C29.6 36.1 27 37 24 37c-5.8 0-10.7-3.9-12.5-9.3l-7 5.4C7.8 40.7 15.3 45 24 45z"/><path fill="#EA4335" d="M44.5 20H24v8.5h11.8c-.8 2.8-2.7 5.1-5.2 6.7l6.7 5.5C41.1 36.9 45 31 45 24c0-1.3-.1-2.7-.5-4z"/></svg>
+        Entrar com Google
+      </button>
+      <div class="flow-divider">ou continue sem Google</div>
+      <div class="flow-field">
+        <label class="flow-label">Seu nome</label>
+        <input type="text" class="flow-input" id="manualName" placeholder="Nome completo">
+      </div>
+      <div class="flow-field">
+        <label class="flow-label">Seu e-mail</label>
+        <input type="email" class="flow-input" id="manualEmail" placeholder="seu@email.com">
+      </div>
+      <button class="btn-flow-primary" onclick="proceedToSetup()" id="btnProceedSetup">Continuar →</button>
+    </div>
+
+    <!-- STEP 2: Team setup -->
+    <div id="createStep2" style="display:none;">
+      <div id="googleUserBadge" class="google-user-badge" style="display:none;">
+        <div class="google-user-avatar" id="googleAvatarLetter">G</div>
+        <div>
+          <div class="google-user-name" id="googleUserNameDisplay">—</div>
+          <div class="google-user-email" id="googleUserEmailDisplay">—</div>
+        </div>
+      </div>
+      <span class="flow-icon">⚙️</span>
+      <div class="flow-title">Configurar Painel</div>
+      <div class="flow-sub">Preencha os dados do seu time e do banco Firebase onde as escalas serão salvas.</div>
+      <div class="flow-field">
+        <label class="flow-label">Nome do Time / Igreja</label>
+        <input type="text" class="flow-input" id="createTeamName" placeholder="ex: Igreja Batista do Méier">
+      </div>
+      <div class="flow-field">
+        <label class="flow-label">Firebase Realtime Database URL</label>
+        <input type="url" class="flow-input" id="createFirebaseUrl" placeholder="https://seu-projeto-rtdb.firebaseio.com">
+      </div>
+      <div class="flow-field">
+        <label class="flow-label">Senha ADM do Time</label>
+        <input type="password" class="flow-input" id="createAdmPass" placeholder="Crie uma senha para o ADM">
+      </div>
+      <div style="background:rgba(212,168,83,0.07);border:1px solid rgba(212,168,83,0.2);border-radius:10px;padding:12px 14px;font-size:11px;color:var(--text-dim);line-height:1.6;margin-bottom:16px;">
+        💡 Não tem Firebase? <a href="https://console.firebase.google.com" target="_blank" style="color:var(--gold2);">Crie gratuitamente em console.firebase.google.com</a> → Novo projeto → Realtime Database → Modo teste
+      </div>
+      <button class="btn-flow-gold" onclick="doCreateTeam()" id="btnCreateTeam">🚀 Criar Painel</button>
+      <button class="flow-back" onclick="document.getElementById('createStep1').style.display='block';document.getElementById('createStep2').style.display='none';" style="margin-top:12px;width:100%;justify-content:center;">← Voltar</button>
+    </div>
+
+    <!-- STEP 3: Success + access code -->
+    <div id="createStep3" style="display:none;">
+      <span class="flow-success-icon">🎉</span>
+      <div class="flow-title">Painel criado!</div>
+      <div class="flow-sub" id="createSuccessSub">Seu painel foi configurado. Compartilhe o código abaixo com os músicos do time.</div>
+      <div class="code-box" onclick="copyCreatedCode()" id="createdCodeBox">
+        <div class="code-box-label">Código de Acesso do Time</div>
+        <div class="code-box-value" id="createdCodeValue">—</div>
+        <div class="code-box-hint">Clique para copiar · Envie via WhatsApp para os músicos</div>
+      </div>
+      <button class="btn-flow-primary" onclick="enterCreatedPanel()">Entrar no Painel ADM →</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN (shown after join with code) -->
 <div id="loginScreen">
   <div class="login-bg-photo">
     <img src="https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=1400&q=50&auto=format" alt="" onerror="this.style.display='none'">
@@ -590,17 +782,12 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
     <p class="login-sub">Disponibilidade, escalas e comunicação da equipe musical.</p>
     <div class="login-card">
       <div class="login-card-top-line"></div>
-      <!-- Team badge — shown when launched from Master Admin -->
       <div id="loginTeamLabel" style="display:none;margin-bottom:14px;background:rgba(212,168,83,0.1);border:1px solid rgba(212,168,83,0.28);border-radius:10px;padding:8px 14px;font-size:12px;color:var(--gold2);font-weight:600;text-align:center;">🏛 —</div>
       <div class="login-card-title">Acesso ao Painel</div>
       <div class="login-card-sub">Selecione seu perfil para continuar</div>
       <div class="login-role-tabs">
-        <button class="role-tab active" id="roleTabMember" onclick="selectRole('membro')">
-          <span class="role-icon">🎸</span>Músico
-        </button>
-        <button class="role-tab" id="roleTabAdm" onclick="selectRole('adm')">
-          <span class="role-icon">🛡</span>ADM
-        </button>
+        <button class="role-tab active" id="roleTabMember" onclick="selectRole('membro')"><span class="role-icon">🎸</span>Músico</button>
+        <button class="role-tab" id="roleTabAdm" onclick="selectRole('adm')"><span class="role-icon">🛡</span>ADM</button>
       </div>
       <div id="memberLoginFields">
         <div class="login-select-wrap">
@@ -614,6 +801,7 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
         </div>
       </div>
       <button class="btn-enter" onclick="doLogin()" id="btnEnter">Entrar no Painel →</button>
+      <button class="flow-back" onclick="showHome()" style="margin-top:14px;width:100%;justify-content:center;font-size:11px;">← Trocar de painel</button>
     </div>
   </div>
 </div>
@@ -883,28 +1071,23 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
 
 <script>
 // ══════════════════════════════════════════════════════════
-// DYNAMIC CONFIG — injected by Master Admin via URL hash
-// Format: ibmeier_escala_v8.html#team=<base64({fb,pass,path,team})>
-// Falls back to hardcoded values if no hash present
-(function applyURLConfig(){
-  try{
-    const hash=window.location.hash;
-    if(hash&&hash.startsWith('#team=')){
-      const payload=JSON.parse(atob(hash.slice(6)));
-      if(payload.fb)  window._DYN_FIREBASE=payload.fb;
-      if(payload.pass)window._DYN_PASS=payload.pass;
-      if(payload.path)window._DYN_PATH=payload.path;
-      if(payload.team)window._DYN_TEAM=payload.team;
-    }
-  }catch(e){console.warn('URL config parse failed',e)}
-})();
-const FIREBASE_URL = window._DYN_FIREBASE || 'https://ibm-53e5f-default-rtdb.firebaseio.com';
-const ADM_PASSWORD  = window._DYN_PASS     || 'ibmeier2026';
-const DB_PATH       = window._DYN_PATH     || '/escalav8.json';
-const TEAM_NAME     = window._DYN_TEAM     || 'Igreja Batista do Méier';
-const LS_SESSION    = 'ibm_session_v8_'+btoa(FIREBASE_URL+DB_PATH).slice(0,12);
-const SYNC_INTERVAL = 30000;
+// GOOGLE OAUTH — configure seu Client ID em console.cloud.google.com
+const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID'; // substitua pelo seu
+// MASTER FIREBASE — onde os times auto-criados são registrados
+const MASTER_FIREBASE_URL = 'https://ibm-53e5f-default-rtdb.firebaseio.com';
+const MASTER_PATH = '/master_selfservice.json';
+// LS keys
+const LS_TEAM_CONFIG  = 'ibm_team_cfg_v1';   // { fb, pass, path, team }
+const LS_SESSION_KEY  = 'ibm_session_key_v1'; // hash de sessão
 // ══════════════════════════════════════════════════════════
+
+// Configuração dinâmica — preenchida em tempo de execução
+let FIREBASE_URL = '';
+let ADM_PASSWORD  = '';
+let DB_PATH       = '';
+let TEAM_NAME     = '';
+let LS_SESSION    = 'ibm_session_v8_default';
+let SYNC_INTERVAL = 30000;
 
 const MONTHS_PT = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
@@ -971,6 +1154,26 @@ async function saveCloud(){
   catch(e){setSyncState('error','Erro ao salvar');showToast('⚠️ Erro ao salvar.')}
   finally{saving=false}
 }
+
+// ══ MIRROR EVENTS TO MASTER ADMIN ══
+async function mirrorEventToMaster(type,icon,color,msg,extra={}){
+  try{
+    const event={
+      id: Date.now(),
+      type, icon, color, msg,
+      teamId: FIREBASE_URL+DB_PATH,
+      teamName: TEAM_NAME,
+      user: currentUser?.name||'—',
+      at: new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}),
+      musicianCount: appData?.musicians?.length||0,
+      agendaCount: appData?.agendas?.length||0,
+      ...extra
+    };
+    // Push to master Firebase team_events
+    const masterFb='https://ibm-53e5f-default-rtdb.firebaseio.com';
+    await fetch(masterFb+'/team_events/'+event.id+'.json',{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(event)});
+  }catch(e){ /* silent — don't block user flow */ }
+}
 async function loadCloud(){
   setSyncState('syncing','Sincronizando…');
   try{
@@ -995,13 +1198,204 @@ async function loadCloud(){
 function startAutoSync(){stopAutoSync();syncTimer=setInterval(async()=>{const ok=await loadCloud();if(ok&&currentRole==='adm')refreshAdmView();if(ok&&currentRole==='membro')renderMemberPanel();renderStats()},SYNC_INTERVAL)}
 function stopAutoSync(){if(syncTimer){clearInterval(syncTimer);syncTimer=null}}
 
-// ── INIT ──
-async function init(){
+// ══════════════════════════════════════════════════════════
+//  SCREEN HELPERS
+// ══════════════════════════════════════════════════════════
+function hideAllScreens(){
+  ['homeScreen','joinScreen','createScreen','loginScreen','appScreen','configError'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.style.display='none';el.style.flexDirection=''}
+  });
+}
+function showHome(){
+  hideAllScreens();
+  document.getElementById('homeScreen').style.display='flex';
+  document.getElementById('homeScreen').style.flexDirection='column';
+  // Clear any team config from URL without reloading
+  if(window.history.replaceState) window.history.replaceState(null,'',window.location.pathname);
+  // Reset header
+  document.getElementById('syncIndicator').style.display='none';
+  document.getElementById('headerRight').innerHTML='';
+}
+function showJoinScreen(){
+  hideAllScreens();
+  const el=document.getElementById('joinScreen');
+  el.style.display='flex';el.style.flexDirection='column';
+}
+function showCreateScreen(){
+  hideAllScreens();
+  const el=document.getElementById('createScreen');
+  el.style.display='flex';el.style.flexDirection='column';
+  // Init Google sign-in button if CLIENT_ID is configured
+  if(GOOGLE_CLIENT_ID!=='YOUR_GOOGLE_CLIENT_ID'&&window.google?.accounts?.id){
+    try{
+      google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:handleGoogleCredential,auto_select:false});
+    }catch(e){}
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  GOOGLE OAUTH
+// ══════════════════════════════════════════════════════════
+let googleUser=null;
+function triggerGoogleLogin(){
+  if(GOOGLE_CLIENT_ID==='YOUR_GOOGLE_CLIENT_ID'){
+    showToast('Configure seu GOOGLE_CLIENT_ID no código para usar login Google.');
+    return;
+  }
+  if(window.google?.accounts?.id){
+    google.accounts.id.prompt(notification=>{
+      if(notification.isNotDisplayed()||notification.isSkippedMoment()){
+        showToast('Pop-up bloqueado. Use o campo manual abaixo.');
+      }
+    });
+  }
+}
+function handleGoogleCredential(response){
+  try{
+    const parts=response.credential.split('.');
+    const payload=JSON.parse(atob(parts[1].replace(/-/g,'+').replace(/_/g,'/')));
+    googleUser={name:payload.name,email:payload.email,picture:payload.picture};
+    showGoogleBadge();
+    proceedToSetup();
+  }catch(e){showToast('Erro ao processar login Google')}
+}
+function showGoogleBadge(){
+  if(!googleUser)return;
+  const badge=document.getElementById('googleUserBadge');
+  const letter=document.getElementById('googleAvatarLetter');
+  const name=document.getElementById('googleUserNameDisplay');
+  const email=document.getElementById('googleUserEmailDisplay');
+  if(badge)badge.style.display='flex';
+  if(letter)letter.textContent=(googleUser.name||'G')[0].toUpperCase();
+  if(name)name.textContent=googleUser.name||'—';
+  if(email)email.textContent=googleUser.email||'—';
+}
+function proceedToSetup(){
+  // If no Google user, use manual fields
+  if(!googleUser){
+    const name=document.getElementById('manualName')?.value.trim();
+    const email=document.getElementById('manualEmail')?.value.trim();
+    if(!name||!email){showToast('Preencha seu nome e e-mail para continuar');return}
+    googleUser={name,email};
+  }
+  document.getElementById('createStep1').style.display='none';
+  document.getElementById('createStep2').style.display='block';
+  showGoogleBadge();
+}
+
+// ══════════════════════════════════════════════════════════
+//  CREATE TEAM FROM HOME
+// ══════════════════════════════════════════════════════════
+let _createdTeamConfig=null;
+async function doCreateTeam(){
+  const teamName=document.getElementById('createTeamName')?.value.trim();
+  const fbUrl=document.getElementById('createFirebaseUrl')?.value.trim();
+  const pass=document.getElementById('createAdmPass')?.value.trim();
+  if(!teamName||!fbUrl||!pass){showToast('Preencha todos os campos');return}
+  if(!fbUrl.startsWith('https://')){showToast('Firebase URL inválida');return}
+  const btn=document.getElementById('btnCreateTeam');
+  btn.disabled=true;btn.textContent='⏳ Criando painel…';
+  try{
+    const teamId='team_'+Date.now();
+    const dbPath='/escala_'+teamId+'.json';
+    // Seed empty team DB
+    const emptyData={musicians:[],agendas:[],notifications:[],revocations:{},chatGeral:[],avisos:[],agendaChats:{}};
+    const seedRes=await fetch(fbUrl+dbPath,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(emptyData)});
+    if(!seedRes.ok)throw new Error('Firebase inacessível: '+seedRes.status);
+    // Register in master Firebase
+    const now=new Date();const dateStr=now.toLocaleDateString('pt-BR')+' às '+now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    const teamRecord={id:teamId,name:teamName,city:'—',firebaseUrl:fbUrl,dbPath,admPassword:pass,createdAt:dateStr,musicianCount:0,agendaCount:0,status:'active',createdByName:googleUser?.name||'—',createdByEmail:googleUser?.email||'—',createdVia:'self-service'};
+    // Try to register in master (non-critical, don't fail if it errors)
+    try{
+      const masterData=await (await fetch(MASTER_FIREBASE_URL+MASTER_PATH)).json()||{teams:[]};
+      if(!masterData.teams)masterData.teams=[];
+      masterData.teams.push(teamRecord);
+      await fetch(MASTER_FIREBASE_URL+MASTER_PATH,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(masterData)});
+    }catch(e){console.warn('Master registration skipped:',e.message)}
+    // Build access code
+    const code=btoa(JSON.stringify({fb:fbUrl,pass,path:dbPath,team:teamName}));
+    _createdTeamConfig={fb:fbUrl,pass,path:dbPath,team:teamName,code};
+    // Save config locally
+    lsW(LS_TEAM_CONFIG,{fb:fbUrl,pass,path:dbPath,team:teamName});
+    // Show success
+    document.getElementById('createStep2').style.display='none';
+    document.getElementById('createStep3').style.display='block';
+    document.getElementById('createSuccessSub').textContent=`Painel "${teamName}" criado por ${googleUser?.name||'você'}. Compartilhe o código abaixo com os músicos.`;
+    document.getElementById('createdCodeValue').textContent=code;
+    showToast('✅ Painel criado com sucesso!');
+  }catch(e){
+    showToast('❌ Erro: '+e.message);
+    btn.disabled=false;btn.textContent='🚀 Criar Painel';
+  }
+}
+function copyCreatedCode(){
+  const code=document.getElementById('createdCodeValue').textContent;
+  navigator.clipboard.writeText(code).then(()=>showToast('🔗 Código copiado! Envie via WhatsApp'));
+}
+function enterCreatedPanel(){
+  if(!_createdTeamConfig)return;
+  applyConfig(_createdTeamConfig);
+  loadAndShowLogin();
+}
+
+// ══════════════════════════════════════════════════════════
+//  JOIN WITH CODE
+// ══════════════════════════════════════════════════════════
+async function doJoinWithCode(){
+  const raw=document.getElementById('joinCodeInput')?.value.trim();
+  if(!raw){showToast('Cole o código de acesso');return}
+  const btn=document.getElementById('btnJoinCode');
+  btn.disabled=true;btn.textContent='⏳ Conectando…';
+  try{
+    const cfg=JSON.parse(atob(raw));
+    if(!cfg.fb||!cfg.pass||!cfg.path||!cfg.team)throw new Error('Código inválido');
+    applyConfig(cfg);
+    lsW(LS_TEAM_CONFIG,cfg);
+    await loadAndShowLogin();
+  }catch(e){
+    showToast('Código inválido ou erro de conexão. Verifique e tente novamente.');
+    btn.disabled=false;btn.textContent='🚀 Conectar ao Painel';
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+//  APPLY CONFIG (set runtime variables)
+// ══════════════════════════════════════════════════════════
+function applyConfig(cfg){
+  FIREBASE_URL=cfg.fb;
+  ADM_PASSWORD=cfg.pass;
+  DB_PATH=cfg.path;
+  TEAM_NAME=cfg.team;
+  LS_SESSION='ibm_sess_'+btoa(cfg.fb+cfg.path).slice(0,14);
+}
+
+async function loadAndShowLogin(){
   const overlay=document.getElementById('loadingOverlay');
-  if(!FIREBASE_URL||FIREBASE_URL.includes('COLE_SUA_URL')){overlay.style.display='none';document.getElementById('configError').style.display='flex';return}
-  const ok=await loadCloud();overlay.style.display='none';
-  if(!ok){document.getElementById('configError').style.display='flex';return}
+  const loadTxt=document.getElementById('loadingText');
+  overlay.style.display='flex';
+  loadTxt.textContent='Conectando ao painel…';
+  const ok=await loadCloud();
+  overlay.style.display='none';
+  if(!ok){
+    hideAllScreens();
+    document.getElementById('configError').style.display='flex';
+    return;
+  }
+  showLoginScreen();
+}
+
+async function tryRestoreSession(){
+  const cfg=ls(LS_TEAM_CONFIG);
+  if(!cfg){showToast('Nenhuma sessão salva neste dispositivo');return}
+  applyConfig(cfg);
   const session=ls(LS_SESSION);
+  const overlay=document.getElementById('loadingOverlay');
+  overlay.style.display='flex';
+  document.getElementById('loadingText').textContent='Restaurando sessão…';
+  const ok=await loadCloud();
+  overlay.style.display='none';
+  if(!ok){showToast('Erro ao reconectar. Verifique conexão.');return}
   if(session?.role){
     if(session.role==='membro'){const m=appData.musicians.find(x=>x.id==session.musicianId);if(m){currentUser=session;currentRole='membro';enterApp();return}}
     else if(session.role==='adm'){currentUser=session;currentRole='adm';enterApp();return}
@@ -1009,20 +1403,63 @@ async function init(){
   showLoginScreen();
 }
 
+// ══════════════════════════════════════════════════════════
+//  INIT — ALWAYS STARTS AT HOME SCREEN
+// ══════════════════════════════════════════════════════════
+async function init(){
+  const overlay=document.getElementById('loadingOverlay');
+  overlay.style.display='none'; // hide immediately, home handles its own loading
+
+  // Check for URL hash (launched from Master Admin)
+  const hash=window.location.hash;
+  if(hash&&hash.startsWith('#team=')){
+    try{
+      const cfg=JSON.parse(atob(hash.slice(6)));
+      if(cfg.fb&&cfg.pass&&cfg.path&&cfg.team){
+        applyConfig(cfg);
+        lsW(LS_TEAM_CONFIG,cfg);
+        await loadAndShowLogin();
+        return;
+      }
+    }catch(e){console.warn('Hash config failed',e)}
+  }
+
+  // Check for saved session (same device, same team)
+  const savedCfg=ls(LS_TEAM_CONFIG);
+  if(savedCfg?.fb){
+    applyConfig(savedCfg);
+    const session=ls(LS_SESSION);
+    if(session?.role){
+      // Try to silently reconnect
+      overlay.style.display='flex';
+      document.getElementById('loadingText').textContent='Reconectando…';
+      const ok=await loadCloud();
+      overlay.style.display='none';
+      if(ok){
+        if(session.role==='membro'){const m=appData.musicians.find(x=>x.id==session.musicianId);if(m){currentUser=session;currentRole='membro';enterApp();return}}
+        else if(session.role==='adm'){currentUser=session;currentRole='adm';enterApp();return}
+      }
+      // Session invalid, show home
+    }
+  }
+
+  // Default: show home screen
+  showHome();
+}
+
 // ── LOGIN ──
 function showLoginScreen(){
   populateMemberSelect();
+  hideAllScreens();
   document.getElementById('loginScreen').style.display='flex';
-  document.getElementById('appScreen').style.display='none';
-  document.getElementById('configError').style.display='none';
-  // Show team name on login screen if launched from Master Admin
+  document.getElementById('loginScreen').style.flexDirection='column';
   const teamLabel=document.getElementById('loginTeamLabel');
-  if(teamLabel&&window._DYN_TEAM){
-    teamLabel.textContent='🏛 '+window._DYN_TEAM;
+  if(teamLabel&&TEAM_NAME){
+    teamLabel.textContent='🏛 '+TEAM_NAME;
     teamLabel.style.display='block';
   }
   const hr=document.getElementById('headerRight');
-  hr.innerHTML=`<div class="sync-indicator synced" id="syncIndicator"><div class="sync-dot"></div><span class="sync-text" id="syncText">Conectado</span></div><button class="btn-login" onclick="showLoginScreen()">Entrar</button>`;
+  hr.innerHTML=`<div class="sync-indicator synced" id="syncIndicator"><div class="sync-dot"></div><span class="sync-text" id="syncText">Conectado</span></div>`;
 }
 function selectRole(role){
   selectedRole=role;
@@ -1041,9 +1478,12 @@ async function doLogin(){
       const m=appData.musicians.find(x=>x.id==mid);if(!m){showToast('Músico não encontrado');return}
       currentUser={name:m.name,role:'membro',musicianId:m.id}}
     currentRole=currentUser.role;lsW(LS_SESSION,currentUser);enterApp();
+    // Mirror login to master
+    const role = currentUser.role==='adm'?'adm':'músico';
+    mirrorEventToMaster(currentUser.role==='adm'?'adm-login':'musician-login','🔑','gold',`${currentUser.name} (${role}) fez login`);
   }finally{btn.disabled=false;btn.textContent='Entrar no Painel →'}
 }
-function logout(){stopAutoSync();currentUser=null;currentRole=null;memberPendingAvail={};lsW(LS_SESSION,null);showLoginScreen()}
+function logout(){stopAutoSync();currentUser=null;currentRole=null;memberPendingAvail={};lsW(LS_SESSION,null);showHome()}
 function enterApp(){
   document.getElementById('loginScreen').style.display='none';
   document.getElementById('appScreen').style.display='block';
@@ -1161,6 +1601,7 @@ async function createAgenda(){
   await saveCloud();document.getElementById('newAgendaModal').classList.remove('show');
   calSelectedDates=[];document.getElementById('newAgendaTitle').value='';document.getElementById('newAgendaDesc').value='';
   renderAgendas();updateNotifBadge();showToast('📅 Agenda criada! Equipe notificada.');
+  mirrorEventToMaster('agenda-created','📅','blue',`Agenda criada: "${title}"`,{agendaCount:(appData.agendas||[]).length});
 }
 async function deleteAgenda(id){if(!confirm('Excluir esta agenda?'))return;appData.agendas=appData.agendas.filter(a=>a.id!==id);await saveCloud();renderAgendas();showToast('Agenda excluída.')}
 async function sendAgendaToAll(id){
@@ -1814,6 +2255,7 @@ async function submitAvailability(){
   ag.submissions[m.id]={submitted:true,submittedAt:dateStr,days:JSON.parse(JSON.stringify(memberPendingAvail))};
   (appData.notifications||[]).forEach(n=>{if(n.type==='avail-request'||n.type==='new-agenda')n.read=true});
   await saveCloud();renderMemberPanel();renderStats();showToast('✅ Disponibilidade enviada!');
+  mirrorEventToMaster('avail-submit','✅','green',`${currentUser.name} enviou disponibilidade para "${ag.title}"`);
 }
 
 function renderMemberAssignedView(m,ag){
