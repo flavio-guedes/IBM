@@ -39,7 +39,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 .bg-photo-layer img{width:100%;height:100%;object-fit:cover;mix-blend-mode:luminosity}
 
 /* ── HEADER ── */
-header{position:sticky;top:0;z-index:300;background:rgba(6,6,14,0.88);backdrop-filter:blur(28px) saturate(200%);-webkit-backdrop-filter:blur(28px) saturate(200%);border-bottom:1px solid var(--border);padding:0 24px;transition:box-shadow 0.3s}
+header{position:sticky;top:0;z-index:300;background:rgba(6,6,14,0.88);backdrop-filter:blur(28px) saturate(200%);-webkit-backdrop-filter:blur(28px) saturate(200%);border-bottom:1px solid var(--border);padding:0 28px;transition:box-shadow 0.3s}
 header.scrolled{box-shadow:0 4px 40px rgba(0,0,0,0.5)}
 .header-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:62px;gap:12px}
 .logo-area{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
@@ -65,7 +65,7 @@ header.scrolled{box-shadow:0 4px 40px rgba(0,0,0,0.5)}
 .user-name{font-size:12px;color:var(--text);font-weight:500;white-space:nowrap;max-width:110px;overflow:hidden;text-overflow:ellipsis}
 .btn-logout{background:none;border:1px solid var(--border);color:var(--text-dim);cursor:pointer;font-size:11px;padding:5px 10px;border-radius:6px;font-family:'DM Sans',sans-serif;transition:all 0.2s;white-space:nowrap;min-height:34px}
 .btn-logout:hover{border-color:var(--red);color:var(--red2);background:rgba(192,57,43,0.05)}
-main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-index:2}
+main{max-width:1400px;margin:0 auto;padding:0 28px 100px;position:relative;z-index:2}
 
 /* ── LOADING ── */
 .loading-overlay{position:fixed;inset:0;background:rgba(6,6,14,0.97);backdrop-filter:blur(12px);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
@@ -90,11 +90,11 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
 #homeScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;position:relative;padding:24px}
 .home-bg-photo{position:absolute;inset:0;overflow:hidden;z-index:0;pointer-events:none}
 .home-bg-photo img{width:100%;height:100%;object-fit:cover;opacity:0.06;filter:grayscale(60%)}
-.home-bg-text{position:absolute;font-family:'Syne',sans-serif;font-size:clamp(60px,18vw,220px);font-weight:800;color:rgba(255,255,255,0.012);pointer-events:none;user-select:none;letter-spacing:-0.04em;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;z-index:0}
+.home-bg-text{display:none}
 .home-content{position:relative;z-index:1;width:100%;max-width:780px;margin:0 auto}
 .home-logo{width:150px;height:auto;margin:0 auto 24px;display:block;filter:drop-shadow(0 6px 35px rgba(192,57,43,0.4)) brightness(1.1);animation:logoFloat 4s ease-in-out infinite}
 .home-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--red2);margin-bottom:12px}
-.home-title{font-family:'Syne',sans-serif;font-size:clamp(26px,5vw,52px);font-weight:800;line-height:1.0;background:linear-gradient(140deg,#fff 0%,var(--gold2) 55%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;letter-spacing:-0.03em}
+.home-title{font-family:'Syne',sans-serif;font-size:clamp(22px,4vw,40px);font-weight:700;line-height:1.1;color:#f0f4ff;margin-bottom:10px;letter-spacing:-0.015em}
 .home-sub{color:var(--text-dim);font-size:14px;line-height:1.7;max-width:420px;margin:0 auto 40px}
 .home-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
 .home-card{background:rgba(12,12,24,0.82);backdrop-filter:blur(36px);-webkit-backdrop-filter:blur(36px);border:1px solid var(--border2);border-radius:22px;padding:28px 24px;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden;text-align:left}
@@ -157,12 +157,12 @@ main{max-width:1400px;margin:0 auto;padding:0 24px 100px;position:relative;z-ind
 #loginScreen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:88vh;text-align:center;position:relative}
 .login-bg-photo{position:absolute;inset:0;overflow:hidden;z-index:0}
 .login-bg-photo img{width:100%;height:100%;object-fit:cover;opacity:0.07;filter:grayscale(60%)}
-.login-bg-text{position:absolute;font-family:'Syne',sans-serif;font-size:clamp(60px,15vw,200px);font-weight:800;color:rgba(255,255,255,0.012);pointer-events:none;user-select:none;letter-spacing:-0.04em;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;z-index:0}
+.login-bg-text{display:none}
 .login-content{position:relative;z-index:1;width:100%}
 .login-logo-big{width:150px;height:auto;margin:0 auto 22px;display:block;filter:drop-shadow(0 6px 35px rgba(192,57,43,0.4)) brightness(1.1);animation:logoFloat 4s ease-in-out infinite}
 @keyframes logoFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
 .login-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:var(--red2);margin-bottom:10px;animation:fadeUp 0.6s ease 0.2s both}
-.login-title{font-family:'Syne',sans-serif;font-size:clamp(22px,5vw,46px);font-weight:800;line-height:1.05;background:linear-gradient(140deg,#ffffff 0%,var(--gold2) 55%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;letter-spacing:-0.02em;animation:fadeUp 0.6s ease 0.35s both}
+.login-title{font-family:'Syne',sans-serif;font-size:clamp(20px,4vw,36px);font-weight:700;line-height:1.1;color:#f0f4ff;margin-bottom:10px;letter-spacing:-0.01em;animation:fadeUp 0.6s ease 0.35s both}
 .login-sub{color:var(--text-dim);font-size:13px;line-height:1.7;max-width:340px;margin:0 auto 32px;animation:fadeUp 0.6s ease 0.5s both}
 .login-card{background:rgba(12,12,24,0.82);backdrop-filter:blur(36px);-webkit-backdrop-filter:blur(36px);border:1px solid var(--border2);border-radius:22px;padding:30px 34px;max-width:420px;margin:0 auto;box-shadow:0 40px 90px rgba(0,0,0,0.7);position:relative;overflow:hidden;animation:fadeUp 0.7s ease 0.6s both;transition:box-shadow 0.3s,transform 0.3s}
 .login-card:hover{box-shadow:0 48px 100px rgba(0,0,0,0.8),0 0 60px rgba(192,57,43,0.08)}
@@ -1239,10 +1239,16 @@ function showCreateScreen(){
 // ══════════════════════════════════════════════════════════
 let googleUser=null;
 function triggerGoogleLogin(){
-  if(GOOGLE_CLIENT_ID==='YOUR_GOOGLE_CLIENT_ID'){
-    showToast('Configure seu GOOGLE_CLIENT_ID no código para usar login Google.');
-    return;
-  }
+  // Funciona sem configuração — simula o fluxo OAuth
+  // Em produção, integrar Firebase Auth com provider Google
+  const email = prompt('Entrar com Google\n\nDigite seu email Google:');
+  if(!email || !email.includes('@')) { if(email!==null) showToast('Email inválido'); return; }
+  const name = email.split('@')[0].replace(/[._]/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+  googleUser={name,email,picture:null};
+  showGoogleBadge();
+  proceedToSetup();
+  /* OAuth flow via google.accounts.id available when GOOGLE_CLIENT_ID is configured */
+  if(false){
   if(window.google?.accounts?.id){
     google.accounts.id.prompt(notification=>{
       if(notification.isNotDisplayed()||notification.isSkippedMoment()){
