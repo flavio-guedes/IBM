@@ -178,10 +178,49 @@ select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmln
   .grid2, .grid3 { grid-template-columns: 1fr; }
   .kpis { grid-template-columns: 1fr 1fr; }
 }
+
+/* ── LOGIN ── */
+#loginScreen{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px;}
+.login-wrap{width:100%;max-width:360px;}
+.login-logo{font-size:13px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:0.16em;margin-bottom:32px;display:flex;align-items:center;gap:8px;}
+.login-logo-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);}
+.login-card{background:#111118;border:1px solid var(--border);border-radius:14px;padding:30px 28px;position:relative;overflow:hidden;}
+.login-card-top{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.login-title{font-size:20px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.login-sub{font-size:12px;color:var(--muted);margin-bottom:24px;line-height:1.5;}
+.login-field{margin-bottom:14px;}
+.login-field label{display:block;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:5px;}
+.login-error{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:8px;padding:9px 12px;font-size:12px;color:#ef4444;margin-bottom:14px;display:none;}
+.btn-login-submit{width:100%;background:var(--gold);color:#000;border:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:700;padding:13px;border-radius:9px;cursor:pointer;transition:opacity 0.15s;letter-spacing:0.02em;}
+.btn-login-submit:hover{opacity:0.88;}
+.btn-login-submit:disabled{opacity:0.5;cursor:not-allowed;}
 </style>
 </head>
 <body>
-<div class="layout">
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-wrap">
+    <div class="login-logo"><div class="login-logo-dot"></div>Master Admin</div>
+    <div class="login-card">
+      <div class="login-card-top"></div>
+      <div class="login-title">Acesso Restrito</div>
+      <div class="login-sub">Painel de controle da plataforma Escala Musical.</div>
+      <div class="login-error" id="loginError">Nome ou senha incorretos.</div>
+      <div class="login-field">
+        <label>Nome</label>
+        <input type="text" class="field-input" id="loginName" placeholder="Seu nome" autocomplete="off" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <div class="login-field">
+        <label>Senha</label>
+        <input type="password" class="field-input" id="loginPass" placeholder="Senha" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="btn-login-submit" id="btnLogin" onclick="doLogin()">Entrar no Painel →</button>
+    </div>
+  </div>
+</div>
+
+<div class="layout" id="appLayout" style="display:none;">
 
   <!-- SIDEBAR -->
   <div class="sidebar">
@@ -203,6 +242,9 @@ select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmln
       <button class="sb-item" onclick="go('passwords',this)"><span class="sb-item-icon">🔑</span>Senhas</button>
       <button class="sb-item" onclick="go('settings',this)"><span class="sb-item-icon">⚙️</span>Configurações</button>
     </nav>
+  <div style="padding:10px 8px;border-top:1px solid var(--border);">
+    <button onclick="doLogout()" style="width:100%;display:flex;align-items:center;gap:7px;padding:8px 10px;border-radius:7px;background:none;border:1px solid var(--border);color:var(--muted);cursor:pointer;font-size:12px;font-family:'Inter',sans-serif;transition:all 0.15s;" onmouseover="this.style.borderColor='#ef4444';this.style.color='#ef4444';" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--muted)';">🚪 Sair</button>
+  </div>
   </div>
 
   <!-- MAIN -->
@@ -849,11 +891,61 @@ async function refresh() {
 }
 
 // ─── INIT ────
+// ── CREDENTIALS (altere aqui) ──
+const MASTER_USERS = [
+  { name: 'Flavio',  pass: 'ibm@master2026' },
+  { name: 'Master',  pass: 'master@2026'     },
+];
+
+const SESSION_KEY = 'master_v2_session';
+
+function doLogin() {
+  const name = document.getElementById('loginName').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  const err   = document.getElementById('loginError');
+  const btn   = document.getElementById('btnLogin');
+  err.style.display = 'none';
+  if (!name || !pass) { err.textContent = 'Preencha nome e senha.'; err.style.display = 'block'; return; }
+  const ok = MASTER_USERS.find(u => u.name.toLowerCase() === name.toLowerCase() && u.pass === pass);
+  if (!ok) { err.textContent = 'Nome ou senha incorretos.'; err.style.display = 'block'; return; }
+  // Valid — save session and enter
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify({ name: ok.name, at: Date.now() }));
+  enterPanel();
+}
+
+function enterPanel() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appLayout').style.display   = 'flex';
+  // Update sidebar name
+  const session = JSON.parse(sessionStorage.getItem(SESSION_KEY) || '{}');
+  const nameEl  = document.querySelector('.sb-logo-name');
+  if (nameEl && session.name) nameEl.textContent = '⚡ ' + session.name;
+}
+
+function doLogout() {
+  sessionStorage.removeItem(SESSION_KEY);
+  document.getElementById('appLayout').style.display   = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('loginName').value = '';
+  document.getElementById('loginPass').value = '';
+}
+
 (async () => {
-  await load();
-  populateDropdowns();
-  renderDash();
-  updateTicketBadge();
+  // Check existing session (valid for 8 hours)
+  const session = JSON.parse(sessionStorage.getItem(SESSION_KEY) || '{}');
+  const valid   = session.at && (Date.now() - session.at) < 8 * 60 * 60 * 1000;
+
+  if (valid) {
+    await load();
+    populateDropdowns();
+    renderDash();
+    updateTicketBadge();
+    enterPanel();
+  } else {
+    // Show login — load data in background so panel is ready
+    load().then(() => { populateDropdowns(); updateTicketBadge(); });
+  }
+
   // Auto-refresh every 60s
   setInterval(async () => { await load(); renderDash(); updateTicketBadge(); }, 60000);
 })();
