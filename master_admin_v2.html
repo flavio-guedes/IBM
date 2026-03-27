@@ -247,6 +247,28 @@ html,body{height:100%;font-family:'DM Sans',system-ui,sans-serif;background:var(
 select.field-input{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235a6a8a'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
 .divider{height:1px;background:var(--border);margin:20px 0}
 
+/* ── LAUNCH PANEL MODAL ── */
+.launch-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(10px);z-index:900;display:none;align-items:center;justify-content:center;padding:20px}
+.launch-modal-overlay.show{display:flex}
+.launch-modal{background:rgba(8,8,22,0.99);border:1px solid var(--border2);border-radius:22px;padding:34px;width:100%;max-width:500px;position:relative;box-shadow:0 40px 100px rgba(0,0,0,0.8)}
+.launch-modal-top{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--gold2),transparent);border-radius:2px}
+.launch-modal-team-badge{display:flex;align-items:center;gap:14px;margin-bottom:24px;padding:16px 18px;background:rgba(212,168,83,0.06);border:1px solid rgba(212,168,83,0.18);border-radius:14px}
+.launch-modal-team-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:#000;flex-shrink:0}
+.launch-modal-team-name{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--text)}
+.launch-modal-team-sub{font-size:11px;color:var(--text-dim);margin-top:2px}
+.launch-creds-box{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:20px}
+.launch-cred-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)}
+.launch-cred-row:last-child{border-bottom:none;padding-bottom:0}
+.launch-cred-label{font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;min-width:90px}
+.launch-cred-value{font-family:'DM Mono',monospace;font-size:11px;color:var(--gold2);word-break:break-all;flex:1;text-align:right}
+.launch-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:4px;flex-wrap:wrap}
+.btn-launch{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,var(--gold),#b8893c);color:#000;border:none;padding:11px 20px;border-radius:10px;cursor:pointer;font-family:'Syne',sans-serif;font-size:13px;font-weight:800;letter-spacing:0.04em;transition:all 0.2s;box-shadow:0 4px 20px rgba(212,168,83,0.3);min-height:44px}
+.btn-launch:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(212,168,83,0.45)}
+.launch-info{font-size:11px;color:var(--text-dim);background:rgba(255,255,255,0.02);border:1px solid var(--border);border-left:3px solid rgba(212,168,83,0.4);border-radius:8px;padding:10px 12px;line-height:1.6;margin-bottom:18px}
+.btn-team-access{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,rgba(212,168,83,0.15),rgba(212,168,83,0.08));border:1px solid rgba(212,168,83,0.35)!important;color:var(--gold2);padding:6px 13px;border-radius:8px;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;transition:all 0.15s;min-height:34px;white-space:nowrap}
+.btn-team-access:hover{background:linear-gradient(135deg,rgba(212,168,83,0.25),rgba(212,168,83,0.15));box-shadow:0 0 14px rgba(212,168,83,0.25);transform:translateY(-1px)}
+.team-empty-notice{display:inline-flex;align-items:center;gap:5px;background:rgba(39,174,96,0.08);border:1px solid rgba(39,174,96,0.2);color:var(--green2);padding:3px 9px;border-radius:20px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-top:6px}
+
 /* ── RESPONSIVE ── */
 @media(max-width:768px){
   .sidebar{position:fixed;left:-100%;z-index:400;height:100%;transition:left 0.3s}
@@ -548,6 +570,10 @@ select.field-input{appearance:none;-webkit-appearance:none;background-image:url(
     <div class="modal-top"></div>
     <div class="modal-title">🏛 Novo Time</div>
     <div class="modal-sub">Crie um novo time com seu banco de dados Firebase independente.</div>
+    <div style="background:rgba(39,174,96,0.07);border:1px solid rgba(39,174,96,0.22);border-radius:10px;padding:11px 14px;font-size:11px;color:var(--green2);line-height:1.6;margin-bottom:18px;display:flex;align-items:flex-start;gap:8px;">
+      <span style="font-size:16px;flex-shrink:0;">✅</span>
+      <span><strong>Time começa vazio.</strong> Nenhum músico é inserido automaticamente. O ADM do time cria todos os integrantes e atribui seus instrumentos e funções pelo painel.</span>
+    </div>
     <div class="modal-field"><label>Nome do Time</label><input type="text" class="modal-input" id="newTeamName" placeholder="ex: Igreja Batista do Méier"></div>
     <div class="modal-field"><label>Cidade / Localização</label><input type="text" class="modal-input" id="newTeamCity" placeholder="ex: Rio de Janeiro, RJ"></div>
     <div class="modal-field"><label>Firebase URL</label><input type="text" class="modal-input" id="newTeamFirebase" placeholder="https://seu-projeto.firebaseio.com"></div>
@@ -656,75 +682,49 @@ select.field-input{appearance:none;-webkit-appearance:none;background-image:url(
   </div>
 </div>
 
-<!-- Team Access Modal -->
-<div class="modal-overlay" id="modalTeamAccess">
-  <div class="modal" style="max-width:540px;">
-    <div class="modal-top"></div>
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px;">
+<!-- ════ LAUNCH PANEL MODAL ════ -->
+<div class="launch-modal-overlay" id="launchPanelModal">
+  <div class="launch-modal">
+    <div class="launch-modal-top"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
       <div>
-        <div class="modal-title" id="teamAccessName">—</div>
-        <div style="font-size:12px;color:var(--text-dim);margin-top:2px;" id="teamAccessCity">—</div>
+        <div style="font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--text);">🚪 Acessar Painel do Time</div>
+        <div style="font-size:12px;color:var(--text-dim);margin-top:3px;">Abra o painel ADM deste time</div>
       </div>
-      <span id="teamAccessStatus" style="font-size:11px;padding:4px 10px;border-radius:20px;background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.25);color:var(--green);white-space:nowrap;margin-top:4px;">—</span>
+      <button class="btn-sm-icon" onclick="hideModal('launchPanelModal')" style="font-size:18px;">×</button>
     </div>
-
-    <!-- Stats row -->
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0;">
-      <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
-        <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--blue2);" id="teamAccessAdmCount">0</div>
-        <div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-top:3px;">ADMs</div>
-      </div>
-      <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
-        <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--green);" id="teamAccessMemberCount">0</div>
-        <div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-top:3px;">Músicos</div>
-      </div>
-      <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;">
-        <div style="font-family:'Syne',sans-serif;font-size:11px;font-weight:600;color:var(--text-mid);" id="teamAccessCreated">—</div>
-        <div style="font-size:9px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-top:3px;">Criado em</div>
+    <div class="launch-modal-team-badge">
+      <div class="launch-modal-team-icon" id="launchTeamIcon" style="background:linear-gradient(135deg,#d4a853,#f0c870)">T</div>
+      <div>
+        <div class="launch-modal-team-name" id="launchTeamName">—</div>
+        <div class="launch-modal-team-sub" id="launchTeamCity">—</div>
       </div>
     </div>
-
-    <!-- Firebase + Senha -->
-    <div style="background:rgba(212,168,83,0.05);border:1px solid rgba(212,168,83,0.15);border-radius:10px;padding:12px 14px;margin-bottom:14px;">
-      <div style="font-size:9px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;">🔑 Credenciais de Acesso</div>
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
-        <span style="font-size:10px;color:var(--text-dim);width:76px;flex-shrink:0;">Firebase URL</span>
-        <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-mid);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" id="teamAccessFbUrl">—</span>
-        <button class="btn-sm-icon" onclick="copyText(document.getElementById('teamAccessFbUrl').textContent,'URL copiada!')" style="flex-shrink:0;">📋</button>
+    <div class="launch-info">
+      ℹ️ O painel será aberto em uma nova aba já configurado com as credenciais deste time. O ADM do time fará login com a senha abaixo. Novos times começam <strong style="color:var(--green2);">sem músicos</strong> — o ADM cria os integrantes e atribui as funções.
+    </div>
+    <div class="launch-creds-box">
+      <div class="launch-cred-row">
+        <span class="launch-cred-label">Time</span>
+        <span class="launch-cred-value" id="launchCredTeam">—</span>
       </div>
-      <div style="display:flex;align-items:center;gap:8px;">
-        <span style="font-size:10px;color:var(--text-dim);width:76px;flex-shrink:0;">Senha ADM</span>
-        <span style="font-family:'DM Mono',monospace;font-size:13px;color:var(--gold2);background:rgba(212,168,83,0.08);border:1px solid rgba(212,168,83,0.2);border-radius:6px;padding:4px 10px;letter-spacing:0.08em;" id="teamAccessPass">—</span>
-        <button class="btn-sm-icon" onclick="copyText(document.getElementById('teamAccessPass').textContent,'Senha copiada!')" style="flex-shrink:0;">📋</button>
+      <div class="launch-cred-row">
+        <span class="launch-cred-label">Firebase URL</span>
+        <span class="launch-cred-value" id="launchCredFb" style="font-size:10px;">—</span>
+      </div>
+      <div class="launch-cred-row">
+        <span class="launch-cred-label">Senha ADM</span>
+        <span class="launch-cred-value" id="launchCredPass">—</span>
+      </div>
+      <div class="launch-cred-row">
+        <span class="launch-cred-label">DB Path</span>
+        <span class="launch-cred-value" id="launchCredPath" style="font-size:10px;">—</span>
       </div>
     </div>
-
-    <!-- ADMs -->
-    <div style="margin-bottom:14px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-        <div style="font-size:11px;font-weight:700;color:var(--text-mid);text-transform:uppercase;letter-spacing:0.1em;">🛡 ADMs do Time</div>
-        <button class="btn btn-outline" onclick="quickAddAdmForTeam()" style="font-size:10px;padding:4px 10px;min-height:28px;">+ Adicionar ADM</button>
-      </div>
-      <div id="teamAccessAdmList" style="max-height:130px;overflow-y:auto;"></div>
-    </div>
-
-    <!-- Members -->
-    <div style="margin-bottom:6px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-        <div style="font-size:11px;font-weight:700;color:var(--text-mid);text-transform:uppercase;letter-spacing:0.1em;">🎸 Músicos do Time</div>
-        <button class="btn btn-outline" onclick="quickAddUserForTeam()" style="font-size:10px;padding:4px 10px;min-height:28px;">+ Adicionar Músico</button>
-      </div>
-      <div id="teamAccessMemberList" style="max-height:120px;overflow-y:auto;"></div>
-    </div>
-
-    <div style="background:rgba(52,152,219,0.06);border:1px solid rgba(52,152,219,0.18);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--text-dim);line-height:1.6;margin:14px 0 0;">
-      ℹ️ <strong style="color:var(--blue2);">Fluxo recomendado:</strong> 1) Adicione ADMs → 2) ADMs criam os músicos e distribuem funções → 3) Clique em <strong style="color:var(--gold2);">Abrir Painel</strong> para acessar como ADM deste time.
-    </div>
-
-    <div class="modal-actions" style="margin-top:18px;">
-      <button class="btn btn-outline" onclick="hideModal('modalTeamAccess')">Fechar</button>
-      <button class="btn btn-green-sm" onclick="quickAddAdmForTeam()">🛡 Novo ADM</button>
-      <button class="btn btn-gold-sm" onclick="launchTeamPanel()" style="gap:6px;">🚀 Abrir Painel do Time</button>
+    <div class="launch-actions">
+      <button class="btn btn-outline" onclick="hideModal('launchPanelModal')">Fechar</button>
+      <button class="btn btn-outline" onclick="copyLaunchLink()" style="border-color:rgba(212,168,83,0.3)!important;color:var(--gold2);">🔗 Copiar Link</button>
+      <button class="btn-launch" onclick="openTeamPanel()">🚀 Abrir Painel →</button>
     </div>
   </div>
 </div>
@@ -773,7 +773,7 @@ function emptyMasterDB(){
       {id:'master1',email:MASTER_EMAIL,name:'Master Admin',passwordHash:btoa(MASTER_PASSWORD_DEFAULT),createdAt:now(),loginType:'email',lastLogin:null}
     ],
     teams:[
-      {id:'team_ibm',name:'Igreja Batista do Méier',city:'Rio de Janeiro, RJ',firebaseUrl:'https://ibm-53e5f-default-rtdb.firebaseio.com',admPassword:'ibmeier2026',description:'Time fundador',createdAt:now(),musicianCount:0,agendaCount:0,status:'active',members:[]}
+      {id:'team_ibm',name:'Igreja Batista do Méier',city:'Rio de Janeiro, RJ',firebaseUrl:'https://ibm-53e5f-default-rtdb.firebaseio.com',admPassword:'ibmeier2026',description:'Time fundador',createdAt:now(),musicianCount:21,agendaCount:0,status:'active'}
     ],
     admins:[
       {id:'adm1',name:'Administrador IBMéier',email:'adm@ibmeier.com',teamId:'team_ibm',loginType:'senha',createdAt:now(),lastLogin:null,status:'active'}
@@ -1034,39 +1034,31 @@ function renderTeams(){
   const teams=masterDB.teams||[];
   const colors=['linear-gradient(135deg,#d4a853,#f0c870)','linear-gradient(135deg,#3498db,#2980b9)','linear-gradient(135deg,#8e44ad,#9b59b6)','linear-gradient(135deg,#27ae60,#2ecc71)','linear-gradient(135deg,#c0392b,#e74c3c)','linear-gradient(135deg,#e67e22,#f39c12)'];
   if(!teams.length){document.getElementById('teamsGrid').innerHTML='<div class="empty"><div class="empty-icon">🏛</div><div class="empty-text">Nenhum time cadastrado.<br>Clique em "+ Novo Time".</div></div>';return}
-  document.getElementById('teamsGrid').innerHTML=teams.map((t,i)=>{
-    // Live counts from arrays (não do campo estático)
-    const admCount = (masterDB.admins||[]).filter(a=>a.teamId===t.id).length;
-    const musicianCount = (masterDB.users||[]).filter(u=>u.teamId===t.id).length;
-    // Sync musicianCount field
-    t.musicianCount = musicianCount;
-    const isEmpty = admCount===0 && musicianCount===0;
-    const noMusicians = admCount>0 && musicianCount===0;
-    return `
+  document.getElementById('teamsGrid').innerHTML=teams.map((t,i)=>`
     <div class="team-card">
       <div class="team-card-header">
         <div class="team-avatar" style="background:${colors[i%colors.length]}">${t.name[0]}</div>
         <div>
           <div class="team-name">${t.name}</div>
           <div class="team-email">${t.city||'—'}</div>
+          ${(t.musicianCount||0)===0?'<div class="team-empty-notice">🆕 Time vazio</div>':''}
         </div>
         <span class="badge ${t.status==='active'?'badge-green':'badge-gray'}" style="margin-left:auto;">${t.status==='active'?'Ativo':'Inativo'}</span>
       </div>
       <div class="team-meta">
-        <div class="team-meta-item"><div class="team-meta-val">${musicianCount}</div><div class="team-meta-label">Músicos</div></div>
-        <div class="team-meta-item"><div class="team-meta-val">${admCount}</div><div class="team-meta-label">ADMs</div></div>
+        <div class="team-meta-item"><div class="team-meta-val">${t.musicianCount||0}</div><div class="team-meta-label">Músicos</div></div>
+        <div class="team-meta-item"><div class="team-meta-val">${masterDB.admins?.filter(a=>a.teamId===t.id).length||0}</div><div class="team-meta-label">ADMs</div></div>
         <div class="team-meta-item"><div class="team-meta-val">${t.agendaCount||0}</div><div class="team-meta-label">Agendas</div></div>
         <div class="team-meta-item"><div class="team-meta-val" style="font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.createdAt||'—'}</div><div class="team-meta-label">Criado</div></div>
       </div>
       ${t.firebaseUrl?`<div style="margin-top:10px;font-size:10px;color:var(--text-dim);background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:7px;padding:6px 10px;font-family:'DM Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.firebaseUrl}</div>`:''}
-      ${isEmpty ? `<div style="margin-top:10px;background:rgba(230,126,34,0.08);border:1px solid rgba(230,126,34,0.22);border-radius:7px;padding:7px 10px;font-size:11px;color:var(--amber2);">⚠️ Sem integrantes — configure ADMs e distribua as funções.</div>` : noMusicians ? `<div style="margin-top:10px;background:rgba(52,152,219,0.06);border:1px solid rgba(52,152,219,0.18);border-radius:7px;padding:7px 10px;font-size:11px;color:var(--blue2);">ℹ️ ADM configurado · Aguardando cadastro de músicos.</div>` : ''}
       <div class="team-actions">
-        <button class="btn btn-gold-sm" onclick="openTeamAccess('${t.id}')" style="flex:1;">🚀 Acessar Painel</button>
-        <button class="btn btn-outline" onclick="copyText('${t.admPassword||''}','Senha ADM copiada!')" title="Copiar senha ADM">🔑</button>
-        <button class="btn btn-red-sm" onclick="deleteTeam('${t.id}')" title="Excluir time">🗑</button>
+        <button class="btn-team-access" onclick="showLaunchModal('${t.id}')">🚪 Acessar Painel</button>
+        <button class="btn btn-outline" onclick="copyText('${t.admPassword||''}','Senha ADM copiada!')">🔑 Senha ADM</button>
+        <button class="btn btn-outline" onclick="copyText('${t.firebaseUrl||''}','URL copiada!')">🔗 URL</button>
+        <button class="btn btn-red-sm" onclick="deleteTeam('${t.id}')">🗑</button>
       </div>
-    </div>`;
-  }).join('');
+    </div>`).join('');
 }
 
 async function createTeam(){
@@ -1075,11 +1067,21 @@ async function createTeam(){
   const fbUrl=document.getElementById('newTeamFirebase').value.trim();
   const pass=document.getElementById('newTeamPass').value.trim();
   if(!name||!fbUrl||!pass){showToast('⚠️ Preencha nome, Firebase URL e senha');return}
-  // Novo time: sem nenhum integrante — ADM deve criar acessos e distribuir funções
-  const t={id:'team_'+Date.now(),name,city,firebaseUrl:fbUrl,admPassword:pass,description:document.getElementById('newTeamDesc').value.trim(),createdAt:now(),musicianCount:0,agendaCount:0,status:'active',members:[]};
+  const teamId='team_'+Date.now();
+  const dbPath='/escala_'+teamId+'.json';
+  // Seed the team's Firebase database with an EMPTY dataset (no musicians)
+  const emptyTeamData={musicians:[],agendas:[],notifications:[],revocations:{},chatGeral:[],avisos:[],agendaChats:{}};
+  try{
+    const seedRes=await fetch(fbUrl+dbPath,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(emptyTeamData)});
+    if(!seedRes.ok)throw new Error('seed '+seedRes.status);
+  }catch(e){
+    showToast('⚠️ Firebase inacessível. Verifique a URL. Criando localmente.');
+    console.warn('Seed warning:',e.message);
+  }
+  const t={id:teamId,name,city,firebaseUrl:fbUrl,dbPath,admPassword:pass,description:document.getElementById('newTeamDesc').value.trim(),createdAt:now(),musicianCount:0,agendaCount:0,status:'active'};
   masterDB.teams.push(t);
-  logActivity('🏛','gold','team',currentMaster.name,'Plataforma',`Novo time criado: "${name}" — aguardando cadastro de membros`);
-  await saveDB();hideModal('modalNewTeam');renderTeams();populateTeamDropdowns();showToast('✅ Time criado! Adicione os ADMs e distribua as funções.');
+  logActivity('🏛','gold','team',currentMaster.name,'Plataforma',`Novo time criado: "${name}" (vazio — ADM configura integrantes)`);
+  await saveDB();hideModal('modalNewTeam');renderTeams();populateTeamDropdowns();showToast('✅ Time criado! Banco Firebase inicializado vazio.');
   ['newTeamName','newTeamCity','newTeamFirebase','newTeamPass','newTeamDesc'].forEach(id=>document.getElementById(id).value='');
 }
 
@@ -1256,7 +1258,7 @@ function renderPasswords(){
     const teams=masterDB.teams||[];
     if(!teams.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-dim);">Nenhum time cadastrado</td></tr>';}
     else tbody.innerHTML=teams.map(t=>`<tr>
-      <td><strong style="color:var(--text);">${t.name}</strong></td>
+      <td><strong style="color:var(--text);">${t.name}</strong>${(t.musicianCount||0)===0?` <span class="badge badge-green" style="margin-left:6px;font-size:9px;">🆕 Vazio</span>`:''}</td>
       <td><span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim);">${t.firebaseUrl||'—'}</span></td>
       <td>
         <span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--gold2);">••••••••</span>
@@ -1264,7 +1266,10 @@ function renderPasswords(){
       </td>
       <td>${t.musicianCount||0}</td>
       <td>${t.agendaCount||0}</td>
-      <td><button class="btn btn-outline" style="font-size:11px;padding:5px 10px;" onclick="copyText('${t.admPassword||''}','Senha ADM copiada!')">🔑 Copiar Senha</button></td>
+      <td style="display:flex;gap:6px;align-items:center;">
+        <button class="btn btn-outline" style="font-size:11px;padding:5px 10px;" onclick="copyText('${t.admPassword||''}','Senha ADM copiada!')">🔑 Copiar Senha</button>
+        <button class="btn-team-access" style="font-size:11px;padding:5px 11px;" onclick="showLaunchModal('${t.id}')">🚪 Painel</button>
+      </td>
     </tr>`).join('');
   }
   // Generated passwords
@@ -1329,6 +1334,51 @@ async function changePassword(){
   document.getElementById('settingsNewPass').value='';document.getElementById('settingsConfPass').value='';
 }
 
+// ══ LAUNCH PANEL ══
+let _launchTeamId = null;
+
+function showLaunchModal(teamId){
+  const t=masterDB.teams?.find(x=>x.id===teamId);if(!t)return;
+  _launchTeamId=teamId;
+  const colors=['linear-gradient(135deg,#d4a853,#f0c870)','linear-gradient(135deg,#3498db,#2980b9)','linear-gradient(135deg,#8e44ad,#9b59b6)','linear-gradient(135deg,#27ae60,#2ecc71)','linear-gradient(135deg,#c0392b,#e74c3c)','linear-gradient(135deg,#e67e22,#f39c12)'];
+  const idx=masterDB.teams.findIndex(x=>x.id===teamId);
+  const icon=document.getElementById('launchTeamIcon');
+  if(icon){icon.textContent=t.name[0];icon.style.background=colors[idx%colors.length]}
+  document.getElementById('launchTeamName').textContent=t.name;
+  document.getElementById('launchTeamCity').textContent=t.city||'—';
+  document.getElementById('launchCredTeam').textContent=t.name;
+  document.getElementById('launchCredFb').textContent=t.firebaseUrl||'(não configurado)';
+  document.getElementById('launchCredPass').textContent=t.admPassword||'—';
+  // Derive a DB path from the team id — each team uses its own path
+  const dbPath='/escala_'+t.id+'.json';
+  document.getElementById('launchCredPath').textContent=dbPath;
+  showModal('launchPanelModal');
+}
+
+function buildTeamPanelURL(t){
+  if(!t||!t.firebaseUrl)return null;
+  const dbPath='/escala_'+t.id+'.json';
+  // Encode credentials into URL hash (never sent to server)
+  const payload=btoa(JSON.stringify({fb:t.firebaseUrl,pass:t.admPassword||'',path:dbPath,team:t.name}));
+  // Points to the escala v8 file deployed alongside master_admin
+  return `ibmeier_escala_v8.html#team=${payload}`;
+}
+
+function openTeamPanel(){
+  const t=masterDB.teams?.find(x=>x.id===_launchTeamId);if(!t){showToast('Time não encontrado');return}
+  const url=buildTeamPanelURL(t);
+  if(!url){showToast('⚠️ Configure a Firebase URL do time primeiro');return}
+  hideModal('launchPanelModal');
+  window.open(url,'_blank');
+  showToast('🚀 Painel aberto em nova aba!');
+}
+
+function copyLaunchLink(){
+  const t=masterDB.teams?.find(x=>x.id===_launchTeamId);if(!t)return;
+  const url=window.location.origin+window.location.pathname.replace('master_admin.html','')+buildTeamPanelURL(t);
+  navigator.clipboard.writeText(url).then(()=>showToast('🔗 Link copiado! Envie ao ADM do time.'));
+}
+
 // ══ HELPERS ══
 function populateTeamDropdowns(){
   const teams=masterDB.teams||[];
@@ -1351,95 +1401,6 @@ let toastT=null;
 function showToast(msg){
   const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
   if(toastT)clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),3000);
-}
-
-// ══ TEAM ACCESS (Acessar Painel do Time) ══
-function openTeamAccess(teamId){
-  const t = masterDB.teams?.find(x=>x.id===teamId);
-  if(!t) return;
-  const admins = (masterDB.admins||[]).filter(a=>a.teamId===teamId);
-  const members = (masterDB.users||[]).filter(u=>u.teamId===teamId);
-  // Render modal content
-  document.getElementById('teamAccessName').textContent = t.name;
-  document.getElementById('teamAccessCity').textContent = t.city||'—';
-  document.getElementById('teamAccessFbUrl').textContent = t.firebaseUrl||'—';
-  document.getElementById('teamAccessPass').textContent = t.admPassword||'—';
-  document.getElementById('teamAccessStatus').textContent = t.status==='active'?'✅ Ativo':'⏸ Inativo';
-  document.getElementById('teamAccessAdmCount').textContent = admins.length;
-  document.getElementById('teamAccessMemberCount').textContent = members.length;
-  document.getElementById('teamAccessCreated').textContent = t.createdAt||'—';
-  // ADM list
-  document.getElementById('teamAccessAdmList').innerHTML = admins.length===0
-    ? '<div style="font-size:12px;color:var(--text-dim);padding:10px 0;">Nenhum ADM cadastrado ainda. <a style="color:var(--gold2);cursor:pointer;" onclick="hideModal(\'modalTeamAccess\');showModal(\'modalNewAdm\')">+ Adicionar ADM</a></div>'
-    : admins.map(a=>`<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);">
-        <div style="width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--purple));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#fff;flex-shrink:0;">${(a.name||'?')[0].toUpperCase()}</div>
-        <div style="flex:1;min-width:0;">
-          <div style="font-size:12px;color:var(--text);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${a.name}</div>
-          <div style="font-size:10px;color:var(--text-dim);">${a.email||'—'} · <span style="color:${a.loginType==='google'?'var(--blue2)':'var(--purple2);'}">${a.loginType==='google'?'Google':'Senha'}</span></div>
-        </div>
-        <span style="font-size:9px;padding:2px 7px;border-radius:10px;background:rgba(39,174,96,0.1);border:1px solid rgba(39,174,96,0.25);color:var(--green);">${a.status==='active'?'Ativo':'Inativo'}</span>
-      </div>`).join('');
-  // Member list (musicians)
-  document.getElementById('teamAccessMemberList').innerHTML = members.length===0
-    ? '<div style="font-size:12px;color:var(--text-dim);padding:10px 0;">Nenhum músico cadastrado. O ADM deve criar os acessos e distribuir as funções.</div>'
-    : members.map(u=>`<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--border);">
-        <div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--green),#1e8449);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;">${(u.name||'?')[0].toUpperCase()}</div>
-        <div style="flex:1;min-width:0;">
-          <div style="font-size:12px;color:var(--text);font-weight:500;">${u.name}</div>
-          <div style="font-size:10px;color:var(--text-dim);">${u.email||'—'}</div>
-        </div>
-      </div>`).join('');
-  // Store current team for quick actions
-  document.getElementById('modalTeamAccess').dataset.teamId = teamId;
-  showModal('modalTeamAccess');
-  logActivity('👁','blue','view',currentMaster.name,t.name,`Acessou painel do time "${t.name}"`);
-}
-
-function launchTeamPanel(){
-  const teamId = document.getElementById('modalTeamAccess').dataset.teamId;
-  const t = masterDB.teams?.find(x=>x.id===teamId);
-  if(!t){showToast('Painel não configurado');return;}
-  // Pass team credentials via sessionStorage so the escala app can auto-login
-  try{
-    sessionStorage.setItem('teamLogin',JSON.stringify({
-      teamId: t.id,
-      teamName: t.name,
-      firebaseUrl: t.firebaseUrl,
-      admPassword: t.admPassword,
-      launchedByMaster: true,
-      masterEmail: currentMaster.email
-    }));
-  }catch(e){}
-  // Open the escala panel — use same origin or configured URL
-  const panelUrl = t.panelUrl || 'ibmeier_escala_v8.html';
-  const win = window.open(panelUrl,'_blank');
-  if(!win){
-    showToast('⚠️ Popup bloqueado. Habilite popups e tente novamente.');
-    return;
-  }
-  logActivity('🚀','gold','launch',currentMaster.name,t.name,`Abriu painel do time "${t.name}" via master`);
-  showToast(`🚀 Painel de "${t.name}" aberto!`);
-}
-
-function quickAddAdmForTeam(){
-  const teamId = document.getElementById('modalTeamAccess').dataset.teamId;
-  hideModal('modalTeamAccess');
-  // Pre-select team in the adm modal
-  setTimeout(()=>{
-    showModal('modalNewAdm');
-    const sel = document.getElementById('newAdmTeam');
-    if(sel) sel.value = teamId;
-  },150);
-}
-
-function quickAddUserForTeam(){
-  const teamId = document.getElementById('modalTeamAccess').dataset.teamId;
-  hideModal('modalTeamAccess');
-  setTimeout(()=>{
-    showModal('modalNewUser');
-    const sel = document.getElementById('newUserTeam');
-    if(sel) sel.value = teamId;
-  },150);
 }
 
 // ══ INIT ══
