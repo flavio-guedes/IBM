@@ -28,7 +28,7 @@ html,body{height:100%;font-family:'DM Sans',system-ui,sans-serif;background:var(
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 
 /* ════ AUTH SCREEN ════ */
-#authScreen{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;align-items:center;justify-content:center;overflow:auto}
+#authScreen{display:none!important}
 .auth-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 .auth-orb{position:absolute;border-radius:50%;filter:blur(100px)}
 .auth-orb-1{width:500px;height:500px;top:-150px;left:-150px;background:radial-gradient(circle,rgba(212,168,83,0.12) 0%,transparent 70%)}
@@ -394,7 +394,7 @@ select.field-input{appearance:none;-webkit-appearance:none;background-image:url(
       <div class="nav-item" onclick="switchPanel('settings',this)"><span class="nav-icon">⚙️</span>Configurações</div>
     </nav>
     <div class="sidebar-footer">
-      <button class="btn-logout-sidebar" onclick="doLogout()">🚪 Sair do painel</button>
+      <button class="btn-logout-sidebar" onclick="location.reload()">↻ Recarregar painel</button>
     </div>
   </div>
 
@@ -1170,12 +1170,8 @@ function showRegisterView(){
 }
 
 function doLogout(){
-  lsW('master_session',null);
-  currentMaster=null;
-  if(syncInterval){clearInterval(syncInterval);syncInterval=null}
-  document.getElementById('appLayout').style.display='none';
-  document.getElementById('authScreen').style.display='flex';
-  showLoginView();
+  // Sem login — recarrega direto no painel
+  location.reload();
 }
 
 // ══ APP ══
