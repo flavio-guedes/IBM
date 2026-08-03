@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding · Guitarristas · IBMEIER</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0c0d;
+    --bg-elevated:#151614;
+    --bg-card:#191a17;
+    --line:#2c2b25;
+    --line-soft:#211f1a;
+    --gold:#c9a35a;
+    --gold-bright:#e6c37f;
+    --gold-dim:#8a7343;
+    --text:#eee7d8;
+    --text-dim:#a49c8a;
+    --text-faint:#6f6858;
+    --green:#7fa876;
+    --yellow:#d0a94f;
+    --orange:#c98955;
+    --red:#b3564f;
+    --serif:'Fraunces', serif;
+    --sans:'Work Sans', sans-serif;
+    --mono:'JetBrains Mono', monospace;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  body{
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(201,163,90,0.07), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(201,163,90,0.05), transparent 60%),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.5;
+    min-height:100vh;
+    padding-bottom:80px;
+  }
+
+  ::selection{background:var(--gold-dim);color:#000;}
+
+  header{
+    padding:56px 32px 40px;
+    max-width:1100px;
+    margin:0 auto;
+    border-bottom:1px solid var(--line);
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.28em;
+    text-transform:uppercase;
+    color:var(--gold);
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:'';
+    width:26px;height:1px;
+    background:var(--gold-dim);
+  }
+  h1{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:clamp(32px,5vw,54px);
+    letter-spacing:-.01em;
+    color:var(--gold-bright);
+    margin-bottom:10px;
+  }
+  h1 span{color:var(--text-faint); font-weight:400; font-style:italic;}
+  .subtitle{
+    color:var(--text-dim);
+    font-size:15px;
+    max-width:560px;
+    margin-bottom:28px;
+  }
+  .header-meta{
+    display:flex;
+    gap:28px;
+    flex-wrap:wrap;
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--text-faint);
+  }
+  .header-meta b{color:var(--gold);font-weight:500;}
+
+  .player-toggle{
+    max-width:1100px;
+    margin:28px auto 0;
+    padding:0 32px;
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
+  .player-btn{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.05em;
+    padding:10px 20px;
+    border-radius:3px;
+    border:1px solid var(--line);
+    background:var(--bg-elevated);
+    color:var(--text-dim);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .player-btn:hover{border-color:var(--gold-dim);color:var(--text);}
+  .player-btn.active{
+    background:var(--gold);
+    border-color:var(--gold);
+    color:#12100a;
+    font-weight:600;
+  }
+  .reset-btn{
+    margin-left:auto;
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.04em;
+    padding:9px 14px;
+    border-radius:3px;
+    border:1px solid var(--line);
+    background:transparent;
+    color:var(--text-faint);
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .reset-btn:hover{border-color:var(--red);color:var(--red);}
+
+  nav.tabs{
+    max-width:1100px;
+    margin:24px auto 0;
+    padding:0 32px;
+    display:flex;
+    gap:4px;
+    overflow-x:auto;
+    scrollbar-width:none;
+    border-bottom:1px solid var(--line);
+  }
+  nav.tabs::-webkit-scrollbar{display:none;}
+  .tab{
+    font-family:var(--mono);
+    font-size:11.5px;
+    letter-spacing:.04em;
+    white-space:nowrap;
+    padding:12px 16px;
+    color:var(--text-faint);
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+    transition:all .2s ease;
+  }
+  .tab:hover{color:var(--text-dim);}
+  .tab.active{color:var(--gold-bright);border-bottom-color:var(--gold);}
+
+  main{max-width:1100px;margin:0 auto;padding:40px 32px;}
+  .panel{display:none;animation:fade .35s ease;}
+  .panel.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  .section-title{
+    font-family:var(--serif);
+    font-size:26px;
+    font-weight:600;
+    color:var(--gold-bright);
+    margin-bottom:6px;
+  }
+  .section-sub{
+    color:var(--text-dim);
+    font-size:13.5px;
+    margin-bottom:28px;
+    max-width:620px;
+  }
+
+  .string-row{
+    display:grid;
+    grid-template-columns:150px 1fr 52px;
+    align-items:center;
+    gap:16px;
+    padding:12px 0;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .string-row:last-child{border-bottom:none;}
+  .string-label{
+    font-size:13px;
+    color:var(--text);
+    font-weight:500;
+  }
+  .string-label small{display:block;font-family:var(--mono);font-size:10px;color:var(--text-faint);margin-top:2px;letter-spacing:.05em;}
+  .string-track{
+    position:relative;
+    height:14px;
+  }
+  .string-line{
+    position:absolute;
+    top:50%;
+    left:0;right:0;
+    transform:translateY(-50%);
+    background:var(--line);
+    border-radius:2px;
+  }
+  .string-fill{
+    position:absolute;
+    top:50%;
+    left:0;
+    transform:translateY(-50%);
+    background:linear-gradient(90deg,var(--gold-dim),var(--gold-bright));
+    border-radius:2px;
+    transition:width .5s ease;
+  }
+  .string-capo{
+    position:absolute;
+    top:-5px;
+    width:2px;height:24px;
+    background:var(--gold-bright);
+    box-shadow:0 0 8px rgba(230,195,127,.6);
+    transition:left .5s ease;
+    transform:translateX(-1px);
+  }
+  .string-pct{
+    font-family:var(--mono);
+    font-size:12.5px;
+    text-align:right;
+    color:var(--gold);
+    font-weight:600;
+  }
+
+  .th1 .string-line{height:1px;} .th1 .string-fill{height:1px;}
+  .th2 .string-line{height:2px;} .th2 .string-fill{height:2px;}
+  .th3 .string-line{height:3px;} .th3 .string-fill{height:3px;}
+  .th4 .string-line{height:4px;} .th4 .string-fill{height:4px;}
+
+  .overview-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+    margin-bottom:32px;
+  }
+  @media(max-width:720px){.overview-grid{grid-template-columns:1fr;}}
+  .overview-card{
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:26px 24px;
+  }
+  .overview-card h3{
+    font-family:var(--serif);
+    font-size:19px;
+    color:var(--gold-bright);
+    margin-bottom:2px;
+  }
+  .overview-card .role{
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--text-faint);
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    margin-bottom:18px;
+  }
+  .next-goal{
+    margin-top:18px;
+    padding:12px 14px;
+    background:var(--bg-elevated);
+    border-left:2px solid var(--gold);
+    border-radius:0 3px 3px 0;
+    font-size:12.5px;
+    color:var(--text-dim);
+  }
+  .next-goal b{color:var(--gold-bright);font-weight:600;}
+  .empty-state{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--text-faint);
+    padding:8px 0;
+  }
+
+  .checklist-group{
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:22px 24px;
+    margin-bottom:20px;
+  }
+  .checklist-group h4{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--gold);
+    margin-bottom:14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .checklist-group h4 .count{color:var(--text-faint);font-weight:400;}
+  .check-item{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:8px 0;
+    border-bottom:1px solid var(--line-soft);
+    cursor:pointer;
+    font-size:13.5px;
+    color:var(--text-dim);
+  }
+  .check-item:last-child{border-bottom:none;}
+  .check-item:hover{color:var(--text);}
+  .check-item input{
+    appearance:none;
+    width:16px;height:16px;
+    border:1px solid var(--gold-dim);
+    border-radius:3px;
+    margin-top:1px;
+    flex-shrink:0;
+    cursor:pointer;
+    position:relative;
+    transition:all .15s ease;
+  }
+  .check-item input:checked{
+    background:var(--gold);
+    border-color:var(--gold);
+  }
+  .check-item input:checked::after{
+    content:'';
+    position:absolute;
+    left:5px;top:1px;
+    width:4px;height:8px;
+    border:solid #12100a;
+    border-width:0 2px 2px 0;
+    transform:rotate(45deg);
+  }
+  .check-item.checked label{color:var(--text-faint);text-decoration:line-through;text-decoration-color:var(--line);}
+  .check-item label{cursor:pointer;flex:1;}
+
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  @media(max-width:720px){.two-col{grid-template-columns:1fr;}}
+
+  .note-block{
+    font-size:13px;
+    color:var(--text-dim);
+    background:var(--bg-elevated);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:16px 18px;
+    margin-bottom:24px;
+  }
+  .note-block b{color:var(--gold-bright);}
+
+  .readiness-score{
+    display:flex;
+    align-items:baseline;
+    gap:16px;
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:28px 26px;
+    margin-bottom:24px;
+  }
+  .readiness-num{
+    font-family:var(--serif);
+    font-size:56px;
+    font-weight:600;
+    color:var(--gold-bright);
+  }
+  .readiness-tier{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.04em;
+  }
+  .tier-green{color:var(--green);}
+  .tier-yellow{color:var(--yellow);}
+  .tier-orange{color:var(--orange);}
+  .tier-red{color:var(--red);}
+
+  .tier-legend{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:28px;
+  }
+  @media(max-width:600px){.tier-legend{grid-template-columns:1fr;}}
+  .tier-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:10px 14px;
+    border:1px solid var(--line);
+    border-radius:5px;
+    font-size:12px;
+    color:var(--text-dim);
+  }
+  .tier-chip{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .tier-row b{color:var(--text);font-family:var(--mono);}
+
+  footer{
+    max-width:1100px;
+    margin:60px auto 0;
+    padding:24px 32px 0;
+    border-top:1px solid var(--line);
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--text-faint);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .current-player-tag{
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--gold);
+    letter-spacing:.05em;
+    margin-bottom:14px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Ministério de Louvor · IBMEIER</div>
+  <h1>Onboarding <span>de guitarristas</span></h1>
+  <p class="subtitle">Um programa de 90 dias para integrar Genaro e Walmir à cultura, à liturgia e ao repertório do ministério — do primeiro contato até a autonomia completa em escala.</p>
+  <div class="header-meta">
+    <span>Duração <b>90 dias</b></span>
+    <span>Fases <b>9</b></span>
+    <span>Músicos <b>2</b></span>
+    <span>Meta final <b>Prontidão para escala</b></span>
+  </div>
+</header>
+
+<div class="player-toggle">
+  <button class="player-btn active" data-player="genaro">Genaro</button>
+  <button class="player-btn" data-player="walmir">Walmir</button>
+  <button class="reset-btn" id="reset-btn">Zerar progresso deste músico</button>
+</div>
+
+<nav class="tabs" id="tabs">
+  <div class="tab active" data-panel="overview">Visão Geral</div>
+  <div class="tab" data-panel="fase0">Fase 0 · Antes</div>
+  <div class="tab" data-panel="dia1">Primeiro Dia</div>
+  <div class="tab" data-panel="sem1">Semana 1</div>
+  <div class="tab" data-panel="sem2">Semana 2</div>
+  <div class="tab" data-panel="sem3">Semana 3</div>
+  <div class="tab" data-panel="mes1">Mês 1</div>
+  <div class="tab" data-panel="mes2">Mês 2</div>
+  <div class="tab" data-panel="mes3">Mês 3</div>
+  <div class="tab" data-panel="prontidao">Prontidão p/ Escala</div>
+</nav>
+
+<main>
+
+  <!-- OVERVIEW -->
+  <section class="panel active" id="overview">
+    <div class="section-title">Painel de progresso</div>
+    <p class="section-sub">O progresso é calculado em tempo real a partir dos itens marcados em todas as abas — cada corda representa uma frente do onboarding. Marque os checklists nas outras abas para preencher este painel.</p>
+
+    <div class="current-player-tag" id="current-player-tag">MOSTRANDO: GENARO</div>
+
+    <div class="overview-grid">
+      <div class="overview-card" style="grid-column:1 / -1;">
+        <div id="strings-container"></div>
+        <div class="next-goal"><b>Próxima meta sugerida:</b> foque nas frentes com menor progresso — normalmente Ambiências e Playback/Click nas primeiras semanas.</div>
+      </div>
+    </div>
+
+    <div class="checklist-group">
+      <h4>Objetivo geral ao final de 90 dias <span class="count">6 marcos</span></h4>
+      <div class="check-item" data-cat="none"><input type="checkbox"><label>Conhecer o repertório principal da igreja</label></div>
+      <div class="check-item" data-cat="none"><input type="checkbox"><label>Entender a dinâmica dos cultos</label></div>
+      <div class="check-item" data-cat="none"><input type="checkbox"><label>Dominar o fluxo dos ensaios</label></div>
+      <div class="check-item" data-cat="none"><input type="checkbox"><label>Estar apto a tocar com autonomia</label></div>
+      <div class="check-item" data-cat="none"><input type="checkbox"><label>Conhecer a identidade musical do ministério</label></div>
+      <div class="check-item" data-cat="none"><input type="checkbox"><label>Sentir-se integrado à equipe</label></div>
+    </div>
+  </section>
+
+  <!-- FASE 0 -->
+  <section class="panel" id="fase0">
+    <div class="section-title">Fase 0 — Antes do primeiro ensaio</div>
+    <p class="section-sub">Responsável: Ministro de Louvor. Tudo isso acontece antes de o músico pisar no palco pela primeira vez.</p>
+
+    <div class="two-col">
+      <div class="checklist-group">
+        <h4>Comunicação <span class="count">7 itens</span></h4>
+        <div class="check-item" data-cat="comunicacao"><input type="checkbox"><label>Adicionar no grupo oficial</label></div>
+        <div class="check-item" data-cat="comunicacao"><input type="checkbox"><label>Enviar mensagem de boas-vindas</label></div>
+        <div class="check-item" data-cat="comunicacao"><input type="checkbox"><label>Confirmar presença</label></div>
+        <div class="check-item" data-cat="comunicacao"><input type="checkbox"><label>Compartilhar horários</label></div>
+        <div class="check-item" data-cat="comunicacao"><input type="checkbox"><label>Compartilhar localização</label></div>
+        <div class="check-item" data-cat="comunicacao"><input type="checkbox"><label>Informar dress code</label></div>
+        <div class="check-item" data-cat="comunicacao"><input type="checkbox"><label>Explicar horários de chegada</label></div>
+      </div>
+
+      <div class="checklist-group">
+        <h4>Cadastro <span class="count">6 itens</span></h4>
+        <div class="check-item" data-cat="integracao"><input type="checkbox"><label>Nome</label></div>
+        <div class="check-item" data-cat="integracao"><input type="checkbox"><label>Foto</label></div>
+        <div class="check-item" data-cat="integracao"><input type="checkbox"><label>Instrumento</label></div>
+        <div class="check-item" data-cat="integracao"><input type="checkbox"><label>WhatsApp</label></div>
+        <div class="check-item" data-cat="integracao"><input type="checkbox"><label>Disponibilidade</label></div>
+        <div class="check-item" data-cat="integracao"><input type="checkbox"><label>Equipamentos próprios</label></div>
+      </div>
+    </div>
+
+    <div class="checklist-group">
+      <h4>Materiais enviados <span class="count">8 itens</span></h4>
+      <div class="two-col">
+        <div>
+          <div class="check-item" data-cat="comunicacao"><input type="checkbox"><label>Acesso ao sistema</label></div>
+          <div class="check-item" data-cat="repertorio"><input type="checkbox"><label>Biblioteca de cifras</label></div>
+          <div class="check-item" data-cat="repertorio"><input type="checkbox"><label>Playlist Spotify</label></div>
+          <div class="check-item" data-cat="repertorio"><input type="checkbox"><label>Playlist YouTube</label></div>
+        </div>
+        <div>
+          <div class="check-item" data-cat="playback"><input type="checkbox"><label>Playbacks</label></div>
+          <div class="check-item" data-cat="repertorio"><input type="checkbox"><label>Guias de estudo</label></div>
+          <div class="check-item" data-cat="repertorio"><input type="checkbox"><label>Lista de repertório principal</label></div>
+          <div class="check-item" data-cat="comunicacao"><input type="checkbox"><label>Organização dos ensaios e calendário</label></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIMEIRO DIA -->
+  <section class="panel" id="dia1">
+    <div class="section-title">Primeiro dia</div>
+    <p class="section-sub">Ao fim do dia, o músico deve saber exatamente quem é quem, como funcionam cultos e ensaios, onde encontrar tudo e o que estudar primeiro.</p>
+
+    <div class="two-col">
+      <div class="checklist-group">
+        <h4>Recepção · 10 min <span class="count">5 itens</span></h4>
+        <div class="check-item" data-cat="integracao"><input type="checkbox"><label>Recepção</label></div>
+        <div class="check-item" data-cat="integracao"><input type="checkbox"><label>Apresentação da equipe</label></div>
+        <div class="check-item" data-cat="integracao"><input type="checkbox"><label>Conhecer músicos, pastor e técnicos</label></div>
+        <div class="check-item" data-cat="integracao"><input type="checkbox"><label>Conhecer mídia</label></div>
+        <div class="check-item" data-cat="integracao"><input type="checkbox"><label>Conhecer responsáveis</label></div>
+      </div>
+
+      <div class="checklist-group">
+        <h4>Tour <span class="count">7 pontos</span></h4>
+        <div class="check-item" data-cat="equipamentos"><input type="checkbox"><label>Palco, mesa de som, monitores, in ear</label></div>
+        <div class="check-item" data-cat="equipamentos"><input type="checkbox"><label>Instrumentos e backline</label></div>
+        <div class="check-item" data-cat="equipamentos"><input type="checkbox"><label>Cabos, fontes e pedestais</label></div>
+        <div class="check-item" data-cat="integracao"><input type="checkbox"><label>Camarim e banheiros</label></div>
+        <div class="check-item" data-cat="integracao"><input type="checkbox"><label>Copa</label></div>
+        <div class="check-item" data-cat="integracao"><input type="checkbox"><label>Local de oração</label></div>
+        <div class="check-item" data-cat="equipamentos"><input type="checkbox"><label>Local de afinação</label></div>
+      </div>
+    </div>
+
+    <div class="checklist-group">
+      <h4>Cultura do ministério · 20 min</h4>
+      <p style="font-size:13px;color:var(--text-dim);line-height:1.7;">
+        Missão, visão e valores · Como os cultos são planejados · Como funciona a comunicação e a escala ·
+        Como funcionam os ensaios · Como são feitas mudanças de repertório · Quem toma decisões · Fluxo entre pastor e ministro.
+      </p>
+    </div>
+
+    <div class="two-col">
+      <div class="checklist-group">
+        <h4>Apresentação do sistema <span class="count">6 itens</span></h4>
+        <div class="check-item" data-cat="comunicacao"><input type="checkbox"><label>Dashboard</label></div>
+        <div class="check-item" data-cat="comunicacao"><input type="checkbox"><label>Biblioteca</label></div>
+        <div class="check-item" data-cat="comunicacao"><input type="checkbox"><label>Repertórios</label></div>
+        <div class="check-item" data-cat="comunicacao"><input type="checkbox"><label>Escalas</label></div>
+        <div class="check-item" data-cat="comunicacao"><input type="checkbox"><label>Histórico</label></div>
+        <div class="check-item" data-cat="comunicacao"><input type="checkbox"><label>Planejamento de ensaios</label></div>
+      </div>
+
+      <div class="checklist-group">
+        <h4>Equipamentos <span class="count">6 itens</span></h4>
+        <div class="check-item" data-cat="equipamentos"><input type="checkbox"><label>Afinador funcionando</label></div>
+        <div class="check-item" data-cat="equipamentos"><input type="checkbox"><label>Cabos revisados</label></div>
+        <div class="check-item" data-cat="equipamentos"><input type="checkbox"><label>Fonte revisada</label></div>
+        <div class="check-item" data-cat="equipamentos"><input type="checkbox"><label>Patch atualizado</label></div>
+        <div class="check-item" data-cat="equipamentos"><input type="checkbox"><label>Presets organizados</label></div>
+        <div class="check-item" data-cat="equipamentos"><input type="checkbox"><label>Backup disponível</label></div>
+      </div>
+    </div>
+
+    <div class="note-block"><b>Avaliação técnica · 30 min —</b> não é um teste, é um diagnóstico. Pede-se para tocar base, power chords, dedilhado, ambiência, solo, improviso, click e dinâmica. Registra-se conforto, técnica, segurança, leitura, improviso e experiência.</div>
+
+    <div class="note-block"><b>Conhecimento do repertório —</b> o sistema apresenta 20 músicas e classifica cada uma como "já conheço", "conheço parcialmente" ou "nunca toquei", gerando um Mapa de Conhecimento individual.</div>
+
+    <div class="checklist-group">
+      <h4>Fechamento do dia <span class="count">3 momentos</span></h4>
+      <div class="check-item" data-cat="integracao"><input type="checkbox"><label>Primeira oração — apresentação oficial com toda a equipe reunida</label></div>
+      <div class="check-item" data-cat="tecnica"><input type="checkbox"><label>Primeiro ensaio — participa mesmo sem tocar todas as músicas; objetivo é observar, entender e aprender</label></div>
+      <div class="check-item" data-cat="comunicacao"><input type="checkbox"><label>Feedback rápido pós-ensaio — como se sentiu, teve dificuldade, alguma dúvida (registrar tudo)</label></div>
+    </div>
+  </section>
+
+  <!-- SEMANA 1 -->
+  <section class="panel" id="sem1">
+    <div class="section-title">Primeira semana</div>
+    <p class="section-sub">Objetivo: conhecer o funcionamento do ministério.</p>
+
+    <div class="checklist-group">
+      <h4>Checklist <span class="count">7 itens</span></h4>
+      <div class="check-item" data-cat="tecnica"><input type="checkbox"><label>Participou dos ensaios</label></div>
+      <div class="check-item" data-cat="equipamentos"><input type="checkbox"><label>Configurou equipamentos</label></div>
+      <div class="check-item" data-cat="repertorio"><input type="checkbox"><label>Conheceu repertório principal</label></div>
+      <div class="check-item" data-cat="comunicacao"><input type="checkbox"><label>Entendeu comunicação</label></div>
+      <div class="check-item" data-cat="integracao"><input type="checkbox"><label>Conheceu líderes</label></div>
+      <div class="check-item" data-cat="repertorio"><input type="checkbox"><label>Estudou playlist</label></div>
+      <div class="check-item" data-cat="comunicacao"><input type="checkbox"><label>Tirou dúvidas</label></div>
+    </div>
+
+    <div class="checklist-group">
+      <h4>Missões da semana <span class="count">4 itens</span></h4>
+      <div class="check-item" data-cat="repertorio"><input type="checkbox"><label>Aprender 5 músicas</label></div>
+      <div class="check-item" data-cat="integracao"><input type="checkbox"><label>Assistir 3 cultos</label></div>
+      <div class="check-item" data-cat="repertorio"><input type="checkbox"><label>Ouvir a playlist inteira</label></div>
+      <div class="check-item" data-cat="equipamentos"><input type="checkbox"><label>Organizar presets</label></div>
+    </div>
+  </section>
+
+  <!-- SEMANA 2 -->
+  <section class="panel" id="sem2">
+    <div class="section-title">Segunda semana</div>
+    <p class="section-sub">Entrada parcial no repertório — tocar músicas simples.</p>
+    <div class="checklist-group">
+      <h4>Checklist <span class="count">5 itens</span></h4>
+      <div class="check-item" data-cat="tecnica"><input type="checkbox"><label>Bases</label></div>
+      <div class="check-item" data-cat="tecnica"><input type="checkbox"><label>Entradas</label></div>
+      <div class="check-item" data-cat="tecnica"><input type="checkbox"><label>Finalizações</label></div>
+      <div class="check-item" data-cat="tecnica"><input type="checkbox"><label>Transições</label></div>
+      <div class="check-item" data-cat="tecnica"><input type="checkbox"><label>Dinâmicas</label></div>
+    </div>
+  </section>
+
+  <!-- SEMANA 3 -->
+  <section class="panel" id="sem3">
+    <div class="section-title">Terceira semana</div>
+    <p class="section-sub">Adicionar camadas de complexidade ao repertório.</p>
+    <div class="checklist-group">
+      <h4>Checklist <span class="count">5 itens</span></h4>
+      <div class="check-item" data-cat="repertorio"><input type="checkbox"><label>Músicas médias</label></div>
+      <div class="check-item" data-cat="tecnica"><input type="checkbox"><label>Improvisação</label></div>
+      <div class="check-item" data-cat="ambiencias"><input type="checkbox"><label>Ambiências</label></div>
+      <div class="check-item" data-cat="playback"><input type="checkbox"><label>Click</label></div>
+      <div class="check-item" data-cat="ambiencias"><input type="checkbox"><label>Pads</label></div>
+    </div>
+  </section>
+
+  <!-- MES 1 -->
+  <section class="panel" id="mes1">
+    <div class="section-title">Primeiro mês</div>
+    <p class="section-sub">Objetivo: estar confortável no ministério.</p>
+    <div class="checklist-group">
+      <h4>Checklist <span class="count">6 itens</span></h4>
+      <div class="check-item" data-cat="repertorio"><input type="checkbox"><label>15 músicas dominadas</label></div>
+      <div class="check-item" data-cat="integracao"><input type="checkbox"><label>Fluxo do culto conhecido</label></div>
+      <div class="check-item" data-cat="comunicacao"><input type="checkbox"><label>Escalas compreendidas</label></div>
+      <div class="check-item" data-cat="comunicacao"><input type="checkbox"><label>Comunicação integrada</label></div>
+      <div class="check-item" data-cat="equipamentos"><input type="checkbox"><label>Equipamentos organizados</label></div>
+      <div class="check-item" data-cat="integracao"><input type="checkbox"><label>Participação ativa</label></div>
+    </div>
+  </section>
+
+  <!-- MES 2 -->
+  <section class="panel" id="mes2">
+    <div class="section-title">Segundo mês</div>
+    <p class="section-sub">Adicionar músicas difíceis, Ceia, eventos, conferências e datas especiais (Natal, Páscoa).</p>
+    <div class="checklist-group">
+      <h4>Checklist <span class="count">6 itens</span></h4>
+      <div class="check-item" data-cat="tecnica"><input type="checkbox"><label>Tocou em cultos</label></div>
+      <div class="check-item" data-cat="repertorio"><input type="checkbox"><label>Tocou Ceia</label></div>
+      <div class="check-item" data-cat="repertorio"><input type="checkbox"><label>Tocou repertório completo</label></div>
+      <div class="check-item" data-cat="tecnica"><input type="checkbox"><label>Fez transições</label></div>
+      <div class="check-item" data-cat="playback"><input type="checkbox"><label>Tocou com playback</label></div>
+      <div class="check-item" data-cat="playback"><input type="checkbox"><label>Tocou com click</label></div>
+    </div>
+  </section>
+
+  <!-- MES 3 -->
+  <section class="panel" id="mes3">
+    <div class="section-title">Terceiro mês</div>
+    <p class="section-sub">Objetivo: autonomia — não depender mais de acompanhamento.</p>
+    <div class="checklist-group">
+      <h4>Checklist <span class="count">5 itens</span></h4>
+      <div class="check-item" data-cat="repertorio"><input type="checkbox"><label>Conhece 80% do repertório principal</label></div>
+      <div class="check-item" data-cat="tecnica"><input type="checkbox"><label>Resolve problemas sozinho</label></div>
+      <div class="check-item" data-cat="integracao"><input type="checkbox"><label>Ajuda novos músicos</label></div>
+      <div class="check-item" data-cat="repertorio"><input type="checkbox"><label>Participa da montagem do repertório</label></div>
+      <div class="check-item" data-cat="integracao"><input type="checkbox"><label>Contribui com ideias</label></div>
+    </div>
+  </section>
+
+  <!-- PRONTIDAO -->
+  <section class="panel" id="prontidao">
+    <div class="section-title">Checklist de prontidão para escala</div>
+    <p class="section-sub">Antes de confirmar um novo guitarrista em um culto, valide automaticamente estas cinco frentes.</p>
+
+    <div class="readiness-score">
+      <div class="readiness-num" id="readiness-num">0%</div>
+      <div>
+        <div class="readiness-tier" id="readiness-tier">Adiar a escala e reforçar o plano de estudos</div>
+        <div style="font-family:var(--mono);font-size:11px;color:var(--text-faint);margin-top:4px;">calculado a partir dos itens marcados abaixo</div>
+      </div>
+    </div>
+
+    <div class="tier-legend">
+      <div class="tier-row"><span class="tier-chip" style="background:var(--green);"></span><b>90–100%</b>&nbsp;Pronto para tocar com autonomia</div>
+      <div class="tier-row"><span class="tier-chip" style="background:var(--yellow);"></span><b>70–89%</b>&nbsp;Pronto com acompanhamento</div>
+      <div class="tier-row"><span class="tier-chip" style="background:var(--orange);"></span><b>50–69%</b>&nbsp;Simplificar o repertório</div>
+      <div class="tier-row"><span class="tier-chip" style="background:var(--red);"></span><b>&lt;50%</b>&nbsp;Adiar a escala</div>
+    </div>
+
+    <div class="two-col">
+      <div class="checklist-group">
+        <h4>Disponibilidade <span class="count">3 itens</span></h4>
+        <div class="check-item ready" data-cat="comunicacao"><input type="checkbox"><label>Confirmou presença no prazo</label></div>
+        <div class="check-item ready" data-cat="comunicacao"><input type="checkbox"><label>Informou impedimentos</label></div>
+        <div class="check-item ready" data-cat="comunicacao"><input type="checkbox"><label>Chegará com antecedência mínima</label></div>
+      </div>
+
+      <div class="checklist-group">
+        <h4>Equipamentos <span class="count">8 itens</span></h4>
+        <div class="check-item ready" data-cat="equipamentos"><input type="checkbox"><label>Guitarra regulada</label></div>
+        <div class="check-item ready" data-cat="equipamentos"><input type="checkbox"><label>Cabos testados</label></div>
+        <div class="check-item ready" data-cat="equipamentos"><input type="checkbox"><label>Fonte e alimentação verificadas</label></div>
+        <div class="check-item ready" data-cat="equipamentos"><input type="checkbox"><label>Afinador funcionando</label></div>
+        <div class="check-item ready" data-cat="equipamentos"><input type="checkbox"><label>Pedaleira/pedais configurados</label></div>
+        <div class="check-item ready" data-cat="equipamentos"><input type="checkbox"><label>Presets revisados</label></div>
+        <div class="check-item ready" data-cat="equipamentos"><input type="checkbox"><label>Bateria dos equipamentos sem fio carregada</label></div>
+        <div class="check-item ready" data-cat="equipamentos"><input type="checkbox"><label>Instrumento reserva ou plano de contingência</label></div>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="checklist-group">
+        <h4>Repertório <span class="count">6 itens</span></h4>
+        <div class="check-item ready" data-cat="repertorio"><input type="checkbox"><label>Todas as músicas foram estudadas</label></div>
+        <div class="check-item ready" data-cat="repertorio"><input type="checkbox"><label>Introduções memorizadas</label></div>
+        <div class="check-item ready" data-cat="repertorio"><input type="checkbox"><label>Finais revisados</label></div>
+        <div class="check-item ready" data-cat="repertorio"><input type="checkbox"><label>Tons confirmados</label></div>
+        <div class="check-item ready" data-cat="repertorio"><input type="checkbox"><label>Estruturas conhecidas (refrões, pontes, modulações)</label></div>
+        <div class="check-item ready" data-cat="repertorio"><input type="checkbox"><label>Transições entre músicas ensaiadas</label></div>
+      </div>
+
+      <div class="checklist-group">
+        <h4>Execução <span class="count">4 itens</span></h4>
+        <div class="check-item ready" data-cat="playback"><input type="checkbox"><label>Domina o uso de click</label></div>
+        <div class="check-item ready" data-cat="playback"><input type="checkbox"><label>Domina o uso de playback (quando houver)</label></div>
+        <div class="check-item ready" data-cat="tecnica"><input type="checkbox"><label>Conhece os momentos de dinâmica</label></div>
+        <div class="check-item ready" data-cat="tecnica"><input type="checkbox"><label>Sabe quando conduzir e quando sustentar a base</label></div>
+      </div>
+    </div>
+
+    <div class="checklist-group">
+      <h4>Integração com a equipe <span class="count">4 itens</span></h4>
+      <div class="check-item ready" data-cat="integracao"><input type="checkbox"><label>Conhece os sinais do ministro de louvor</label></div>
+      <div class="check-item ready" data-cat="integracao"><input type="checkbox"><label>Sabe quem conduz cada bloco do culto</label></div>
+      <div class="check-item ready" data-cat="integracao"><input type="checkbox"><label>Entende o fluxo entre pastor, mídia e sonoplastia</label></div>
+      <div class="check-item ready" data-cat="integracao"><input type="checkbox"><label>Participou da oração e alinhamento pré-culto</label></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span>IBMEIER · Ministério de Louvor</span>
+  <span>Onboarding de guitarristas · 90 dias</span>
+</footer>
+
+<script>
+  // ---------- TABS ----------
+  document.querySelectorAll('.tab').forEach(tab=>{
+    tab.addEventListener('click',()=>{
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.panel).classList.add('active');
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+  });
+
+  // ---------- CATEGORY LABELS FOR STRING BARS ----------
+  const categoryMeta = [
+    {key:'integracao',   label:'Integração',        sub:'CULTURA & EQUIPE',   th:'th4'},
+    {key:'repertorio',   label:'Repertório',        sub:'MÚSICAS DOMINADAS', th:'th3'},
+    {key:'equipamentos', label:'Equipamentos',      sub:'SETUP & BACKLINE',  th:'th3'},
+    {key:'comunicacao',  label:'Comunicação',       sub:'FLUXO & ESCALA',    th:'th2'},
+    {key:'tecnica',      label:'Técnica worship',   sub:'DINÂMICA & LEITURA',th:'th2'},
+    {key:'ambiencias',   label:'Ambiências',        sub:'PADS & TEXTURAS',   th:'th1'},
+    {key:'playback',     label:'Playback / Click',  sub:'PRECISÃO RÍTMICA',  th:'th1'},
+  ];
+
+  // assign a stable id to every checkbox in document order
+  const allChecks = Array.from(document.querySelectorAll('.check-item input'));
+  allChecks.forEach((input,i)=>{ input.dataset.id = 'c'+i; });
+
+  // per-player state: { genaro: {c0:true,...}, walmir: {...} }
+  const state = { genaro:{}, walmir:{} };
+  let currentPlayer = 'genaro';
+
+  function applyStateToDOM(){
+    allChecks.forEach(input=>{
+      const checked = !!state[currentPlayer][input.dataset.id];
+      input.checked = checked;
+      input.closest('.check-item').classList.toggle('checked', checked);
+    });
+  }
+
+  function renderStrings(){
+    const container = document.getElementById('strings-container');
+    const items = document.querySelectorAll('.check-item[data-cat]');
+    const totals = {}, doneCounts = {};
+    categoryMeta.forEach(c=>{ totals[c.key]=0; doneCounts[c.key]=0; });
+
+    items.forEach(item=>{
+      const cat = item.dataset.cat;
+      if(cat === 'none' || !totals.hasOwnProperty(cat)) return;
+      const input = item.querySelector('input');
+      totals[cat]++;
+      if(state[currentPlayer][input.dataset.id]) doneCounts[cat]++;
+    });
+
+    const hasAnyItems = categoryMeta.some(c=>totals[c.key] > 0);
+    if(!hasAnyItems){
+      container.innerHTML = '<div class="empty-state">Nenhum item marcado ainda. Vá até as abas de fases e marque os checklists para preencher este painel.</div>';
+      return;
+    }
+
+    container.innerHTML = categoryMeta.map(cat=>{
+      const total = totals[cat.key];
+      const pct = total > 0 ? Math.round((doneCounts[cat.key]/total)*100) : 0;
+      return `
+        <div class="string-row ${cat.th}">
+          <div class="string-label">${cat.label}<small>${cat.sub}</small></div>
+          <div class="string-track">
+            <div class="string-line"></div>
+            <div class="string-fill" style="width:${pct}%"></div>
+            <div class="string-capo" style="left:${pct}%"></div>
+          </div>
+          <div class="string-pct">${pct}%</div>
+        </div>`;
+    }).join('');
+  }
+
+  function updateReadiness(){
+    const items = document.querySelectorAll('.check-item.ready input');
+    if(items.length === 0) return;
+    let checked = 0;
+    items.forEach(input=>{ if(state[currentPlayer][input.dataset.id]) checked++; });
+    const pct = Math.round((checked/items.length)*100);
+    document.getElementById('readiness-num').textContent = pct + '%';
+    const tierEl = document.getElementById('readiness-tier');
+    tierEl.classList.remove('tier-green','tier-yellow','tier-orange','tier-red');
+    if(pct >= 90){ tierEl.textContent='Pronto para tocar com autonomia'; tierEl.classList.add('tier-green'); }
+    else if(pct >= 70){ tierEl.textContent='Pronto com acompanhamento do guitarrista mais experiente'; tierEl.classList.add('tier-yellow'); }
+    else if(pct >= 50){ tierEl.textContent='Recomenda-se simplificar o repertório ou reduzir a participação'; tierEl.classList.add('tier-orange'); }
+    else { tierEl.textContent='Adiar a escala e reforçar o plano de estudos'; tierEl.classList.add('tier-red'); }
+  }
+
+  function refreshAll(){
+    applyStateToDOM();
+    renderStrings();
+    updateReadiness();
+    document.getElementById('current-player-tag').textContent = 'MOSTRANDO: ' + currentPlayer.toUpperCase();
+  }
+
+  // checkbox interaction
+  allChecks.forEach(input=>{
+    input.addEventListener('change',()=>{
+      state[currentPlayer][input.dataset.id] = input.checked;
+      input.closest('.check-item').classList.toggle('checked', input.checked);
+      renderStrings();
+      updateReadiness();
+    });
+  });
+
+  // player toggle
+  document.querySelectorAll('.player-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.player-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      currentPlayer = btn.dataset.player;
+      refreshAll();
+    });
+  });
+
+  // reset current player's progress
+  document.getElementById('reset-btn').addEventListener('click',()=>{
+    if(confirm('Zerar todo o progresso marcado para ' + currentPlayer.charAt(0).toUpperCase()+currentPlayer.slice(1) + '?')){
+      state[currentPlayer] = {};
+      refreshAll();
+    }
+  });
+
+  refreshAll();
+</script>
+
+</body>
+</html>
